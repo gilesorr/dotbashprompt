@@ -11,21 +11,23 @@ prompt.
 
 Run `git clone https://github.com/gilesorr/dotbashprompt.git ~/.bashprompt`
 followed by `source ~/.bashprompt/promnow` and finally `promnow` which
-should give you basic usage information, including instructions on how to
+will give you basic usage information, including instructions on how to
 immediately change your prompt to one of those available in the repository
-name (`promnow <prompt-name>`).  If you want to continue to use a
-particular prompt, edit your **~/.bashrc** and add the following lines at
-the end:
+(`promnow <prompt-name>`).  Please note that - for now - this probably
+won't work if it's not checked out to the **~/.bashprompt/** folder.
+
+If you want to continue to use a particular prompt, edit your **~/.bashrc**
+and add the following lines at the end:
 
 ```
 source ~/.bashprompt/promnow
-promnow your-favourite-prompt # replace with the name of a prompt you like
+promnow <prompt-name> # replace with the name of a prompt you like
 ```
 
 
 ## Known Issues
 
-None yet, but this is the first public release ...
+None yet ...
 
 
 ## Bibliography
