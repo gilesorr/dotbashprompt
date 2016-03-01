@@ -1,0 +1,51 @@
+#!/bin/bash # helps vim figure out the filetype
+#
+
+pushd ${PROMPTDIR} > /dev/null
+source _p_colours # get colours into the environment
+#source directory/_p_colourslashpwd
+source directory/_p_cslash # test replacement for the previous
+source directory/_p_git
+source time/_p_yyyy-mm-dd
+source machine/_p_uptime
+export PROMPT_COMMAND="" # blank this if you're not using it
+popd > /dev/null
+
+function prompt_command () {
+    # 5 days of uptime
+    # TODO: brutal fail on the Mac
+    if [ $(cat /proc/uptime | awk -F "." '{print $1}') -gt $((5*24*60*60)) ]
+    then
+        _p_up="$(_p_uptime)"
+    else
+        _p_up=""
+    fi
+}
+export PROMPT_COMMAND=prompt_command
+
+PS1="\$(_p_yyyy-mm-dd)" # date in yyyy-mm-dd format
+PS1="${PS1}:"           # add a colon
+
+# _p_colourslashpwd works fine straight up, but in the following context it
+# bombs completely, seeing the passed parameters as 2, not 3
+#PS1="${PS1}\$(_p_colourslashpwd "${_pc_yellow}" "${_pc_b_yellow}" "${_pc_nocolour}")" # add PWD with off-colour slashes
+#PS1="${PS1}\$(_p_colourslashpwd ${_c_yellow} ${_c_b_yellow} ${_pc_gray} )" # add PWD with off-colour slashes
+# And this replacement behaves just as oddly, but differently ...:
+#PS1="${PS1}\$(_p_cslash "${_pc_red}" "${_pc_b_yellow}" )" # add PWD with off-colour slashes
+
+PS1="${PS1}${_pc_b_yellow}"
+PS1="${PS1}\$(pwd)"
+PS1="${PS1}${_pc_b_green}\$(_p_git)" # add git status in green
+PS1="${PS1}${_pc_nocolour}"          # colours off
+PS1="${PS1}\n"                       # newline
+PS1="${PS1}${_pc_b_red}"             # bright red
+PS1="${PS1}\${_p_up}"                # uptime (if greater than some value)
+PS1="${PS1}${_pc_nocolour}"          # colours off
+PS1="${PS1}:"                        # colon
+PS1="${PS1}\u@\h"                    # user @ hostname
+PS1="${PS1}${_pc_b_yellow}"          # bright yellow
+PS1="${PS1}\$"                       # $ or # depending on user
+PS1="${PS1}${_pc_nocolour} "
+
+export PS1
+

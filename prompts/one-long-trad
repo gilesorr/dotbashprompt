@@ -1,0 +1,27 @@
+#!/bin/bash # helps vim identify the filetype
+#
+# Source this file to use the prompt immediately.
+#
+# Single line, fairly traditional but long prompt.
+
+pushd ${PROMPTDIR} > /dev/null
+# Get the components we need:
+source _p_colours # get colours into the environment
+source directory/_p_git
+source directory/_p_tildepwd
+source machine/_p_powerconnected
+source machine/_p_powerpercent
+popd > /dev/null
+
+export PROMPT_COMMAND="" # blank this if you're not using it
+
+PS1="${_pc_nocolour}\$(_p_powerconnected)\$(_p_powerpercent)%"
+PS1="${PS1}${_p_nocolour} "
+PS1="${PS1}${_pc_b_green}\u@\h"
+PS1="${PS1}${_p_nocolour}:"
+PS1="${PS1}${_pc_b_blue}\$(_p_tildepwd)"
+PS1="${PS1}${_pc_nocolour}\$(_p_git)"
+PS1="${PS1}\$ "
+
+export PS1
+

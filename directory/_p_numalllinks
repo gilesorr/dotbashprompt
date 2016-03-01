@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Shows a count of the number of links (hidden and visible) in the current
+# directory.
+
+function _p_numalllinks () {
+    ls -A -l | grep "^l" | wc -l | tr -d " "
+}
+

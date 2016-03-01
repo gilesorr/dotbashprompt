@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# Returns current uptime in the form "5h3m" or "7d22h" for both Linux
+# and Mac.
+
+function _p_uptime () {
+    # http://askubuntu.com/questions/335592/how-to-display-time-elapsed-since-last-system-boot-using-uptime
+    # /proc/uptime provides two numbers, the first is how long the system has
+    # been up in seconds, the second is how much of that time the machine has
+    # spent idle in seconds.
+
+    function seconds2uptime () {
+        let secs=$((${1}%60))
+        let mins=$((${1}/60%60))
+        let hours=$((${1}/3600%24))
+        let days=$((${1}/86400))
+        if [ "${days}" -ne "0" ]
+        then
+            echo -n "${days}d${hours}h"
+        else
+            echo -n "${hours}h${mins}m"
+        fi
+    }
+
+    if [ -e /proc/uptime ]
+    then
+        let upSeconds="$(awk -F "." '{print $1}' /proc/uptime)"
+        seconds2uptime ${upSeconds}
+    elif [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
+    then
+        # On a Mac.
+        # "sysctl kern.boottime" shows the time of the last boot in seconds
+        # since the millennia, so we need to work out the number of seconds
+        # since then.
+        let upSeconds=$(( $(date +%s) - $(sysctl kern.boottime | awk '{print $5}' | tr -d ",") ))
+        seconds2uptime ${upSeconds}
+    else
+        echo -n "uptime?"
+    fi
+}
+

@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Shows a count of visible (ie. not hidden) directories in the current
+# directory.
+
+function _p_numvisdirs () {
+    ls -l | grep "^d" | wc -l | tr -d " "
+}
+

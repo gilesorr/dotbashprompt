@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# Uses the file-by-file output of "ls" to sum up the space used by the
+# current directory.
+
+function _p_lsbytesum () {
+    let _p_scale=1      # number of digits after the decimal place
+    let TotalBytes=0
+
+    for Bytes in $(ls -l | grep "^-" | awk '{ print $5 }')
+    do
+       let TotalBytes=$TotalBytes+$Bytes
+    done
+
+    # The if...fi's give a more specific output in byte, kilobyte, megabyte,
+    # and gigabyte
+
+    if [ $TotalBytes -lt 1024 ]; then
+       TotalSize=$(echo -e "scale=${_p_scale} \n$TotalBytes \nquit" | bc)
+       suffix="B"
+    elif [ $TotalBytes -lt 1048576 ]; then
+       TotalSize=$(echo -e "scale=${_p_scale} \n$TotalBytes/1024 \nquit" | bc)
+       suffix="KiB"
+    elif [ $TotalBytes -lt 1073741824 ]; then
+       TotalSize=$(echo -e "scale=${_p_scale} \n$TotalBytes/1048576 \nquit" | bc)
+       suffix="MiB"
+    else
+       TotalSize=$(echo -e "scale=${_p_scale} \n$TotalBytes/1073741824 \nquit" | bc)
+       suffix="GiB"
+    fi
+
+    echo -n "${TotalSize}${suffix}"
+}
+

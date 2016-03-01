@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Most fonts support special characters.  The commonest are tested below:"
+echo ""
+echo -e "\e(0  af  jklm n  opqrs  t u v w x  \e(B"
+echo        "  af  jklm n  opqrs  t u v w x  "
+echo ""
+echo -e "To use these in a prompt, surround the matching letter with '\\\e(0'"
+echo -e "and '\\\e(B', so '\\\e(0n\\\e(B' becomes \e(0n\e(B."
+

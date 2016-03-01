@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Replaces ${HOME} with "~" in the current directory
+
+function _p_tildepwd () {
+    #echo "${PWD}" | sed 's@^'${HOME}'@~@'
+    echo "${PWD/#${HOME}/\~}"
+}
+

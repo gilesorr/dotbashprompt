@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Shows the current date in YYYY-MM-DD format.
+
+function _p_yyyy-mm-dd () {
+    date +%Y-%m-%d
+}
+

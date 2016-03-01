@@ -1,0 +1,22 @@
+#!/bin/bash
+# Prints the percentage battery power available: just the number, no
+# trailing "%" sign.
+
+# TODO:
+# - Linux version would almost certainly barf on dual batteries
+
+function _p_powerpercent () {
+    if [ -e /sys ]
+    then
+        # On a Linux system:
+        cat /sys/class/power_supply/BAT?/capacity
+    elif [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
+    then
+        # On a Mac:
+        pmset -g batt | tail -1 | awk '{print $2}' | tr -d ";" | tr -d "%"
+    else
+        # On an unknown system:
+        echo -n "???"
+    fi
+}
+

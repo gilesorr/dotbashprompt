@@ -1,0 +1,21 @@
+#!/bin/bash
+# Colourizes the PWD.  Needs three colours:
+# $1  =  colour for the slashes
+# $2  =  colour for the dir names
+# $3  =  nocolour - needed because it varies between _pc_nocolour and
+#        _c_nocolour
+#
+# Example:
+#   PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour})"
+#
+#   Ugly, but works.  You can mix in bg colours too.
+
+function _p_colourslashpwd () {
+    if [ $# -ne 3 ]
+    then
+        echo -n "_p_colourslashpwd $# != 3 params!"
+    else
+        echo -ne "${PWD//\//${3}${1}/${3}${2}}${3}"
+    fi
+}
+

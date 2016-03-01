@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Shows the current time in HHMM (24 hour) format.
+
+function _p_hhmm () {
+    date +%H%M
+}
+

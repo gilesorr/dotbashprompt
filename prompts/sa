@@ -1,0 +1,39 @@
+#!/bin/bash # helps vim identify the filetype
+#
+
+pushd ${PROMPTDIR} > /dev/null
+# Get the components we need:
+source _p_colours # get colours into the environment
+source directory/_p_git
+source directory/_p_colourslashpwd
+source machine/_p_powerconnected
+source machine/_p_powerpercent
+popd > /dev/null
+
+export PROMPT_COMMAND="" # blank this if you're not using it
+
+PS1="${_pc_b_gray}-"
+PS1="${PS1}${_pc_b_blue}-"
+PS1="${PS1}${_pc_b_purple}\$(_p_git)"
+PS1="${PS1}${_pc_b_blue}-"
+PS1="${PS1}${_pc_b_gray}-"
+PS1="${PS1}-"
+PS1="${PS1}${_pc_b_blue}-("
+PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour})"
+PS1="${PS1}${_pc_b_blue})-"
+PS1="${PS1}${_pc_b_gray}-"
+PS1="${PS1}${_pc_nocolour}"
+PS1="${PS1}\n"                  # newline
+PS1="${PS1}${_pc_b_gray}-"
+PS1="${PS1}${_pc_b_blue}-("
+PS1="${PS1}${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
+PS1="${PS1}${_pc_nocolour} "
+# User @ Hostname:
+PS1="${PS1}${_pc_b_gray}\u${_pc_b_blue}@${_pc_b_gray}\h"
+PS1="${PS1}${_pc_b_blue})-"
+PS1="${PS1}${_pc_b_gray}-"
+PS1="${PS1}\$"
+PS1="${PS1}${_pc_nocolour} "
+
+export PS1
+

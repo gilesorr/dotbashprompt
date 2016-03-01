@@ -1,0 +1,8 @@
+#!/bin/bash
+# Shows a count of the number of devices (includes hidden ones, although
+# that's not exactly common) in the current directory.
+
+function _p_numalldevices () {
+    ls -A -l | grep "^[bc]" | wc -l | tr -d " "
+}
+

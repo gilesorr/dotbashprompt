@@ -1,0 +1,11 @@
+#!/bin/bash
+# Prints the bogomips rating of your current processor.
+#
+# This assumes that the bogomips ratings for all processors/cores are the
+# same.  And the value shouldn't change during a session, so don't escape
+# it - just run it once.
+
+function _p_bogomips () {
+    cat /proc/cpuinfo | grep bogo | head -n 1 | awk '{print $NF}' | awk -F "." '{print $1}'
+}
+

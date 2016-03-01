@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# Uses the long output of "ls" to print the size of the current directory
+# in kb.
+
+function _p_lssize () {
+    lskb=$(ls -l | grep "^total " | awk '{print $2}')
+    echo -n "${lskb}kb"
+}
+

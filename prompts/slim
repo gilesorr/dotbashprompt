@@ -1,0 +1,53 @@
+#!/bin/bash # helps vim identify the filetype
+#
+# The name comes from the hostname it was first used on.
+
+pushd ${PROMPTDIR} > /dev/null
+source _p_colours # get colours into the environment
+source machine/_p_powerconnected
+source machine/_p_powerpercent
+source directory/_p_git
+source directory/_p_tildepwd
+
+# Directory sizes, temporary for testing
+#
+source directory/_p_lsbytesum
+source directory/_p_lssize
+
+export PROMPT_COMMAND="" # blank this if you're not using it
+popd > /dev/null
+
+PS1="${_pc_b_cyan}"
+PS1="${PS1}["
+PS1="${PS1}${_pc_b_yellow}"
+PS1="${PS1}\$(_p_tildepwd)"
+PS1="${PS1}${_pc_b_cyan}"
+PS1="${PS1}]"
+PS1="${PS1}${_pc_nocolour}"
+PS1="${PS1} "
+PS1="${PS1}${_pc_b_yellow}"
+PS1="${PS1}\$(_p_git)"
+PS1="${PS1}${_pc_nocolour}"
+PS1="${PS1}\n"                           # newline
+PS1="${PS1}${_pc_b_cyan}"
+PS1="${PS1}["
+PS1="${PS1}${_pc_b_purple}"
+PS1="${PS1}\$(_p_powerconnected)"
+PS1="${PS1}\$(_p_powerpercent)"
+PS1="${PS1}%"
+PS1="${PS1}${_pc_b_cyan}"
+PS1="${PS1}]"
+PS1="${PS1}${_pc_nocolour}"
+PS1="${PS1} "
+PS1="${PS1}${_pc_b_purple}"
+PS1="${PS1}\u"
+PS1="${PS1}${_pc_b_cyan}"
+PS1="${PS1}@"
+PS1="${PS1}${_pc_b_purple}"
+PS1="${PS1}\h"
+PS1="${PS1}${_pc_b_gray}"
+PS1="${PS1}\$"
+PS1="${PS1}${_pc_nocolour} "
+
+export PS1
+

@@ -1,0 +1,170 @@
+#!/bin/bash # helps vim identify the filetype
+#
+# This one has everything.
+#
+# It's probably quite resource-hungry and a bad idea on things like
+# Raspberry Pis.
+
+pushd ${PROMPTDIR} > /dev/null
+# Get the components we need:
+source _p_colours # get colours into the environment
+source directory/_p_git
+source machine/_p_powerconnected
+source machine/_p_powerpercent
+source machine/_p_load
+source directory/_p_colourslashpwd
+source directory/_p_numvisfiles
+source directory/_p_numhiddenfiles
+source directory/_p_numvisdirs
+source directory/_p_numhiddendirs
+source directory/_p_numalllinks
+source directory/_p_numalldevices
+source directory/_p_tildepwd
+source directory/_p_lsbytesum
+source directory/_p_xtermtitle
+popd > /dev/null
+
+_p_xtermtitle # generates the _p_TITLEBAR variable
+export PROMPT_COMMAND="" # blank this if you're not using it
+
+#####################################################################
+#               OS-based Colour Settings                            #
+#####################################################################
+# Going to have to do Colour Settings for file types by the OS ...
+#
+# This is a do-once setting, doesn't need to be done for every prompt.
+if [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
+then
+    # character devices on Mac are blue FG, yellow BG
+    # block     devices on Mac are blue FG, cyan   BG
+    # Going with "character" as it's more common ...
+    # This didn't work:
+    #_p_device_colour="${_p_b_blue}${_p_bg_yellow}"
+    _p_device_colour="\[\033[43;1;34m\]"
+else
+    # assuming Linux, more fine-grained control may be needed
+    #_p_device_colour="${_p_b_yellow}"
+    _p_device_colour="\[\033[1;33m\]"
+fi
+if [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
+then
+    # Didn't work:
+    #_p_link_colour="${_p_b_purple}"
+    _p_link_colour="\[\033[1;35m\]"
+else
+    #_p_link_colour="${_p_b_cyan}"
+    _p_link_colour="\[\033[1;36m\]"
+fi
+
+function prompt_command () {
+    #################################################################
+    #                         Files                                 #
+    #################################################################
+    let tmp1=$(_p_numvisfiles)
+    let tmp2=$(_p_numhiddenfiles)
+    if [ ${tmp1} -gt 0 ] && [ ${tmp2} -gt 0 ]
+    then
+        _p_files="${tmp1}.${tmp2} "
+    fi
+    if [ ${tmp1} -gt 0 ] && [ ${tmp2} -eq 0 ]
+    then
+        _p_files="${tmp1} "
+    fi
+    if [ ${tmp1} -eq 0 ] && [ ${tmp2} -gt 0 ]
+    then
+        _p_files=".${tmp2} "
+    fi
+    if [ ${tmp1} -eq 0 ] && [ ${tmp2} -eq 0 ]
+    then
+        _p_files=""
+    fi
+
+    #################################################################
+    #                     Directories                               #
+    #################################################################
+    let tmp1=$(_p_numvisdirs)
+    let tmp2=$(_p_numhiddendirs)
+    if [ ${tmp1} -gt 0 ] && [ ${tmp2} -gt 0 ]
+    then
+        _p_dirs="${tmp1}.${tmp2} "
+    fi
+    if [ ${tmp1} -gt 0 ] && [ ${tmp2} -eq 0 ]
+    then
+        _p_dirs="${tmp1} "
+    fi
+    if [ ${tmp1} -eq 0 ] && [ ${tmp2} -gt 0 ]
+    then
+        _p_dirs=".${tmp2} "
+    fi
+    if [ ${tmp1} -eq 0 ] && [ ${tmp2} -eq 0 ]
+    then
+        _p_dirs=""
+    fi
+
+    #################################################################
+    #                            Links                              #
+    #################################################################
+    let tmp1=$(_p_numalllinks)
+    if [ ${tmp1} -gt 0 ]
+    then
+        _p_links="${tmp1} "
+    else
+        _p_links=""
+    fi
+
+    #################################################################
+    #                            Devices                            #
+    #################################################################
+    let tmp1=$(_p_numalldevices)
+    if [ ${tmp1} -gt 0 ]
+    then
+        _p_devices="${tmp1} "
+    else
+        _p_devices=""
+    fi
+}
+export PROMPT_COMMAND=prompt_command
+
+PS1="${_p_TITLEBAR}${_pc_b_gray}-"
+PS1="${PS1}${_pc_b_blue}-"
+PS1="${PS1}${_pc_b_purple}\$(_p_git)"
+PS1="${PS1}${_pc_b_blue}-"
+PS1="${PS1}${_pc_b_gray}-"
+
+#####################################################################
+# Load:
+PS1="${PS1}${_pc_b_blue}-("
+PS1="${PS1}${_pc_b_yellow}\$(_p_load)"
+PS1="${PS1}${_pc_b_blue})-"
+PS1="${PS1}${_pc_b_gray}-"
+# Files:
+PS1="${PS1}| "
+PS1="${PS1}${_pc_b_gray}\${_p_files}"
+PS1="${PS1}${_pc_b_blue}\${_p_dirs}"
+PS1="${PS1}${_p_link_colour}\${_p_links}"
+PS1="${PS1}${_p_device_colour}\${_p_devices}${_pc_nocolour}"
+PS1="${PS1}\$(_p_lsbytesum) "
+PS1="${PS1}${_pc_b_gray}|"
+#####################################################################
+
+PS1="${PS1}-"
+PS1="${PS1}${_pc_b_blue}-("
+PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour})"
+PS1="${PS1}${_pc_b_blue})-"
+PS1="${PS1}${_pc_b_gray}-"
+PS1="${PS1}${_pc_nocolour}"
+PS1="${PS1}\n"                  # newline
+PS1="${PS1}${_pc_b_gray}-"
+PS1="${PS1}${_pc_b_blue}-("
+PS1="${PS1}${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
+PS1="${PS1}${_pc_nocolour} "
+PS1="${PS1}${_pc_b_gray}\u"
+PS1="${PS1}${_pc_b_blue}@"
+PS1="${PS1}${_pc_b_gray}\h"
+PS1="${PS1}${_pc_b_blue})-"
+PS1="${PS1}${_pc_b_gray}-"
+PS1="${PS1}\$"
+PS1="${PS1}${_pc_nocolour} "
+
+export PS1
+

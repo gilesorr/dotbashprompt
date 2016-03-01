@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Shows a count of visible (ie. not hidden) files in the current directory.
+# Does NOT include directories.
+
+function _p_numvisfiles () {
+    ls -l | grep "^-" | wc -l | tr -d " "
+}
+

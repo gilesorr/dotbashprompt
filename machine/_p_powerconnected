@@ -1,0 +1,27 @@
+#!/bin/bash
+# Gives a single character indicator of whether power is available.
+
+function _p_powerconnected () {
+    if [ -e /sys ]
+    then
+        # On a Linux system:
+        case $(cat /sys/class/power_supply/BAT?/status) in
+            Full) echo "-";;
+            Discharging) echo "v";;
+            Charging) echo "^";;
+            *) echo "?";;
+        esac
+    elif [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
+    then
+        # On a Mac:
+        case $(pmset -g batt | tail -1 | awk '{ print $3 }' | tr -d ";") in
+            discharging) echo "v";;
+            charging) echo "^";;
+            *) echo "?";;
+        esac
+    else
+        # On an unknown system:
+        echo -n "???"
+    fi
+}
+

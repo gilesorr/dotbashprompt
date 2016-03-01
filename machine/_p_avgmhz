@@ -1,0 +1,18 @@
+#!/bin/bash
+# Prints the average MHz speed of your processor
+#
+# gets the current speed of all cores and averages them.
+
+function _p_avgmhz () {
+    let sum=0
+    let numproc=0
+
+    for value in $(cat /proc/cpuinfo | grep "cpu MHz" | awk '{print $NF}' | awk -F "." '{print $1}')
+    do
+        let sum=${sum}+${value}
+        let numproc=${numproc}+1
+    done
+
+    echo -n $((${sum}/${numproc}))
+}
+
