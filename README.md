@@ -9,7 +9,7 @@ prompt.
 
 ## Getting Started
 
-Run `git clone git@github.com:gilesorr/dotbashprompt.git ~/.bashprompt`
+Run `git clone https://github.com/gilesorr/dotbashprompt.git ~/.bashprompt`
 followed by `source ~/.bashprompt/promnow` and finally `promnow` which
 should give you basic usage information, including instructions on how to
 immediately change your prompt to one of those available in the repository
