@@ -27,7 +27,22 @@ promnow <prompt-name> # replace with the name of a prompt you like
 
 ## Known Issues
 
-None yet ...
+I design prompts using a terminal with a black background.  This means the
+prompts commonly look lousy with a light or white background.  Design a
+better one and send me a pull request.
+
+If you've aliased any Unix utility used by the prompt functions (this
+includes but isn't limited to things like ``ls``, ``grep``, ``awk``, and
+``sed``), there's a very good possibility it will break the prompts.  I'm
+adding ``unalias -a`` to the functions to avoid this, but if you've used a
+function overlay of a common utility like ``ls``, there's nothing I can do.
+
+One of the colours available (there aren't many) for making prompts is,
+reasonably enough, "black".  Under Linux, "bold black" is actually a dark
+gray.  It doesn't make a lot of sense, but there it is.  And when you have
+limited choices, you go with what's available.  Unfortunately, on the Mac,
+"bold black" is represented as ... black.  Making prompts that use this
+colour appear somewhat broken.  No fix yet.
 
 
 ## Bibliography
