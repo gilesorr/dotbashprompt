@@ -4,6 +4,8 @@
 # current directory.
 
 function _p_lsbytesum () {
+    unalias -a # clear user's local aliases
+
     let _p_scale=1      # number of digits after the decimal place
     let TotalBytes=0
 

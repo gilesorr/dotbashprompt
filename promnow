@@ -1,8 +1,13 @@
 #!/bin/bash # unnecessary, but helps vim identify the filetype
 
 export PROMPTDIR="${HOME}/.bashprompt/"
+# http://www.thegeekstuff.com/2013/12/bash-completion-complete/
+# If you add a new prompt, it won't be visible in bash completion until you
+# run the following command again.
+complete -W "$(ls ${PROMPTDIR}/prompts)" promnow
 
 function promnow_help () {
+    unalias -a
     echo "promnow <PROMPTNAME>"
     if [ -n "${_p_NAME}" ]
     then
@@ -14,6 +19,7 @@ function promnow_help () {
 }
 
 function promnow () {
+    unalias -a
     if [ $# -eq 1 ]
     then
         promfullname="${PROMPTDIR}prompts/${1}"

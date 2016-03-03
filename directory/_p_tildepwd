@@ -3,7 +3,14 @@
 # Replaces ${HOME} with "~" in the current directory
 
 function _p_tildepwd () {
-    #echo "${PWD}" | sed 's@^'${HOME}'@~@'
-    echo "${PWD/#${HOME}/\~}"
+    # Why the weird "tilde=" abstraction?:
+    # If you use a literal "~", older versions of Bash (v3.*? Apple, it's
+    # time to upgrade) will expand it to your home directory, thus negating
+    # our effort.  If you backslash escape the tilde, later versions of
+    # Bash (v4.*?) show you the backslash and the tilde, because they don't
+    # see anything that needs escaping.
+
+    local tilde='~'
+    echo "${PWD/#${HOME}/${tilde}}"
 }
 

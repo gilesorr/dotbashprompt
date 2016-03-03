@@ -1,6 +1,7 @@
 #!/bin/bash
 
-echo "Most fonts support special characters.  The commonest are tested below:"
+echo "Most fonts support special characters.  The commonest are tested below"
+echo "(this does NOT work on Macs, just Linux(?)):"
 echo ""
 echo -e "\e(0  af  jklm n  opqrs  t u v w x  \e(B"
 echo        "  af  jklm n  opqrs  t u v w x  "

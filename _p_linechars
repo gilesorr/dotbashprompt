@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Borrowed directly from
+# https://gitlab.com/aksrikanth/settings/blob/master/config_sources/prompt.d/00-colors
+# (thanks!)
+
+if [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
+then
+    export _p_line_tl='╭'
+    export _p_line_ll='╰'
+    export _p_line='─'
+    export _p_line_end='─'
+    export _p_line_rightt='─┤'
+    export _p_line_leftt='├─'
+elif [ "$(uname -a | grep Linux > /dev/null ; echo $?)" == "0" ]
+then
+    # it's ugly, but it works: see demo/specialchars:
+    export _p_line_tl='\001\e(0\002l\001\e(B\002'
+    export _p_line_ll='\001\e(0\002m\001\e(B\002'
+    export _p_line='\001\e(0\002q\001\e(B\002'
+    # the following character is the same as the previous, but I'm not
+    # clear on the distinction anyway ...
+    export _p_line_end='\001\e(0\002q\001\e(B\002'
+    export _p_line_rightt='\001\e(0\002u\001\e(B\002'
+    export _p_line_leftt='\001\e(0\002t\001\e(B\002'
+else
+    echo "Linedraw characters unavailable because this script doesn't"
+    echo "recognize the OS it's on."
+fi
+

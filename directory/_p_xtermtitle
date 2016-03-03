@@ -3,11 +3,17 @@
 # This only needs to be done once per session, ie. call it outside the
 # PS1 string and then use the _p_TITLEBAR variable in the PS1.
 function _p_xtermtitle () {
+    unalias -a
     case ${TERM} in
         xterm*|rxvt*)
             # the first "\u@\h" is the Icon Title
             # the second "\u@\h:\w" is goes into the XTerm Title Bar
             _p_TITLEBAR="\[\033]1;\u@\h\007\033]2;\u@\h:\w\007\]"
+            if [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
+            then
+                # Macs don't understand the "Icon Title":
+                _p_TITLEBAR="\[\033]0;\u@\h:\w\007\]"
+            fi
             ;;
         *)
             _p_TITLEBAR=""

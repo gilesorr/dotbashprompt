@@ -45,6 +45,15 @@ limited choices, you go with what's available.  Unfortunately, on the Mac,
 colour appear somewhat broken.  No fix yet.
 
 
+## Acknowledgements
+
+I want to thank Srikanth Agaram: it was his pointer to [his prompt
+setup](https://gitlab.com/aksrikanth/settings/tree/master/config_sources)
+that started me creating this project.  If you're interested in
+constructing your own prompt(s), looking at what he's done will give you a
+somewhat different perspective on the same subject.
+
+
 ## Bibliography
 
 - `man bash`
