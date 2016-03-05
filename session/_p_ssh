@@ -1,0 +1,11 @@
+#!/bin/bash
+# Indicates whether or not you're in an SSH session.
+#
+
+function _p_ssh () {
+    if [ -n "$SSH_CLIENT" ]
+    then
+        echo "ssh"
+    fi
+}
+

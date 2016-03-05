@@ -5,6 +5,7 @@ pushd ${PROMPTDIR} > /dev/null
 source _p_colours # get colours into the environment
 source directory/_p_colourslashpwd
 source directory/_p_git
+source directory/_p_xtermtitle
 source time/_p_yyyy-mm-dd
 # This one is usually called by _p_uptime, but we need it separately
 # to test uptime in PROMPT_COMMAND:
@@ -14,6 +15,7 @@ export PROMPT_COMMAND="" # blank this if you're not using it
 popd > /dev/null
 
 function prompt_command () {
+    _p_xtermtitle # generates the _p_TITLEBAR variable
     # minimum days of uptime before uptime is shown:
     local minuptime=5
     # TODO: brutal fail on the Mac
@@ -26,10 +28,12 @@ function prompt_command () {
 }
 export PROMPT_COMMAND=prompt_command
 
-PS1="\$(_p_yyyy-mm-dd)" # date in yyyy-mm-dd format
+PS1=""
+PS1="${PS1}${_p_TITLEBAR}"
+PS1="${PS1}\$(_p_yyyy-mm-dd)" # date in yyyy-mm-dd format
 PS1="${PS1}:"           # add a colon
 PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour} )" # add PWD with off-colour slashes
-PS1="${PS1}${_pc_b_green}\$(_p_git)" # add git status in green
+PS1="${PS1}${_pc_b_green}(\$(_p_git))" # add git status in green
 PS1="${PS1}${_pc_nocolour}"          # colours off
 PS1="${PS1}\n"                       # newline
 PS1="${PS1}${_pc_b_red}"             # bright red

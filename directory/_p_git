@@ -55,7 +55,7 @@ function _p_git () {
         branch_name=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/")
         if [ "${branch_name}x" != "x" ]
         then
-            echo -n "(${branch_name}$(_p_git_dirty)$(_p_git_up))"
+            echo -n "${branch_name}$(_p_git_dirty)$(_p_git_up)"
         fi
     }
 

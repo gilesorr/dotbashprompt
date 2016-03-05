@@ -1,0 +1,45 @@
+#!/bin/bash # helps vim identify the filetype
+#
+
+pushd ${PROMPTDIR} > /dev/null
+
+echo "Prompt Title: sa-bgl"
+echo "Includes:     git status, colour PWD, newline, battery, user@host"
+echo "For:          a light background" # Mac? works on Linux
+echo "Requires:     git"
+
+# Get the components we need:
+source _p_colours # get colours into the environment
+source directory/_p_git
+source directory/_p_colourslashpwd
+source machine/_p_powerconnected
+source machine/_p_powerpercent
+popd > /dev/null
+
+export PROMPT_COMMAND="" # blank this if you're not using it
+
+PS1="${_pc_black}-"
+PS1="${PS1}${_pc_b_blue}-"
+PS1="${PS1}${_pc_b_purple}\$(_p_git)"
+PS1="${PS1}${_pc_b_blue}-"
+PS1="${PS1}${_pc_black}-"
+PS1="${PS1}-"
+PS1="${PS1}${_pc_b_blue}-("
+PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_blue} \${_pc_nocolour})"
+PS1="${PS1}${_pc_b_blue})-"
+PS1="${PS1}${_pc_black}-"
+PS1="${PS1}${_pc_nocolour}"
+PS1="${PS1}\n"                  # newline
+PS1="${PS1}${_pc_black}-"
+PS1="${PS1}${_pc_b_blue}-("
+PS1="${PS1}${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
+PS1="${PS1}${_pc_nocolour} "
+# User @ Hostname:
+PS1="${PS1}${_pc_black}\u${_pc_b_blue}@${_pc_black}\h"
+PS1="${PS1}${_pc_b_blue})-"
+PS1="${PS1}${_pc_black}-"
+PS1="${PS1}\$"
+PS1="${PS1}${_pc_nocolour} "
+
+export PS1
+

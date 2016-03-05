@@ -1,0 +1,64 @@
+#!/bin/bash # helps vim identify the filetype
+#
+# Colourful bar of information above a simple prompt.
+
+pushd ${PROMPTDIR} > /dev/null
+
+echo "Prompt Title: bar"
+echo "Includes:     battery, user@hostname, short PWD, git status"
+echo "For:          dark or light background"
+echo "Requires:     git"
+
+# Get the components we need:
+source _p_colours # get colours into the environment
+source directory/_p_git
+source directory/_p_colourslashpwd
+source machine/_p_powerconnected
+source machine/_p_powerpercent
+popd > /dev/null
+
+function prompt_command () {
+    # This is needed to calculate prompt width to fill the full width of
+    # the terminal.
+
+    local pwidth=0
+    _p_pow="$(_p_powerconnected)$(_p_powerpercent)%"
+    # we'll use this var in PS1 to avoid calling it twice:
+    _p_newgit="$(_p_git)"
+    # username @ hostname for length calculation:
+    local uath="${USER}@$(hostname -s)"
+    # pwidth = prompt width
+    # "+ 2" for the spaces between content
+    pwidth=$(( ${pwidth} + ${#_p_pow} + ${#uath} + ${#PWD} + ${#_p_newgit} + 2 ))
+    fill=""
+    if [ ${pwidth} -gt ${COLUMNS} ]
+    then
+        # prompt is too wide, truncate the PWD
+        local  overage=$(( ${pwidth} - ${COLUMNS} ))
+        let _p_newPWDlen=$(( ${#PWD} - ${overage} ))
+    else
+        filllength=$(( ${COLUMNS} - ${pwidth} ))
+        let i=0
+        while [ ${i} -lt ${filllength} ]
+        do
+            fill="${fill} "
+            i=$(( ${i} + 1 ))
+        done
+    fi
+}
+export PROMPT_COMMAND="prompt_command"
+
+#PS1="fill is -\${fill}-"
+#PS1="${PS1}${_pc_b_yellow}${_pc_bg_blue}\${_p_pow}"
+PS1="${_pc_b_yellow}${_pc_bg_blue}\${_p_pow}"
+PS1="${PS1} "
+PS1="${PS1}${_pc_b_gray}\u${_pc_b_yellow}@${_pc_b_gray}\h"
+PS1="${PS1}${_pc_b_yellow}:"
+PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red}\${_pc_bg_blue} \${_pc_b_yellow}\${_pc_bg_blue} \${_pc_bg_blue} \${_p_newPWDlen})"
+PS1="${PS1}${_pc_b_gray}\${fill}\${_p_newgit}"
+PS1="${PS1}${_pc_nocolour}\n"
+PS1="${PS1}\$"
+PS1="${PS1}${_pc_nocolour} "
+
+export PS1
+

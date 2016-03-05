@@ -1,0 +1,33 @@
+#!/bin/bash # helps vim identify the filetype
+#
+# Single line with cropped PWD (based on one-long-trad)
+# for a light background.
+
+pushd ${PROMPTDIR} > /dev/null
+
+echo "Prompt Title: one-short-bgl"
+echo "Includes:     battery, user@hostname, short PWD, git status"
+echo "For:          a light background" # Mac? works on Linux
+echo "Requires:     git"
+
+# Get the components we need:
+source _p_colours # get colours into the environment
+source directory/_p_git
+source directory/_p_shortpwd
+source machine/_p_powerconnected
+source machine/_p_powerpercent
+popd > /dev/null
+
+export PROMPT_COMMAND="" # blank this if you're not using it
+
+PS1="${_pc_nocolour}\$(_p_powerconnected)\$(_p_powerpercent)%"
+PS1="${PS1}${_p_nocolour} "
+PS1="${PS1}${_pc_black}\u${_pc_b_blue}@${_pc_black}\h"
+PS1="${PS1}${_p_nocolour}:"
+PS1="${PS1}${_pc_nocolour}\$(_p_shortpwd 15)"
+PS1="${PS1}${_pc_black}\$(_p_git)"
+PS1="${PS1}${_pc_blue}\$"
+PS1="${PS1}${_pc_nocolour} "
+
+export PS1
+

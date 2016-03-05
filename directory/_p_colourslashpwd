@@ -2,20 +2,34 @@
 # Colourizes the PWD.  Needs three colours:
 # $1  =  colour for the slashes
 # $2  =  colour for the dir names
-# $3  =  nocolour - needed because it varies between _pc_nocolour and
-#        _c_nocolour
+# $3  =  nocolour - used to terminate every colour block, needed because
+#        it varies between _pc_nocolour and _c_nocolour
+# $4  =  OPTIONAL length to truncate PWD to
 #
-# Example:
+# Examples:
 #   PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour})"
+#   PS1="${PS1}\$(_p_colourslashpwd \${_pc_bg_white}\${_pc_b_red} \${_pc_nocolour} \${_pc_nocolour}) 15"
 #
 #   Ugly, but works.  You can mix in bg colours too.
 
 function _p_colourslashpwd () {
-    if [ $# -ne 3 ]
+    # indication that a truncation has occurred:
+    local trunc_symbol="..."
+    if [ $# -eq 3 ]
     then
-        echo -n "_p_colourslashpwd $# != 3 params!"
-    else
         echo -ne "${PWD//\//${3}${1}/${3}${2}}${3}"
+    elif [ $# -eq 4 ]
+    then
+        if [ ${#PWD} -gt ${4} ]
+        then
+            local pwdoffset=$(( ${#PWD} - ${4} + 3 ))
+            newPWD="${trunc_symbol}${PWD:${pwdoffset}}"
+            echo -ne "${2}${newPWD//\//${3}${1}/${3}${2}}${3}"
+        else
+            echo -ne "${PWD//\//${3}${1}/${3}${2}}${3}"
+        fi
+    else
+        echo -n "_p_colourslashpwd $# != 3/4 params!"
     fi
 }
 
