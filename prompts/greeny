@@ -3,6 +3,12 @@
 # Named for its dominant colour.  No git support.
 
 pushd ${PROMPTDIR} > /dev/null
+
+echo "Prompt Title: greeny"
+echo "Includes:     user@host, history, tty, PWD, newline, time"
+echo "For:          a dark background (colours don't work well on Mac)"
+echo "Requires:     "
+
 # Get the components we need:
 source _p_colours # get colours into the environment
 source machine/_p_shorttty

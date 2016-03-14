@@ -5,36 +5,41 @@
 # A clone of my MacBook Pro prompt.
 
 pushd ${PROMPTDIR} > /dev/null
+
+echo "Prompt Title: gomacbp"
+echo "Includes:     git status, PWD, newline, battery, user@host"
+echo "For:          a dark background" # Mac? works on Linux
+echo "Requires:     git"
+
 # Get the components we need:
 source _p_colours # get colours into the environment
+source directory/_p_xtermtitle
 source directory/_p_git
 source directory/_p_tildepwd
 source machine/_p_powerconnected
 source machine/_p_powerpercent
 popd > /dev/null
 
-export PROMPT_COMMAND="" # blank this if you're not using it
+function prompt_command () {
+    _p_xtermtitle # generates the _p_TITLEBAR variable
+}
 
-PS1="${_pc_b_gray}-"
-PS1="${PS1}${_pc_b_blue}-"
+export PROMPT_COMMAND=prompt_command
+
+PS1=""
+PS1="${PS1}${_p_TITLEBAR}"
+PS1="${PS1}${_pc_b_gray}-${_pc_b_blue}-"
 PS1="${PS1}${_pc_b_purple}\$(_p_git)"
-PS1="${PS1}${_pc_b_blue}-"
-PS1="${PS1}${_pc_b_gray}-"
-PS1="${PS1}-"
-PS1="${PS1}${_pc_b_blue}-("
+PS1="${PS1}${_pc_b_blue}-${_pc_b_gray}--${_pc_b_blue}-("
 PS1="${PS1}${_pc_b_yellow}\$(_p_tildepwd)"
-PS1="${PS1}${_pc_b_blue})-"
-PS1="${PS1}${_pc_b_gray}-"
-PS1="${PS1}${_pc_nocolour}"
-PS1="${PS1}\n"                  # newline
-PS1="${PS1}${_pc_b_gray}-"
-PS1="${PS1}${_pc_b_blue}-("
+PS1="${PS1}${_pc_b_blue})-${_pc_b_gray}-"
+PS1="${PS1}${_pc_nocolour}\n"                  # newline
+PS1="${PS1}${_pc_b_gray}-${_pc_b_blue}-("
 PS1="${PS1}${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
 PS1="${PS1}${_pc_nocolour} "
 # User @ Hostname:
 PS1="${PS1}${_pc_b_gray}\u${_pc_b_blue}@${_pc_b_gray}\h"
-PS1="${PS1}${_pc_b_blue})-"
-PS1="${PS1}${_pc_b_gray}-"
+PS1="${PS1}${_pc_b_blue})-${_pc_b_gray}-"
 PS1="${PS1}\$"
 PS1="${PS1}${_pc_nocolour} "
 

@@ -3,26 +3,45 @@
 # Named for its bright colours.
 
 pushd ${PROMPTDIR} > /dev/null
+
+echo "Prompt Title: tonka2"
+echo "Includes:     battery, user@host, PWD, git status, newline, date"
+echo "For:          a dark background" # Mac? works on Linux
+echo "Requires:     git"
+
 # Get the components we need:
 source _p_colours # get colours into the environment
 source directory/_p_xtermtitle
+source directory/_p_git
 popd > /dev/null
 
-_p_xtermtitle # generates the _p_TITLEBAR variable
+function prompt_command () {
+    _p_xtermtitle # generates the _p_TITLEBAR variable
+    local tmp=$(_p_git)
+    if [ "${tmp}x" == "x" ]
+    then
+        _p_git_output=""
+    else
+        _p_git_output=" ${tmp} "
+    fi
+}
 
-export PROMPT_COMMAND="" # blank this if you're not using it
+export PROMPT_COMMAND=prompt_command
 
-PS1="${_pc_b_yellow}-${_pc_b_blue}-("
+PS1=""
+PS1="${PS1}${_p_TITLEBAR}"
+PS1="${PS1}${_pc_b_yellow}-${_pc_b_blue}-("
 # User @ Hostname:
 PS1="${PS1}${_pc_b_yellow}\u${_pc_b_blue}@${_pc_b_yellow}\h"
 PS1="${PS1}${_pc_b_blue})-("
 PS1="${PS1}${_pc_b_yellow}\${PWD}"
+PS1="${PS1}${_pc_b_yellow}\${_p_git_output}"
 PS1="${PS1}${_pc_b_blue})-${_pc_b_yellow}-"
 PS1="${PS1}\n" # ------------------------------------------
 PS1="${PS1}${_pc_b_yellow}-${_pc_b_blue}-("
 PS1="${PS1}${_pc_b_yellow}\D{%H%M}"
 PS1="${PS1}${_pc_b_blue}:"
-PS1="${PS1}${_pc_b_yellow}\D{%a, %d %b %y}"
+PS1="${PS1}${_pc_b_yellow}\D{%a %m-%d}"
 PS1="${PS1}${_pc_b_blue}:"
 PS1="${PS1}${_pc_b_gray}\$ ${_pc_b_blue})-${_pc_b_yellow}-"
 PS1="${PS1}${_pc_nocolour} "

@@ -10,43 +10,42 @@
 
 function _p_git () {
 
-    function _p_git_dirty  () {
+    function _p_git_dirty () {
         git diff --no-ext-diff --quiet --exit-code &>/dev/null
-        git_dirty=$?
-        case $git_dirty in
-            0) ;;
-            1) echo "!";;
-            128) echo "-bare";;
-            *) ;;
-        esac
-    }
-
-    function _p_git_up     () {
+        if [ $? -eq 128 ]
+        then
+            echo -n "(bare)"
+        fi
         status="$(git status 2> /dev/null)"
         upstream="$(echo ${status} | grep 'Your branch is')"
         if [ "${upstream}x" != "x" ]
         then
             # we appear to have an origin
-            git_uptodate=$(echo "${upstream}" | grep "up-to-date" -q ; echo $?)
-            git_ahead=$(   echo "${upstream}" | grep "ahead of"   -q ; echo $?)
-            git_behind=$(  echo "${upstream}" | grep "behind"     -q ; echo $?)
-            git_untrack=$( echo "${status}"   | grep "ntrack"     -q ; echo $?)
-            if [ ${git_uptodate} -eq 0 ]
+            _p_git_uptodate=$(echo "${upstream}" | grep "up-to-date"      -q ; echo $?)
+            _p_git_ahead=$(   echo "${upstream}" | grep "ahead of"        -q ; echo $?)
+            _p_git_behind=$(  echo "${upstream}" | grep "behind"          -q ; echo $?)
+            _p_git_modified=$(echo "${status}"   | grep "not staged for"  -q ; echo $?)
+            _p_git_untrack=$( echo "${status}"   | grep "ntrack"          -q ; echo $?)
+            _p_git_staged=$( echo "${status}"    | grep "to be committed" -q ; echo $?)
+            if [ ${_p_git_modified} -eq 0 ]
             then
-                #echo "-"
-                echo -n ""
+                echo -n "!"
             fi
-            if [ ${git_ahead} -eq 0 ]
+            if [ ${_p_git_ahead} -eq 0 ]
             then
                 echo -n "^"
             fi
-            if [ ${git_behind} -eq 0 ]
+            if [ ${_p_git_behind} -eq 0 ]
             then
                 echo -n "v"
             fi
-            if [ ${git_untrack} -eq 0 ]
+            if [ ${_p_git_untrack} -eq 0 ]
             then
                 echo -n "+"
+            fi
+            if [ ${_p_git_staged} -eq 0 ]
+            then
+                echo -n "_"
             fi
         fi
     }
@@ -55,7 +54,7 @@ function _p_git () {
         branch_name=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/")
         if [ "${branch_name}x" != "x" ]
         then
-            echo -n "${branch_name}$(_p_git_dirty)$(_p_git_up)"
+            echo -n "${branch_name}$(_p_git_dirty)"
         fi
     }
 

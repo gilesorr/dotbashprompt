@@ -12,13 +12,20 @@ echo "Requires:     git"
 source _p_colours # get colours into the environment
 source directory/_p_git
 source directory/_p_colourslashpwd
+source directory/_p_xtermtitle
 source machine/_p_powerconnected
 source machine/_p_powerpercent
 popd > /dev/null
 
-export PROMPT_COMMAND="" # blank this if you're not using it
+function prompt_command () {
+    _p_xtermtitle # generates the _p_TITLEBAR variable
+}
 
-PS1="${_pc_black}-"
+export PROMPT_COMMAND=prompt_command
+
+PS1=""
+PS1="${PS1}${_p_TITLEBAR}"
+PS1="${PS1}${_pc_black}-"
 PS1="${PS1}${_pc_b_blue}-"
 PS1="${PS1}${_pc_b_purple}\$(_p_git)"
 PS1="${PS1}${_pc_b_blue}-"

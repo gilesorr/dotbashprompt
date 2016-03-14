@@ -3,9 +3,16 @@
 # The name comes from the hostname it was first used on.
 
 pushd ${PROMPTDIR} > /dev/null
+
+echo "Prompt Title: slim"
+echo "Includes:     PWD, git status, newline, battery, user@host"
+echo "For:          a dark background" # Mac? works on Linux
+echo "Requires:     git"
+
 source _p_colours # get colours into the environment
 source machine/_p_powerconnected
 source machine/_p_powerpercent
+source directory/_p_xtermtitle
 source directory/_p_git
 source directory/_p_tildepwd
 
@@ -14,10 +21,16 @@ source directory/_p_tildepwd
 source directory/_p_lsbytesum
 source directory/_p_lssize
 
-export PROMPT_COMMAND="" # blank this if you're not using it
+function prompt_command () {
+    _p_xtermtitle # generates the _p_TITLEBAR variable
+}
+
+export PROMPT_COMMAND=prompt_command
 popd > /dev/null
 
-PS1="${_pc_b_cyan}"
+PS1=""
+PS1="${PS1}${_p_TITLEBAR}"
+PS1="${PS1}${_pc_b_cyan}"
 PS1="${PS1}["
 PS1="${PS1}${_pc_b_yellow}"
 PS1="${PS1}\$(_p_tildepwd)"
