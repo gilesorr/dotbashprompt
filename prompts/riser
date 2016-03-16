@@ -1,0 +1,68 @@
+#!/bin/bash # helps vim identify the filetype
+#
+# "riser" - git status appears on the right ABOVE the prompt line (it will
+# occasionally overwrite data from your previous output).
+
+pushd "${PROMPTDIR}" > /dev/null
+
+echo "Prompt Title: riser"
+echo "Includes:     battery, user@hostname, colourized PWD, git status"
+echo "For:          dark background"
+echo "Requires:     git"
+# This is an edge-case for most people, but let them know.  This is because
+# the tput command stuffs the git status above the current line, and how
+# that's handled seems to vary - by OS or circumstance, I don't know.
+echo "Warning:      unpredictable behaviour when the prompt is at the top line of the terminal and you're in a git repo"
+
+# Get the components we need:
+source _p_colours # get colours into the environment
+source directory/_p_git
+source directory/_p_colourslashpwd
+source machine/_p_powerconnected
+source machine/_p_powerpercent
+popd > /dev/null
+
+function prompt_command () {
+    # This is needed to calculate prompt width to fill the full width of
+    # the terminal.
+    _p_pow="$(_p_powerconnected)$(_p_powerpercent)%"
+    # we'll use this var in PS1 to avoid calling it twice:
+    export _p_newgit="$(_p_git)"
+    # username @ hostname for length calculation:
+    local uath="${USER}@$(hostname -s)"
+    # pwidth = prompt width
+    # "+ 2" for the spaces between content
+    pwidth=$(( ${#_p_pow} + ${#uath} + ${#PWD} + 2 ))
+    fill=""
+    if [ ${pwidth} -gt ${COLUMNS} ]
+    then
+        # prompt is too wide, truncate the PWD
+        local  overage=$(( pwidth - COLUMNS ))
+        export _p_newPWDlen=$(( ${#PWD} - overage ))
+    else
+        filllength=$(( COLUMNS - pwidth ))
+        let i=0
+        while [ ${i} -lt ${filllength} ]
+        do
+            fill="${fill} "
+            i=$(( i + 1 ))
+        done
+    fi
+}
+export PROMPT_COMMAND="prompt_command"
+
+PS1=""
+PS1="${PS1}${_pc_b_yellow}\${_p_pow}"
+PS1="${PS1} "
+PS1="${PS1}${_pc_b_yellow}\u${_pc_b_red}@${_pc_b_yellow}\h"
+PS1="${PS1}${_pc_nocolour}\${fill}"
+PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour} \${_p_newPWDlen})"
+PS1="${PS1}\$(tput sc; tput cuu1 ; tput cub \${#_p_newgit})"
+PS1="${PS1}${_pc_b_green}\${_p_newgit}${_pc_nocolour}"
+PS1="${PS1}\$(tput rc)"
+PS1="${PS1}${_pc_nocolour}\n"
+PS1="${PS1}\$"
+PS1="${PS1}${_pc_nocolour} "
+
+export PS1
+

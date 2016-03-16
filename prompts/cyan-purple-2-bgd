@@ -1,0 +1,61 @@
+#!/bin/bash # helps vim identify the filetype
+
+pushd ${PROMPTDIR} > /dev/null
+
+echo "Prompt Title: cyan-purple-2-bgd"
+echo "Includes:     battery, PWD, git status, newline, user@host"
+echo "For:          a dark background" # Mac? works on Linux
+echo "Requires:     git"
+
+# directory is coloured differently if it's not writable
+# user is red if root, otherwise fits colour scheme
+
+# Get the components we need:
+source _p_colours # get colours into the environment
+source directory/_p_xtermtitle
+source directory/_p_git
+source directory/_p_tildepwd
+source machine/_p_powerconnected
+source machine/_p_powerpercent
+popd > /dev/null
+
+# set the user colour based on privileges:
+# this only needs to be run once per session, so not a part of
+# prompt_command.
+if [ ${UID} -eq 0 ]
+then
+    # Colour indicator when you're logged in as root:
+    export _p_usercolour=${_pc_b_red}
+else
+    export _p_usercolour=${_pc_b_purple}
+fi
+
+_p_xtermtitle # generates the _p_TITLEBAR variable
+
+function prompt_command () {
+    # set the directory colour based on access:
+    if [ -w "${PWD}" ]
+    then
+        export _p_dircolour="$(echo -e ${_pc_b_purple})"
+    else
+        export _p_dircolour="$(echo -e ${_pc_b_purple}${_pc_bg_gray})"
+    fi
+}
+
+export PROMPT_COMMAND=prompt_command
+
+PS1=""
+PS1="${PS1}${_p_TITLEBAR}"
+PS1="${PS1}${_pc_b_cyan}["
+PS1="${PS1}${_pc_purple}\$(_p_powerconnected)${_pc_b_purple}\$(_p_powerpercent)%"
+PS1="${PS1}${_pc_b_cyan}]["
+PS1="${PS1}\${_p_dircolour}\${PWD}"
+PS1="${PS1}${_pc_nocolour}${_pc_b_cyan}]"
+PS1="${PS1}${_pc_nocolour} \$(_p_git)"
+PS1="${PS1}\n"                                                # newline
+# _p_usercolour is only needed once per session (ie. not escaped):
+PS1="${PS1}${_p_usercolour}\u${_pc_b_cyan}@${_pc_b_purple}\h"
+PS1="${PS1}${_pc_b_gray}\$${_pc_nocolour} "
+
+export PS1
+

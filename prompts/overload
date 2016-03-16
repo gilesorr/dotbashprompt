@@ -6,6 +6,13 @@
 # Raspberry Pis.
 
 pushd ${PROMPTDIR} > /dev/null
+
+echo "Prompt Title: overload"
+echo "Includes:     git, load, file data, colourslash PWD, newline, battery, user@host"
+echo "For:          a dark background" # Mac? works on Linux
+echo "Requires:     git"
+echo "Warning:      very processor intensive: switch prompts if it's slow!"
+
 # Get the components we need:
 source _p_colours # get colours into the environment
 source directory/_p_git

@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+#   Filename: cursormove
+#   Created:  20160315
+#   Purpose:  demonstrate the use of "tput" to move the cursor and write
+#             text anywhere within the terminal.
+#
+#   Notes:    tput can be used to set colours (as demonstrated below), but
+#             you can also mix and match, using tput for moving the cursor
+#             and ANSI colour codes.  tput is an external command and
+#             significantly slower than a code: only use tput when
+#             necessary.
+
+# save the current cursor position:
+tput sc
+
+# calculate the midpoint of the screen by getting lines and columns:
+let midpointV=$(( $(tput lines)/2 ))
+let midpointH=$(( $(tput cols )/2 ))
+
+# go to the screen midpoint:
+tput cup ${midpointV} ${midpointH}
+
+# set a purple background:
+tput setab 5
+
+#set a gray foreground:
+tput setaf 7
+
+# output some text:
+echo " BASH "
+
+# reset colours to the defaults:
+tput sgr0
+
+# restore the cursor position to that saved by "tput sc":
+tput rc
+
