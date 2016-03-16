@@ -14,22 +14,27 @@ followed by `source ~/.bashprompt/promnow` and finally `promnow` which
 will give you basic usage information, including instructions on how to
 immediately change your prompt to one of those available in the repository
 (`promnow <prompt-name>`).  Please note that - for now - this probably
-won't work if it's not checked out to the **~/.bashprompt/** folder.
+won't work if it's not checked out to the **~/.bashprompt/** folder.  Tab
+completion is available on prompt names.
 
 If you want to continue to use a particular prompt, edit your **~/.bashrc**
 and add the following lines at the end:
 
 ```
 source ~/.bashprompt/promnow
-promnow <prompt-name> # replace with the name of a prompt you like
+promnow <prompt-name> > /dev/null # replace with the name of a prompt you like
 ```
+
+Sending the output to `/dev/null` squashes the prompt announcement, which
+is only really useful when you're interactively changing prompts.
 
 
 ## Known Issues
 
 I design prompts using a terminal with a black background.  This means the
-prompts commonly look lousy with a light or white background.  Design a
-better one and send me a pull request.
+prompts commonly look lousy with a light or white background.  This is
+being addressed, but slowly.  Design a better one and send me a pull
+request.
 
 If you've aliased any Unix utility used by the prompt functions (this
 includes but isn't limited to things like ``ls``, ``grep``, ``awk``, and
