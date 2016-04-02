@@ -7,7 +7,6 @@ export PROMPTDIR="${HOME}/.bashprompt/"
 complete -W "$(ls ${PROMPTDIR}/prompts)" promnow
 
 function promnow_help () {
-    unalias -a
     echo "promnow <PROMPTNAME>"
     if [ -n "${_p_NAME}" ]
     then
@@ -19,7 +18,6 @@ function promnow_help () {
 }
 
 function promnow () {
-    unalias -a
     if [ $# -eq 1 ]
     then
         promfullname="${PROMPTDIR}prompts/${1}"

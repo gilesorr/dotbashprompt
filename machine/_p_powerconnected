@@ -6,12 +6,15 @@ function _p_powerconnected () {
     if [ -e /sys ]
     then
         # On a Linux system:
-        case $(cat /sys/class/power_supply/BAT?/status) in
-            Full)        echo "" ;;
-            Discharging) echo "v";;
-            Charging)    echo "^";;
-            *)           echo "?";;
-        esac
+        if [ -d /sys/class/power_supply/BAT?/ ] # Check there's a battery
+        then
+            case $(cat /sys/class/power_supply/BAT?/status) in
+                Full)        echo "" ;;
+                Discharging) echo "v";;
+                Charging)    echo "^";;
+                *)           echo "?";;
+            esac
+        fi
     elif [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
     then
         # On a Mac:

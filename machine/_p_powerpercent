@@ -9,7 +9,10 @@ function _p_powerpercent () {
     if [ -e /sys ]
     then
         # On a Linux system:
-        cat /sys/class/power_supply/BAT?/capacity
+        if [ -d /sys/class/power_supply/BAT?/ ] # Check there's a battery
+        then
+            cat /sys/class/power_supply/BAT?/capacity
+        fi
     elif [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
     then
         # On a Mac:
