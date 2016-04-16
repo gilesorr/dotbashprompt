@@ -2,7 +2,7 @@
 #
 # Colourful bar of information above a simple prompt.
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: bar"
 echo "Includes:     battery, user@hostname, short PWD, git status"
@@ -29,20 +29,20 @@ function prompt_command () {
     local uath="${USER}@$(hostname -s)"
     # pwidth = prompt width
     # "+ 2" for the spaces between content
-    pwidth=$(( ${pwidth} + ${#_p_pow} + ${#uath} + ${#PWD} + ${#_p_newgit} + 2 ))
+    pwidth=$(( pwidth + ${#_p_pow} + ${#uath} + ${#PWD} + ${#_p_newgit} + 2 ))
     fill=""
     if [ ${pwidth} -gt ${COLUMNS} ]
     then
         # prompt is too wide, truncate the PWD
-        local  overage=$(( ${pwidth} - ${COLUMNS} ))
-        let _p_newPWDlen=$(( ${#PWD} - ${overage} ))
+        local  overage=$(( pwidth - COLUMNS ))
+        let _p_newPWDlen=$(( ${#PWD} - overage ))
     else
-        filllength=$(( ${COLUMNS} - ${pwidth} ))
+        filllength=$(( COLUMNS - pwidth ))
         let i=0
         while [ ${i} -lt ${filllength} ]
         do
             fill="${fill} "
-            i=$(( ${i} + 1 ))
+            i=$(( i + 1 ))
         done
     fi
 }

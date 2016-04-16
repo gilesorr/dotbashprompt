@@ -4,31 +4,32 @@
 # current directory.
 
 function _p_lsbytesum () {
-    unalias -a # clear user's local aliases
-
     let _p_scale=1      # number of digits after the decimal place
     let TotalBytes=0
 
-    for Bytes in $(ls -l | grep "^-" | awk '{ print $5 }')
+    for Bytes in $(command ls -l | command grep "^-" | command awk '{ print $5 }')
     do
-       let TotalBytes=$TotalBytes+$Bytes
+        let TotalBytes=$(( TotalBytes + Bytes ))
     done
 
     # The if...fi's give a more specific output in byte, kilobyte, megabyte,
-    # and gigabyte
+    # gigabyte, terabyte
 
-    if [ $TotalBytes -lt 1024 ]; then
-       TotalSize=$(echo -e "scale=${_p_scale} \n$TotalBytes \nquit" | bc)
-       suffix="B"
-    elif [ $TotalBytes -lt 1048576 ]; then
-       TotalSize=$(echo -e "scale=${_p_scale} \n$TotalBytes/1024 \nquit" | bc)
-       suffix="KiB"
-    elif [ $TotalBytes -lt 1073741824 ]; then
-       TotalSize=$(echo -e "scale=${_p_scale} \n$TotalBytes/1048576 \nquit" | bc)
-       suffix="MiB"
+    if [ ${TotalBytes} -lt 1024 ]; then
+        TotalSize="${TotalBytes}"
+        suffix="B"
+    elif [ ${TotalBytes} -lt 1048576 ]; then
+        TotalSize=$(echo -e "scale=${_p_scale} \n${TotalBytes}/1024 \nquit" | command bc)
+        suffix="KiB"
+    elif [ ${TotalBytes} -lt 1073741824 ]; then
+        TotalSize=$(echo -e "scale=${_p_scale} \n${TotalBytes}/1048576 \nquit" | command bc)
+        suffix="MiB"
+    elif [ ${TotalBytes} -lt 1099511627776 ]; then
+        TotalSize=$(echo -e "scale=${_p_scale} \n${TotalBytes}/1073741824 \nquit" | command bc)
+        suffix="GiB"
     else
-       TotalSize=$(echo -e "scale=${_p_scale} \n$TotalBytes/1073741824 \nquit" | bc)
-       suffix="GiB"
+        TotalSize=$(echo -e "scale=${_p_scale} \n${TotalBytes}/1099511627776 \nquit" | command bc)
+        suffix="TiB"
     fi
 
     echo -n "${TotalSize}${suffix}"

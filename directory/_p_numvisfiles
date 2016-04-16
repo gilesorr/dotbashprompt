@@ -4,6 +4,6 @@
 # Does NOT include directories.
 
 function _p_numvisfiles () {
-    ls -l | grep "^-" | wc -l | tr -d " "
+    command ls -l | command grep -c "^-" | command tr -d " "
 }
 

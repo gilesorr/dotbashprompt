@@ -1,4 +1,4 @@
-#!/bin/bash # helps vim identify the filetype
+#!/bin/bash
 #
 # Shortens the PWD to the length provided by the first parameter.  If no
 # value is provided, "20" is used.
@@ -10,15 +10,15 @@ function _p_shortpwd () {
     else
         let pwd_len=${1}
     fi
-    newPWD=$(pwd)
+    newPWD=$(builtin pwd)
     newPWD=${newPWD/#${HOME}/\~} # Replace home dir with ~
     if [ ${#newPWD} -gt ${pwd_len} ]
     then
         if [ "${newPWD:0:1}" = "~" ]
         then
-            newPWD="~..${newPWD:$((${#newPWD}-${pwd_len}))}"
+            newPWD="~..${newPWD:$(( ${#newPWD} - pwd_len ))}"
         else
-            newPWD="...${newPWD:$((${#newPWD}-${pwd_len}))}"
+            newPWD="...${newPWD:$(( ${#newPWD} - pwd_len ))}"
         fi
     fi
     echo -n "${newPWD}"

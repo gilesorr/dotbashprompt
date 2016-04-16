@@ -4,6 +4,6 @@
 # current directory.
 
 function _p_numalldirs () {
-    ls -A -l | grep "^d" | wc -l | tr -d " "
+    command ls -A -l | command grep -c "^d" | command tr -d " "
 }
 

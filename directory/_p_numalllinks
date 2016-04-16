@@ -4,6 +4,6 @@
 # directory.
 
 function _p_numalllinks () {
-    ls -A -l | grep "^l" | wc -l | tr -d " "
+    command ls -A -l | command grep -c "^l" | command tr -d " "
 }
 

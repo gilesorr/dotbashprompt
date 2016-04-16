@@ -1,6 +1,6 @@
 #!/bin/bash
 # Okay, it's kind of useless.
 function _p_pwd () {
-    pwd
+    builtin pwd
 }
 

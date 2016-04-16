@@ -11,22 +11,22 @@
 function _p_git () {
 
     function _p_git_dirty () {
-        git diff --no-ext-diff --quiet --exit-code &>/dev/null
+        command git diff --no-ext-diff --quiet --exit-code &>/dev/null
         if [ $? -eq 128 ]
         then
             echo -n "(bare)"
         fi
-        status="$(git status 2> /dev/null)"
-        upstream="$(echo ${status} | grep 'Your branch is')"
+        status="$(command git status 2> /dev/null)"
+        upstream="$(echo ${status} | command grep 'Your branch is')"
         if [ "${upstream}x" != "x" ]
         then
             # we appear to have an origin
-            _p_git_uptodate=$(echo "${upstream}" | grep "up-to-date"      -q ; echo $?)
-            _p_git_ahead=$(   echo "${upstream}" | grep "ahead of"        -q ; echo $?)
-            _p_git_behind=$(  echo "${upstream}" | grep "behind"          -q ; echo $?)
-            _p_git_modified=$(echo "${status}"   | grep "not staged for"  -q ; echo $?)
-            _p_git_untrack=$( echo "${status}"   | grep "ntrack"          -q ; echo $?)
-            _p_git_staged=$( echo "${status}"    | grep "to be committed" -q ; echo $?)
+            _p_git_uptodate=$(echo "${upstream}" | command grep "up-to-date"      -q ; echo $?)
+            _p_git_ahead=$(   echo "${upstream}" | command grep "ahead of"        -q ; echo $?)
+            _p_git_behind=$(  echo "${upstream}" | command grep "behind"          -q ; echo $?)
+            _p_git_modified=$(echo "${status}"   | command grep "not staged for"  -q ; echo $?)
+            _p_git_untrack=$( echo "${status}"   | command grep "ntrack"          -q ; echo $?)
+            _p_git_staged=$( echo "${status}"    | command grep "to be committed" -q ; echo $?)
             if [ ${_p_git_modified} -eq 0 ]
             then
                 echo -n "!"
@@ -51,7 +51,7 @@ function _p_git () {
     }
 
     function _p_git_branch () {
-        branch_name=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/")
+        branch_name=$(command git branch --no-color 2> /dev/null | command sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/")
         if [ "${branch_name}x" != "x" ]
         then
             echo -n "${branch_name}$(_p_git_dirty)"

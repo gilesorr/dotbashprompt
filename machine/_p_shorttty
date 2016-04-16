@@ -4,6 +4,6 @@
 # prompt, and in X "/dev/pts/4" becomes "4" in the prompt.
 
 function _p_shorttty () {
-    basename $(tty)
+    command basename "$(command tty)"
 }
 

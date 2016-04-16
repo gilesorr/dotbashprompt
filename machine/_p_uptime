@@ -5,7 +5,7 @@
 
 # an auxiliary function needed by this one that abstracts away the OS
 # differences:
-source ${PROMPTDIR}/machine/_p_upseconds
+source "${PROMPTDIR}/machine/_p_upseconds"
 
 function _p_uptime () {
     # http://askubuntu.com/questions/335592/how-to-display-time-elapsed-since-last-system-boot-using-uptime

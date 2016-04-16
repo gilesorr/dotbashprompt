@@ -4,7 +4,7 @@
 # in kb.
 
 function _p_lssize () {
-    lskb=$(ls -l | grep "^total " | awk '{print $2}')
+    lskb=$(command ls -l | command grep "^total " | command awk '{print $2}')
     echo -n "${lskb}kb"
 }
 

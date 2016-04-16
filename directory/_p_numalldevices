@@ -3,6 +3,6 @@
 # that's not exactly common) in the current directory.
 
 function _p_numalldevices () {
-    ls -A -l | grep "^[bc]" | wc -l | tr -d " "
+    command ls -A -l | command grep -c "^[bc]" | command tr -d " "
 }
 

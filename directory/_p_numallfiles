@@ -4,6 +4,6 @@
 # NOT include directories.
 
 function _p_numallfiles () {
-    ls -Al | grep "^-" | wc -l | tr -d " "
+    command ls -Al | command grep -c "^-" | command tr -d " "
 }
 

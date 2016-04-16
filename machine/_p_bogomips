@@ -6,6 +6,6 @@
 # it - just run it once.
 
 function _p_bogomips () {
-    cat /proc/cpuinfo | grep bogo | head -n 1 | awk '{print $NF}' | awk -F "." '{print $1}'
+    command grep bogo /proc/cpuinfo | command head -n 1 | command awk '{print $NF}' | command awk -F "." '{print $1}'
 }
 

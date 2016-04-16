@@ -2,7 +2,7 @@
 #
 # The name comes from the hostname it was first used on.
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: slim"
 echo "Includes:     PWD, git status, newline, battery, user@host"

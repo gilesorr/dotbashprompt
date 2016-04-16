@@ -7,6 +7,6 @@ function _p_load () {
     # If you wanted:
     # - the  5 minute load: $(NF-1)
     # - the 15 minute load: $NF
-    uptime | awk '{print $(NF-2)}' | tr -d ","
+    command uptime | command awk '{print $(NF-2)}' | command tr -d ","
 }
 

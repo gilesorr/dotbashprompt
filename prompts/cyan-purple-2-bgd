@@ -1,6 +1,6 @@
 #!/bin/bash # helps vim identify the filetype
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: cyan-purple-2-bgd"
 echo "Includes:     battery, PWD, git status, newline, user@host"
@@ -36,9 +36,9 @@ function prompt_command () {
     # set the directory colour based on access:
     if [ -w "${PWD}" ]
     then
-        export _p_dircolour="$(echo -e ${_pc_b_purple})"
+        export _p_dircolour="$(echo -e "${_pc_b_purple}")"
     else
-        export _p_dircolour="$(echo -e ${_pc_b_purple}${_pc_bg_gray})"
+        export _p_dircolour="$(echo -e "${_pc_b_purple}${_pc_bg_gray}")"
     fi
 }
 
@@ -49,7 +49,7 @@ PS1="${PS1}${_p_TITLEBAR}"
 PS1="${PS1}${_pc_b_cyan}["
 PS1="${PS1}${_pc_purple}\$(_p_powerconnected)${_pc_b_purple}\$(_p_powerpercent)%"
 PS1="${PS1}${_pc_b_cyan}]["
-PS1="${PS1}\${_p_dircolour}\${PWD}"
+PS1="${PS1}\${_p_dircolour}\$(_p_tildepwd)"
 PS1="${PS1}${_pc_nocolour}${_pc_b_cyan}]"
 PS1="${PS1}${_pc_nocolour} \$(_p_git)"
 PS1="${PS1}\n"                                                # newline

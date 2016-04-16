@@ -9,7 +9,7 @@ function _p_screen () {
     if [ $(which screen > /dev/null ; echo $?) -eq 0 ]
     then # screen is installed
         # Thanks to Jasper Boot for this one:
-        _p_detached_screens=$(screen -ls | grep -c Detach )
+        export _p_detached_screens=$(screen -ls | command grep -c Detach )
         if [ "${TERM}" = "screen" ]
         then
             echo -n "scr"

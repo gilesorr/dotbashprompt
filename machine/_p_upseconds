@@ -12,14 +12,14 @@ function _p_upseconds () {
         # /proc/uptime provides two numbers, the first is how long the
         # system has been up in seconds, the second is how much of that
         # time the machine has spent idle in seconds.
-        let upSeconds="$(awk -F "." '{print $1}' /proc/uptime)"
-    elif [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
+        let upSeconds="$(command awk -F "." '{print $1}' /proc/uptime)"
+    elif [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
     then
         # On a Mac.
         # "sysctl kern.boottime" shows the time of the last boot in seconds
         # since the millennia, so we need to work out the number of seconds
         # since then.
-        let upSeconds=$(( $(date +%s) - $(sysctl kern.boottime | awk '{print $5}' | tr -d ",") ))
+        let upSeconds=$(( $(command date +%s) - $(sysctl kern.boottime | command awk '{print $5}' | command tr -d ",") ))
     fi
     echo -n "${upSeconds}"
 }
