@@ -8,25 +8,52 @@
 #
 # Examples:
 #   PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour})"
-#   PS1="${PS1}\$(_p_colourslashpwd \${_pc_bg_white}\${_pc_b_red} \${_pc_nocolour} \${_pc_nocolour}) 15"
+#   PS1="${PS1}\$(_p_colourslashpwd \${_pc_bg_white}\${_pc_b_red} \${_pc_nocolour} \${_pc_nocolour} 15)"
 #
 #   Ugly, but works.  You can mix in bg colours too.
+#
+#
+#   Used to use: 'echo -ne "${PWD//\//${3}${1}/${3}${2}}${3}"' ... doesn't
+#   require looping, but colour values close with \002.  If the next
+#   character is a number (ie. a directory name like "2016" or "2test"), it
+#   gets absorbed into the \NNNN (bash man page says only one to three
+#   digits, but it lies).  Tried a variety of work-arounds, none fixed the
+#   problem - so back to looping.
+
+function _p_colourslashpwd_internal () {
+    # accepts and prints directory with coloured slashes AFTER
+    # lead-in substitution
+
+    for dir in $(echo "${_p_newpwd}" | sed -e 's@/@ @g')
+    do
+        echo -en "${1}"
+        echo -en "/"
+        echo -en "${3}"
+        echo -en "${2}"
+        echo -en "${dir}"
+        echo -en "${3}"
+    done
+    echo -en "${3}"
+}
 
 function _p_colourslashpwd () {
     # indication that a truncation has occurred:
     local trunc_symbol="..."
     if [ $# -eq 3 ]
     then
-        echo -ne "${PWD//\//${3}${1}/${3}${2}}${3}"
+        _p_newpwd="${PWD}"
+        _p_colourslashpwd_internal "${1}" "${2}" "${3}"
     elif [ $# -eq 4 ]
     then
         if [ ${#PWD} -gt ${4} ]
         then
-            local pwdoffset=$(( ${#PWD} - ${4} + 3 ))
-            newPWD="${trunc_symbol}${PWD:${pwdoffset}}"
-            echo -ne "${2}${newPWD//\//${3}${1}/${3}${2}}${3}"
+            local pwdoffset=$(( ${#PWD} - ${4} + ${#trunc_symbol} ))
+            echo -en "${trunc_symbol}"
+            _p_newpwd="${PWD:${pwdoffset}}"
+            _p_colourslashpwd_internal "${1}" "${2}" "${3}" "${4}"
         else
-            echo -ne "${PWD//\//${3}${1}/${3}${2}}${3}"
+            _p_newpwd="${PWD}"
+            _p_colourslashpwd_internal "${1}" "${2}" "${3}"
         fi
     else
         echo -n "_p_colourslashpwd $# != 3/4 params!"

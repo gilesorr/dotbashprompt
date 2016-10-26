@@ -16,7 +16,7 @@
 # Colours of the form "\[\e[1;37m\]" work fine in many contexts, and I've
 # used them for years.  But if you attempt to pass them as parameters ... I
 # haven't found any context or escape sequence to make that work.  Instead,
-# we use '\001[\e[1;37m\002'.
+# we use '\001[\033[1;37m\002'.
 
 export _pc_nocolour='\001\033[0m\002'
 export _pc_nocolor='\001\033[0m\002' # for our American friends
@@ -54,8 +54,7 @@ export _c_b_yellow='\033[1;33m'
 export _c_bg_yellow='\033[43m'
 
 export _pc_blue='\001\033[34m\002'
-#export _pc_b_blue='\001\033[1;34m\002'
-export _pc_b_blue='\001\e[1;34m\002'
+export _pc_b_blue='\001\033[1;34m\002'
 export _pc_bg_blue='\001\033[44m\002'
 export _c_blue='\033[34m'
 export _c_b_blue='\033[1;34m'

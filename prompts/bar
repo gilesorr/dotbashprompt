@@ -34,7 +34,10 @@ function prompt_command () {
     if [ ${pwidth} -gt ${COLUMNS} ]
     then
         # prompt is too wide, truncate the PWD
-        local  overage=$(( pwidth - COLUMNS ))
+        # add two to compensate for added truncation indicator on prompt
+        # ... we should have a variable length based on the verbiage used,
+        # but the current setup doesn't allow that)
+        local  overage=$(( pwidth - COLUMNS + 1 ))
         let _p_newPWDlen=$(( ${#PWD} - overage ))
     else
         filllength=$(( COLUMNS - pwidth ))
