@@ -14,9 +14,10 @@ function _p_powerpercent () {
             cat /sys/class/power_supply/BAT?/capacity
         fi
     elif [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
-    then
-        # On a Mac:
-        pmset -g batt | command tail -1 | command awk '{print $2}' | command tr -d ";" | command tr -d "%"
+    then # On a Mac:
+        # This matches on Sierra, should also match on El Capitan:
+        tmp=$(command pmset -g batt | command tail -1 | command sed 's/.*[[:space:]]\([1-9][0-9]*\)%;.*/\1/')
+        echo -n "${tmp}"
     else
         # On an unknown system:
         echo -n "???"
