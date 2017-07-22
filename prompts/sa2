@@ -1,8 +1,9 @@
-#!/bin/bash # helps vim identify the filetype
+#!/bin/bash
+# helps vim identify the filetype
 #
 # Attempting to re-implement "sa" with linedraw characters
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 # Get the components we need:
 source _p_colours   # get colours into the environment
 source _p_linechars # get linedraw characters into the environment
