@@ -24,16 +24,31 @@ function _p_colourslashpwd_internal () {
     # accepts and prints directory with coloured slashes AFTER
     # lead-in substitution
 
-    for dir in $(echo "${_p_newpwd}" | sed -e 's@/@ @g')
+    # default IFS is " " (a single space) which causes major problems when
+    # there are spaces in filenames, so replace it with something ...
+    # improbable.
+    ORIGIFS=${IFS}
+    IFS=$(echo -en "\n\b")
+    # replace all slashes with the new IFS:
+    for dir in $(echo -n "${_p_newpwd//\//${IFS}}")
     do
-        echo -en "${1}"
-        echo -en "/"
-        echo -en "${3}"
-        echo -en "${2}"
-        echo -en "${dir}"
-        echo -en "${3}"
+        if [ "${dir}x" == "x" ]
+        then
+            # this is necessitated by the leading slash, which is
+            # substituted and creates an empty leader.  It was this or
+            # strip the leading slash and neither is pretty.
+            echo -en ""
+        else
+            echo -en "${1}"
+            echo -en "/"
+            echo -en "${3}"
+            echo -en "${2}"
+            echo -en "${dir}"
+            echo -en "${3}"
+        fi
     done
     echo -en "${3}"
+    IFS=$ORIGIFS
 }
 
 function _p_colourslashpwd () {
