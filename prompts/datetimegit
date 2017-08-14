@@ -5,7 +5,7 @@ pushd ${PROMPTDIR} > /dev/null
 
 echo "Prompt Title: datetimegit"
 echo "Includes:     date, colourslash pwd, git, uptime, user@host"
-echo "For:          a light background"
+echo "For:          a dark background"
 echo "Requires:     git"
 
 source _p_colours # get colours into the environment

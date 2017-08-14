@@ -4,7 +4,7 @@ An easily extensible collection of Bash Prompts.
 **Dot Bashprompt** is a set of Bash functions that allows you to easily
 create complex Bash Prompts, and change them on the fly.  If you have the
 inclination, it's also intended to be extensible and easy to build your own
-prompt.
+prompt.  It also comes with a variety of ready-to-use prompts.
 
 
 ## Getting Started
@@ -49,6 +49,11 @@ limited choices, you go with what's available.  Unfortunately, on the Mac,
 "bold black" is represented as ... black.  Making prompts that use this
 colour appear somewhat broken.  No fix yet.
 
+Running ``promnow <promptname>`` uses ``pushd`` and ``popd`` to get to and
+from the directory where the prompts are stored.  This will mess with your
+``cd -`` command.  Unfortunately, commands to change the prompt have to be
+run in the current shell so this is hard to avoid.
+
 
 ## Acknowledgements
 
@@ -57,6 +62,15 @@ setup](https://gitlab.com/aksrikanth/settings/tree/master/config_sources)
 that started me creating this project.  If you're interested in
 constructing your own prompt(s), looking at what he's done will give you a
 somewhat different perspective on the same subject.
+
+
+## Other Projects
+
+- https://powerline.readthedocs.io/en/master/ - Powerline is best known as
+  a plugin for Vim, but can also be used for Bash (and ZSH and Fish and
+  ...) prompts.
+- https://github.com/magicmonty/bash-git-prompt
+- http://bashish.sourceforge.net/ (last updated 2006?)
 
 
 ## Bibliography
