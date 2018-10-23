@@ -6,9 +6,9 @@
 function _p_shortpwd () {
     if [ "${1}x" == "x" ]
     then
-        let pwd_len=20
+        (( pwd_len = 20 ))
     else
-        let pwd_len=${1}
+        (( pwd_len = ${1} ))
     fi
     newPWD=$(builtin pwd)
     newPWD=${newPWD/#${HOME}/\~} # Replace home dir with ~

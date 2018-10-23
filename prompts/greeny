@@ -2,7 +2,7 @@
 #
 # Named for its dominant colour.  No git support.
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: greeny"
 echo "Includes:     user@host, history, tty, PWD, newline, time"

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Returns 0 if one of the parent processes of the current shell is
+# "script", otherwise returns 1.  (Helps you determine if you're in a
+# typescript session.)
+
+function findParent {
+    process_name="$(ps -p "${1}" -o comm=)"
+    if [ "$process_name" == "script" ]
+    then
+        return 0
+    fi
+    # Use "ps" to retrieve the parent PID:
+    parentPid=$(ps -p "${1}" -o ppid= )
+    # If we're not back to init (process 1), dig deeper:
+    if (( parentPid > 1 ))
+    then
+        findParent ${parentPid}
+    else
+        return 1
+    fi
+}
+
+findParent "$$"
+

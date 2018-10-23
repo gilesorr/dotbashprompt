@@ -4,8 +4,11 @@
 #
 # It's probably quite resource-hungry and a bad idea on things like
 # Raspberry Pis.
+#
+# 2018-05-05: stat fails (missing operand) in a directory where there are
+# no real files - ie. /dev/ where it's all devices and links.
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: overload"
 echo "Includes:     git, load, file data, colourslash PWD, newline, battery, user@host"
@@ -27,7 +30,7 @@ source directory/_p_numhiddendirs
 source directory/_p_numalllinks
 source directory/_p_numalldevices
 source directory/_p_tildepwd
-source directory/_p_lsbytesum
+source directory/_p_statbytesum
 source directory/_p_xtermtitle
 popd > /dev/null
 
@@ -63,74 +66,30 @@ else
     _p_link_colour="\[\033[1;36m\]"
 fi
 
-function prompt_command () {
-    #################################################################
-    #                         Files                                 #
-    #################################################################
-    let tmp1=$(_p_numvisfiles)
-    let tmp2=$(_p_numhiddenfiles)
-    if [ ${tmp1} -gt 0 ] && [ ${tmp2} -gt 0 ]
-    then
-        _p_files="${tmp1}.${tmp2} "
-    fi
-    if [ ${tmp1} -gt 0 ] && [ ${tmp2} -eq 0 ]
-    then
-        _p_files="${tmp1} "
-    fi
-    if [ ${tmp1} -eq 0 ] && [ ${tmp2} -gt 0 ]
-    then
-        _p_files=".${tmp2} "
-    fi
-    if [ ${tmp1} -eq 0 ] && [ ${tmp2} -eq 0 ]
-    then
-        _p_files=""
-    fi
+unset prompt_command
 
-    #################################################################
-    #                     Directories                               #
-    #################################################################
-    let tmp1=$(_p_numvisdirs)
-    let tmp2=$(_p_numhiddendirs)
-    if [ ${tmp1} -gt 0 ] && [ ${tmp2} -gt 0 ]
+function _p_showobj () {
+    # takes two params (whole numbers, no negatives), outputs "x.y":
+    #   - initially this was number of visible and hidden files
+    #   - x and y value are only echoed if they're non-zero
+    #   - the dot is only echoed if there are hidden values
+    #   - a trailing space is echoed if either is non-zero
+    #
+    _p_vis=${1}
+    _p_hid=${2}
+    if [ ${_p_vis} -gt 0 ]
     then
-        _p_dirs="${tmp1}.${tmp2} "
+        echo -n "${_p_vis}"
     fi
-    if [ ${tmp1} -gt 0 ] && [ ${tmp2} -eq 0 ]
+    if [ ${_p_hid} -gt 0 ]
     then
-        _p_dirs="${tmp1} "
+        echo -n ".${_p_hid}"
     fi
-    if [ ${tmp1} -eq 0 ] && [ ${tmp2} -gt 0 ]
+    if [ $(( _p_vis + _p_hid )) -gt 0 ]
     then
-        _p_dirs=".${tmp2} "
-    fi
-    if [ ${tmp1} -eq 0 ] && [ ${tmp2} -eq 0 ]
-    then
-        _p_dirs=""
-    fi
-
-    #################################################################
-    #                            Links                              #
-    #################################################################
-    let tmp1=$(_p_numalllinks)
-    if [ ${tmp1} -gt 0 ]
-    then
-        _p_links="${tmp1} "
-    else
-        _p_links=""
-    fi
-
-    #################################################################
-    #                            Devices                            #
-    #################################################################
-    let tmp1=$(_p_numalldevices)
-    if [ ${tmp1} -gt 0 ]
-    then
-        _p_devices="${tmp1} "
-    else
-        _p_devices=""
+        echo -n " "
     fi
 }
-export PROMPT_COMMAND=prompt_command
 
 PS1="${_p_TITLEBAR}${_pc_b_gray}-"
 PS1="${PS1}${_pc_b_blue}-"
@@ -146,11 +105,11 @@ PS1="${PS1}${_pc_b_blue})-"
 PS1="${PS1}${_pc_b_gray}-"
 # Files:
 PS1="${PS1}| "
-PS1="${PS1}${_pc_b_gray}\${_p_files}"
-PS1="${PS1}${_pc_b_blue}\${_p_dirs}"
-PS1="${PS1}${_p_link_colour}\${_p_links}"
-PS1="${PS1}${_p_device_colour}\${_p_devices}${_pc_nocolour}"
-PS1="${PS1}\$(_p_lsbytesum) "
+PS1="${PS1}${_pc_b_gray}\$(_p_showobj \$(_p_numvisfiles) \$(_p_numhiddenfiles) )"
+PS1="${PS1}${_pc_b_blue}\$(_p_showobj \$(_p_numvisdirs) \$(_p_numhiddendirs) )"
+PS1="${PS1}${_p_link_colour}\$(_p_showobj \$(_p_numalllinks) 0 )"
+PS1="${PS1}${_p_device_colour}\$(_p_showobj \$(_p_numalldevices) 0 )${_pc_nocolour}"
+PS1="${PS1}\$(_p_statbytesum) "
 PS1="${PS1}${_pc_b_gray}|"
 #####################################################################
 

@@ -4,7 +4,7 @@
 # much content is in the prompt.  Adjust "minRemainingWidth" variable to
 # change the behaviour.
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: onetwo"
 echo "Includes:     pwd, git, user@host"
@@ -21,7 +21,10 @@ minRemainingWidth=50
 
 prompt_command () {
     p_displayGit="$(_p_git)"
-    p_dir="${PWD/${HOME}/\~}"
+    _p_tilde="~"
+    # on Linux/Bash4 we need "\~", on Mac/Bash3 we need "~" in this
+    # substitution, so we get around it by making it a variable ...:
+    _p_dir="${PWD/${HOME}/${_p_tilde}}"
     _p_xtermtitle # generates the _p_TITLEBAR variable
 }
 
@@ -30,25 +33,25 @@ PROMPT_COMMAND=prompt_command
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"
 PS1="${PS1}\$(
-remainingWidth=\$(( COLUMNS - \${#p_dir} - \${#p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
+remainingWidth=\$(( COLUMNS - \${#_p_dir} - \${#p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
 
 if [ \${remainingWidth} -le ${minRemainingWidth} ] ;
 then
-    fillWidth=\$(( COLUMNS - \${#p_dir} - \${#p_displayGit} ))
+    fillWidth=\$(( COLUMNS - \${#_p_dir} - \${#p_displayGit} ))
     fill=\"\";
     for (( i=0 ; i<\${fillWidth} ; i=i+1))
     do
         fill=\"\${fill} \"
     done
 
-    echo -en \"\${p_dir}\"
+    echo -en \"\${_p_dir}\"
     echo -en \"\${fill}\"
     echo -en \"${_pc_b_green}\${p_displayGit}${_pc_nocolour}\"
     echo -en \"\n\"
     echo -en \"\u${_pc_b_yellow}@${_pc_nocolour}\h\"
     echo -e  \"${_pc_b_yellow}\$${_pc_nocolour} \";
 else
-    echo -en \"\${p_dir}\"
+    echo -en \"\${_p_dir}\"
     if [ \"\${p_displayGit}x\" != \"x\" ]
     then
         echo -en \"${_pc_b_gray}|\"

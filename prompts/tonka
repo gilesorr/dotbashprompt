@@ -2,7 +2,13 @@
 #
 # Named for its bright colours.
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
+
+echo "Prompt Title: tonka"
+echo "Includes:     user@host, history #, time, date, newline, PWD"
+echo "For:          a dark background"
+echo "Requires:     git"
+
 # Get the components we need:
 source _p_colours # get colours into the environment
 source directory/_p_tildepwd

@@ -1,18 +1,21 @@
 #!/bin/bash
 # Indicates whether or not you're in a screen session.
 #
-# Still considering how to present the information: if you're in screen or
-# not is easy, but what to do with the detached screens count?  For the
-# moment provide it as a count available for the user to use.
+# screen sets its own env variable (SCREEN), which is easy to detect.
+# Unfortunately, tmux sets this too - thus the double detection system
+# below.
 
 function _p_screen () {
     if [ $(which screen > /dev/null ; echo $?) -eq 0 ]
     then # screen is installed
         # Thanks to Jasper Boot for this one:
-        export _p_detached_screens=$(screen -ls | command grep -c Detach )
-        if [ "${TERM}" = "screen" ]
+        _p_detached_screens=$(command screen -ls | command grep -c Detach )
+        export _p_detached_screens
+        if [[ "${TERM}" =~ "screen" ]] && [[ "${TMUX}x" =~ "x" ]]
         then
-            echo -n "scr"
+            export _p_in_screen=true
+        else
+            export _p_in_screen=false
         fi
     fi
 }

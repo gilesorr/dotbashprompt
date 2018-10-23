@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+# Prints the thread count and the one and five minute loads.
+#
+# SUGGESTION: colourize the load based on "is it greater than some multiple
+# of the core/thread count"
+#     below 0.75 no colour
+#     above 0.75 yellow
+#     above 1.5  red
+#     colour the l1 and l5 values separately.
+
+# NOTES on getting the thread count
+# 'lscpu' is probably the source, but is deceptive:
+#
+#       CPU(s):              4
+#       Thread(s) per core:  2
+#       Core(s) per socket:  2
+#       Socket(s):           1
+#
+# According to Intel, this is a 2 core, 4 threads (total) CPU.  I'll
+# have to test this odd counting on some other machines - but at a
+# first approximation it's looking like we want the number on the
+# "CPU(s)" line as the thread count.  (Incorporated into 'promnow'.)
+#
+# var is _p_numthreads
+
+function _p_threadload () {
+    # Get the loads:
+    # (on Linux, commas between load values, on Mac just space separation)
+    # shellcheck disable=SC2034  # yes, l15 is assigned and not used ...
+    read -r l1 l5 l15 < <(uptime | awk '{ print $(NF-2), $(NF-1), $NF }' | tr -d ',')
+    # Display:
+    # shellcheck disable=SC2154  # yes, _p_numthreads is referenced but not assigned
+    echo -n "${_p_numthreads}:${l1},${l5}"
+}
+

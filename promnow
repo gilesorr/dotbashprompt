@@ -7,7 +7,9 @@ export PROMPTDIR="${HOME}/.bashprompt"
 # run the following command again.
 complete -W "$(ls "${PROMPTDIR}/prompts")" promnow
 
-function promnow_help () {
+# as this isn't called directly by the user, give it a name that won't
+# clutter the user's name space (as much - originally "promnow_help").
+function _promnow_help () {
     echo "promnow <PROMPTNAME>"
     if [ -n "${_p_NAME}" ]
     then
@@ -18,24 +20,66 @@ function promnow_help () {
     ls "${PROMPTDIR}/prompts/"
 }
 
+function _promnow_setup () {
+    # set _p_os to string "Darwin" or "Linux"
+    if [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
+    then
+        export _p_os="Darwin"
+        # Battery(s):
+        if command ioreg -l | command grep Capacity >/dev/null
+        then
+            export _p_has_battery=true
+        else
+            export _p_has_battery=false
+        fi
+        # Threads:
+        # this is LOGICAL cores, ie. threads:
+        _p_numthreads=$(sysctl -n hw.ncpu)
+        export _p_numthreads
+    elif [ "$(command uname -a | command grep Linux > /dev/null ; echo $?)" == "0" ]
+    then
+        export _p_os="Linux"
+        # Battery(s):
+        num_batteries=$(command ls -1d /sys/class/power_supply/BAT* 2>/dev/null | command wc -l)
+        if (( num_batteries > 0 ))
+        then
+            export _p_has_battery=true
+        else
+            export _p_has_battery=false
+        fi
+        # Threads:
+        # the 'CPU(s)' line seems to be LOGICAL cores, ie. threads:
+        _p_numthreads=$(lscpu | grep '^CPU(s):' | awk '{ print $NF }')
+        export _p_numthreads
+    else
+        export _p_os="?"
+    fi
+}
+
+# set some env variables, then unclutter the environment (at least a little
+# bit):
+_promnow_setup ; unset _promnow_setup
+
 function promnow () {
     if [ $# -eq 1 ]
     then
         promfullname="${PROMPTDIR}/prompts/${1}"
         if [ -e "${promfullname}" ]
         then
+            # shellcheck disable=SC2164  # "cd could fail"
             pushd "${PROMPTDIR}" > /dev/null
-            prom_name="${1}"
             unset PROMPT_COMMAND
+            # shellcheck disable=SC1090  # "non-constant source"
             source "${promfullname}"
             export _p_NAME="${1}"
+            # shellcheck disable=SC2164  # "cd could fail"
             popd > /dev/null
         else
             echo "Couldn't find prompt '${1}'"
-            promnow_help
+            _promnow_help
         fi
     else
-        promnow_help
+        _promnow_help
     fi
 }
 

@@ -41,7 +41,7 @@ function prompt_command () {
         export _p_newPWDlen=$(( ${#PWD} - overage ))
     else
         filllength=$(( COLUMNS - pwidth ))
-        let i=0
+        (( i = 0 ))
         while [ ${i} -lt ${filllength} ]
         do
             fill="${fill} "

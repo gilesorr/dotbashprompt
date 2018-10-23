@@ -11,7 +11,9 @@ function _p_powerconnected () {
                 Full)        echo "" ;;
                 Discharging) echo "v";;
                 Charging)    echo "^";;
-                *)           echo "?";;
+                # silencing this: works better if the system doesn't have a
+                # battery:
+                *)           echo "";;
             esac
         fi
     elif [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
@@ -22,7 +24,9 @@ function _p_powerconnected () {
             discharging) echo "v";;
             charging)    echo "^";;
             charged)     echo "" ;;
-            *)           echo "?";;
+            # silencing this: works better if the system doesn't have a
+            # battery:
+            *)           echo "";;
         esac
     else
         # On an unknown system:

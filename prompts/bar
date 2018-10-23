@@ -38,10 +38,10 @@ function prompt_command () {
         # ... we should have a variable length based on the verbiage used,
         # but the current setup doesn't allow that)
         local  overage=$(( pwidth - COLUMNS + 1 ))
-        let _p_newPWDlen=$(( ${#PWD} - overage ))
+        (( _p_newPWDlen = ${#PWD} - overage ))
     else
         filllength=$(( COLUMNS - pwidth ))
-        let i=0
+        (( i = 0 ))
         while [ ${i} -lt ${filllength} ]
         do
             fill="${fill} "

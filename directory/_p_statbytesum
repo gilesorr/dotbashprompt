@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# https://stackoverflow.com/questions/450799/shell-command-to-sum-integers-one-per-line
+# recommends the printf in awk to compensate for bad behaviour of some
+# (older?) awks above the 2G mark (2^31).
+
+function _p_statbytesum () {
+    (( _p_scale=1 ))      # number of digits after the decimal place
+
+    if [ "${_p_os}" == "Darwin" ]
+    then
+        TotalBytes=$(command find . -maxdepth 1 -type f -print | command xargs stat -f "%z" | command awk '{s+=$1} END {printf "%.0f", s}')
+    else
+        # known to work for Linux, not tested on other OSes
+        # added sending stat errors to /dev/null to defeat a loud error
+        # when there are no files (dirs, links, devs don't count).
+        # I have NOT added the same to the Mac version, don't know if it's
+        # needed.
+        TotalBytes=$(command find . -maxdepth 1 -type f -print0 | command xargs -0 stat --format="%s" 2>/dev/null | command awk '{s+=$1} END {printf "%.0f", s}')
+    fi
+
+    # The if...fi's give a more specific output in byte, kilobyte, megabyte,
+    # gigabyte, terabyte
+
+    if (( TotalBytes < 1024 )); then
+        TotalSize="${TotalBytes}"
+        suffix="B"
+    elif (( TotalBytes < 1048576 )); then
+        TotalSize=$(echo -e "scale=${_p_scale} ; ${TotalBytes}/1024" | command bc)
+        suffix="KiB"
+    elif (( TotalBytes < 1073741824 )); then
+        TotalSize=$(echo -e "scale=${_p_scale} ; ${TotalBytes}/1048576" | command bc)
+        suffix="MiB"
+    elif (( TotalBytes < 1099511627776 )); then
+        TotalSize=$(echo -e "scale=${_p_scale} ; ${TotalBytes}/1073741824" | command bc)
+        suffix="GiB"
+    else
+        TotalSize=$(echo -e "scale=${_p_scale} ; ${TotalBytes}/1099511627776" | command bc)
+        suffix="TiB"
+    fi
+
+    echo -n "${TotalSize}${suffix}"
+}
+

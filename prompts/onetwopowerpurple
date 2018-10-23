@@ -3,10 +3,11 @@
 # A one- or two-line prompt.  The number of lines varies according to how
 # much content is in the prompt.  Adjust "minRemainingWidth" variable to
 # change the behaviour.  Same as "onetwo" prompt but adds power indicator.
+# Same as "onetwopower" but ... more purple.
 
 pushd "${PROMPTDIR}" > /dev/null
 
-echo "Prompt Title: onetwopower"
+echo "Prompt Title: onetwopowerpurple"
 echo "Includes:     pwd, git, power, user@host"
 echo "For:          a dark background"
 echo "Requires:     git"
@@ -48,24 +49,24 @@ then
         fill=\"\${fill} \"
     done
 
-    echo -en \"${_pc_b_gray}\${p_displayPower}${_pc_nocolour}\"
-    echo -en \"\${_p_dir}\"
+    echo -en \"${_pc_b_purple}\${p_displayPower}${_pc_nocolour}\"
+    echo -en \"${_pc_purple}\${_p_dir}${_pc_nocolour}\"
     echo -en \"\${fill}\"
-    echo -en \"${_pc_b_green}\${p_displayGit}${_pc_nocolour}\"
+    echo -en \"${_pc_b_gray}\${p_displayGit}${_pc_nocolour}\"
     echo -en \"\n\"
-    echo -en \"\u${_pc_b_yellow}@${_pc_nocolour}\h\"
-    echo -e  \"${_pc_b_yellow}\$${_pc_nocolour} \";
+    echo -en \"${_pc_b_yellow}\u${_pc_b_purple}@${_pc_b_yellow}\h\"
+    echo -e  \"${_pc_b_purple}\$${_pc_nocolour} \";
 else   # the one line version
-    echo -en \"${_pc_b_gray}\${p_displayPower}${_pc_nocolour}\"
-    echo -en \"\${_p_dir}\"
+    echo -en \"${_pc_b_purple}\${p_displayPower}${_pc_nocolour}\"
+    echo -en \"${_pc_purple}\${_p_dir}${_pc_nocolour}\"
     if [ \"\${p_displayGit}x\" != \"x\" ]
     then
-        echo -en \"${_pc_b_gray}|\"
-        echo -en \"${_pc_b_green}\${p_displayGit}\"
+        echo -en \"${_pc_b_purple}|\"
+        echo -en \"${_pc_b_gray}\${p_displayGit}\"
     fi
-    echo -en \"${_pc_b_gray}|\"
-    echo -en \"${_pc_nocolour}\u${_pc_b_yellow}@${_pc_nocolour}\h\"
-    echo -e  \"${_pc_b_yellow}\$${_pc_nocolour} \";
+    echo -en \"${_pc_b_purple}|\"
+    echo -en \"${_pc_b_yellow}\u${_pc_b_purple}@${_pc_b_yellow}\h\"
+    echo -e  \"${_pc_b_purple}\$${_pc_nocolour} \";
 fi
 )"
 

@@ -1,7 +1,7 @@
 #!/bin/bash # helps vim figure out the filetype
 #
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: datetimegit"
 echo "Includes:     date, colourslash pwd, git, uptime, user@host"

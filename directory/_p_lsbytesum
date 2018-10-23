@@ -2,14 +2,19 @@
 #
 # Uses the file-by-file output of "ls" to sum up the space used by the
 # current directory.
+#
+# 2017-08-17: DEPRECATED, prefer _p_statbytesum.  Broken on Mac (output
+# columns of ls are different than on Linux).  While this was fixable,
+# 'statbytesum' seemed simpler overall (it's also OS-dependent
+# unfortunately).
 
 function _p_lsbytesum () {
-    let _p_scale=1      # number of digits after the decimal place
-    let TotalBytes=0
+    (( _p_scale=1 ))      # number of digits after the decimal place
+    (( TotalBytes=0 ))
 
     for Bytes in $(command ls -l | command grep "^-" | command awk '{ print $5 }')
     do
-        let TotalBytes=$(( TotalBytes + Bytes ))
+        (( TotalBytes = TotalBytes + Bytes ))
     done
 
     # The if...fi's give a more specific output in byte, kilobyte, megabyte,
@@ -19,16 +24,16 @@ function _p_lsbytesum () {
         TotalSize="${TotalBytes}"
         suffix="B"
     elif [ ${TotalBytes} -lt 1048576 ]; then
-        TotalSize=$(echo -e "scale=${_p_scale} \n${TotalBytes}/1024 \nquit" | command bc)
+        TotalSize=$(echo -e "scale=${_p_scale} ; ${TotalBytes}/1024" | command bc)
         suffix="KiB"
     elif [ ${TotalBytes} -lt 1073741824 ]; then
-        TotalSize=$(echo -e "scale=${_p_scale} \n${TotalBytes}/1048576 \nquit" | command bc)
+        TotalSize=$(echo -e "scale=${_p_scale} ; ${TotalBytes}/1048576" | command bc)
         suffix="MiB"
     elif [ ${TotalBytes} -lt 1099511627776 ]; then
-        TotalSize=$(echo -e "scale=${_p_scale} \n${TotalBytes}/1073741824 \nquit" | command bc)
+        TotalSize=$(echo -e "scale=${_p_scale} ; ${TotalBytes}/1073741824" | command bc)
         suffix="GiB"
     else
-        TotalSize=$(echo -e "scale=${_p_scale} \n${TotalBytes}/1099511627776 \nquit" | command bc)
+        TotalSize=$(echo -e "scale=${_p_scale} ; ${TotalBytes}/1099511627776" | command bc)
         suffix="TiB"
     fi
 

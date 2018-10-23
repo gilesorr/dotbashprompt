@@ -4,7 +4,7 @@
 #
 # A clone of my MacBook Pro prompt.
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: gomacbp"
 echo "Includes:     git status, PWD, newline, battery, user@host"

@@ -1,7 +1,13 @@
 #!/bin/bash # helps vim identify the filetype
 #
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
+
+echo "Prompt Title: sa"
+echo "Includes:     git status, colour PWD, newline, battery, user@host"
+echo "For:          a dark background"
+echo "Requires:     git"
+
 # Get the components we need:
 source _p_colours # get colours into the environment
 source directory/_p_git

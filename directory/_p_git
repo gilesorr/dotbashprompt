@@ -17,33 +17,38 @@ function _p_git () {
             echo -n "(bare)"
         fi
         status="$(command git status 2> /dev/null)"
-        upstream="$(echo ${status} | command grep 'Your branch is')"
+        upstream="$(echo "${status}" | command grep 'Your branch')"
         if [ "${upstream}x" != "x" ]
         then
             # we appear to have an origin
             _p_git_uptodate=$(echo "${upstream}" | command grep "up-to-date"      -q ; echo $?)
             _p_git_ahead=$(   echo "${upstream}" | command grep "ahead of"        -q ; echo $?)
             _p_git_behind=$(  echo "${upstream}" | command grep "behind"          -q ; echo $?)
+            _p_git_diverged=$(echo "${upstream}" | command grep "diverged"        -q ; echo $?)
             _p_git_modified=$(echo "${status}"   | command grep "not staged for"  -q ; echo $?)
             _p_git_untrack=$( echo "${status}"   | command grep "ntrack"          -q ; echo $?)
             _p_git_staged=$( echo "${status}"    | command grep "to be committed" -q ; echo $?)
-            if [ ${_p_git_modified} -eq 0 ]
+            if (( _p_git_modified == 0 ))
             then
                 echo -n "!"
             fi
-            if [ ${_p_git_ahead} -eq 0 ]
+            if (( _p_git_ahead == 0 ))
             then
                 echo -n "^"
             fi
-            if [ ${_p_git_behind} -eq 0 ]
+            if (( _p_git_behind == 0 ))
             then
                 echo -n "v"
             fi
-            if [ ${_p_git_untrack} -eq 0 ]
+            if (( _p_git_diverged == 0 ))
+            then
+                echo -n "^v"
+            fi
+            if (( _p_git_untrack == 0 ))
             then
                 echo -n "+"
             fi
-            if [ ${_p_git_staged} -eq 0 ]
+            if (( _p_git_staged == 0 ))
             then
                 echo -n "_"
             fi

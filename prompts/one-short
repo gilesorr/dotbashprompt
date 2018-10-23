@@ -2,7 +2,7 @@
 #
 # Single line with cropped PWD (based on one-long-trad)
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: one-short"
 echo "Includes:     battery, user@host, PWD, git status"

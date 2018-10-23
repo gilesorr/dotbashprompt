@@ -15,8 +15,8 @@
 tput sc
 
 # calculate the midpoint of the screen by getting lines and columns:
-let midpointV=$(( $(tput lines)/2 ))
-let midpointH=$(( $(tput cols )/2 ))
+(( midpointV = $(tput lines)/2 ))
+(( midpointH = $(tput cols )/2 ))
 
 # go to the screen midpoint:
 tput cup ${midpointV} ${midpointH}

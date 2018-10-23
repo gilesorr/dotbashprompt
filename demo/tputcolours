@@ -1,0 +1,22 @@
+#!/bin/bash
+#  Based on the Bash Prompt HOWTO script I got from Daniel Crisman,
+#  jhubert @ github rewrote it with tput:
+#  https://gist.github.com/jhubert/5024807
+
+T='gYw'   # The test text
+
+for FGs in 0 1 2 3 4 5 6 7;
+    do FG=${FGs// /}
+    echo -en "     $FGs $(tput setaf $FG) $T "
+    for BG in 0 1 2 3 4 5 6 7;
+        do echo -en "$EINS $(tput setaf $FG)$(tput setab $BG) $T $(tput sgr0)";
+    done
+    echo;
+
+    echo -en "bold $FGs $(tput bold; tput setaf $FG) $T "
+    for BG in 0 1 2 3 4 5 6 7;
+        do echo -en "$EINS $(tput bold; tput setaf $FG)$(tput setab $BG) $T $(tput sgr0)";
+    done
+    echo;
+done
+

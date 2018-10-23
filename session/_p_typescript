@@ -1,0 +1,26 @@
+#!/bin/bash
+# Indicates whether or not you're in a script/typescript session.
+#
+# Happily, typescript sets its own environment variable (SCRIPT) that's
+# easy to detect.  Unfortunately, it doesn't appear to get set until after
+# the prompt is initially set, making this significantly less useful.
+#
+# Another possible solution is to find the "parentage" of the current
+# process to find out if one of the parent executables of this shell is
+# called "script": see the 'in_typescript' script in this directory.
+#
+# This has had almost zero testing (2017-08-23).
+
+function _p_typescript () {
+    if (( $(which script > /dev/null ; echo $?) == 0 ))
+    then # script is installed
+        if [[ "${SCRIPT}" =~ "script" ]]
+        then
+            export _p_in_typescript=true
+        else
+            export _p_in_typescript=false
+        fi
+    fi
+}
+
+

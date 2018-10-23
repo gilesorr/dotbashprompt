@@ -3,7 +3,7 @@
 # Single line with cropped PWD (based on one-long-trad)
 # for a light background.
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: one-short-bgl"
 echo "Includes:     battery, user@hostname, short PWD, git status"

@@ -4,7 +4,7 @@
 #
 # Single line, fairly traditional but long prompt.
 
-pushd ${PROMPTDIR} > /dev/null
+pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: one-long-trad"
 echo "Includes:     battery, user@host, PWD, git status"

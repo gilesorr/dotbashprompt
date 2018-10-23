@@ -2,11 +2,13 @@
 #
 # A one- or two-line prompt.  The number of lines varies according to how
 # much content is in the prompt.  Adjust "minRemainingWidth" variable to
-# change the behaviour.  Same as "onetwo" prompt but adds power indicator.
+# change the behaviour.  Same as "onetwopower" prompt but doesn't do width
+# fill - which significantly reduces the complexity and no longer requires
+# the maintainenance of two different versions.
 
 pushd "${PROMPTDIR}" > /dev/null
 
-echo "Prompt Title: onetwopower"
+echo "Prompt Title: onetwopowernofill"
 echo "Includes:     pwd, git, power, user@host"
 echo "For:          a dark background"
 echo "Requires:     git"
@@ -39,34 +41,22 @@ PS1="${PS1}${_p_TITLEBAR}"
 PS1="${PS1}\$(
 remainingWidth=\$(( COLUMNS - \${#p_displayPower} - \${#_p_dir} - \${#p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
 
+echo -en \"${_pc_b_gray}\${p_displayPower}${_pc_nocolour}\"
+echo -en \"\${_p_dir}\"
+if [ \"\${p_displayGit}x\" != \"x\" ]
+then
+    echo -en \"${_pc_b_gray}|\"
+    echo -en \"${_pc_b_green}\${p_displayGit}\"
+fi
+
 if [ \${remainingWidth} -le ${minRemainingWidth} ] ; # the two line version
 then
-    fillWidth=\$(( COLUMNS - \${#p_displayPower} - \${#_p_dir} - \${#p_displayGit} ))
-    fill=\"\";
-    for (( i=0 ; i<\${fillWidth} ; i=i+1))
-    do
-        fill=\"\${fill} \"
-    done
-
-    echo -en \"${_pc_b_gray}\${p_displayPower}${_pc_nocolour}\"
-    echo -en \"\${_p_dir}\"
-    echo -en \"\${fill}\"
-    echo -en \"${_pc_b_green}\${p_displayGit}${_pc_nocolour}\"
     echo -en \"\n\"
-    echo -en \"\u${_pc_b_yellow}@${_pc_nocolour}\h\"
-    echo -e  \"${_pc_b_yellow}\$${_pc_nocolour} \";
 else   # the one line version
-    echo -en \"${_pc_b_gray}\${p_displayPower}${_pc_nocolour}\"
-    echo -en \"\${_p_dir}\"
-    if [ \"\${p_displayGit}x\" != \"x\" ]
-    then
-        echo -en \"${_pc_b_gray}|\"
-        echo -en \"${_pc_b_green}\${p_displayGit}\"
-    fi
     echo -en \"${_pc_b_gray}|\"
-    echo -en \"${_pc_nocolour}\u${_pc_b_yellow}@${_pc_nocolour}\h\"
-    echo -e  \"${_pc_b_yellow}\$${_pc_nocolour} \";
 fi
+echo -en \"${_pc_nocolour}\u${_pc_b_yellow}@${_pc_nocolour}\h\"
+echo -e  \"${_pc_b_yellow}\$${_pc_nocolour} \";
 )"
 
 export PS1

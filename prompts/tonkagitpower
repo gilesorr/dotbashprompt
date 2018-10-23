@@ -4,8 +4,8 @@
 
 pushd "${PROMPTDIR}" > /dev/null
 
-echo "Prompt Title: tonka2"
-echo "Includes:     user@host, PWD, git status, newline, date"
+echo "Prompt Title: tonkagitpower"
+echo "Includes:     battery, user@host, PWD, git status, newline, date"
 echo "For:          a dark background"
 echo "Requires:     git"
 
@@ -13,6 +13,8 @@ echo "Requires:     git"
 source _p_colours # get colours into the environment
 source directory/_p_xtermtitle
 source directory/_p_git
+source machine/_p_powerconnected
+source machine/_p_powerpercent
 popd > /dev/null
 
 function prompt_command () {
@@ -22,7 +24,7 @@ function prompt_command () {
     then
         _p_git_output=""
     else
-        _p_git_output=" ${tmp} "
+        _p_git_output=" ${tmp}"
     fi
 }
 
@@ -41,7 +43,7 @@ PS1="${PS1}\n" # ------------------------------------------
 PS1="${PS1}${_pc_b_yellow}-${_pc_b_blue}-("
 PS1="${PS1}${_pc_b_yellow}\D{%H%M}"
 PS1="${PS1}${_pc_b_blue}:"
-PS1="${PS1}${_pc_b_yellow}\D{%a %m-%d}"
+PS1="${PS1}${_pc_b_green}\$(_p_powerconnected)\$(_p_powerpercent)%"
 PS1="${PS1}${_pc_b_blue}:"
 PS1="${PS1}${_pc_b_gray}\$ ${_pc_b_blue})-${_pc_b_yellow}-"
 PS1="${PS1}${_pc_nocolour} "

@@ -1,0 +1,22 @@
+#!/bin/bash
+# Indicates whether or not you're in a tmux session.
+#
+# Happily, tmux sets its own environment variable (TMUX) that's easy to
+# detect.  Unfortunately, it also sets the SCREEN env variable.
+#
+# This has had almost zero testing (2017-08-23).
+
+function _p_tmux () {
+    if (( $(which tmux > /dev/null ; echo $?) == 0 ))
+    then # tmux is installed
+        _p_detached_tmuxs="$(command tmux ls | command grep -v attached | command wc -l)"
+        export _p_detached_tmuxs
+        if [[ "${TMUX}" =~ "tmux" ]]
+        then
+            export _p_in_tmux=true
+        else
+            export _p_in_tmux=false
+        fi
+    fi
+}
+

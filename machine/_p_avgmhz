@@ -4,8 +4,8 @@
 # gets the current speed of all cores and averages them.
 
 function _p_avgmhz () {
-    let sum=0
-    let numproc=0
+    (( sum=0 ))
+    (( numproc=0 ))
 
     for value in $(command grep "cpu MHz" /proc/cpuinfo | command awk '{print $NF}' | command awk -F "." '{print $1}')
     do

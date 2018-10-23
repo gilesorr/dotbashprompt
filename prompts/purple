@@ -1,12 +1,12 @@
 #!/bin/bash # helps vim identify the filetype
 #
-# The name comes from the hostname it was first used on.
+# Based on "slim" but very purple.
 
 pushd "${PROMPTDIR}" > /dev/null
 
-echo "Prompt Title: slim"
-echo "Includes:     PWD, git status, newline, battery, user@host"
-echo "For:          a dark background" # Mac? works on Linux
+echo "Prompt Title: purple"
+echo "Includes:     PWD, git status (yellow), newline, battery, user@host"
+echo "For:          a dark background, bad on Mac" # relies on bold colour difference
 echo "Requires:     git"
 
 source _p_colours # get colours into the environment
@@ -25,11 +25,11 @@ popd > /dev/null
 
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"
-PS1="${PS1}${_pc_b_cyan}"
+PS1="${PS1}${_pc_purple}"
 PS1="${PS1}["
-PS1="${PS1}${_pc_b_yellow}"
+PS1="${PS1}${_pc_b_purple}"
 PS1="${PS1}\$(_p_tildepwd)"
-PS1="${PS1}${_pc_b_cyan}"
+PS1="${PS1}${_pc_purple}"
 PS1="${PS1}]"
 PS1="${PS1}${_pc_nocolour}"
 PS1="${PS1} "
@@ -37,22 +37,22 @@ PS1="${PS1}${_pc_b_yellow}"
 PS1="${PS1}\$(_p_git)"
 PS1="${PS1}${_pc_nocolour}"
 PS1="${PS1}\n"                           # newline
-PS1="${PS1}${_pc_b_cyan}"
+PS1="${PS1}${_pc_purple}"
 PS1="${PS1}["
 PS1="${PS1}${_pc_b_purple}"
 PS1="${PS1}\$(_p_powerconnected)"
 PS1="${PS1}\$(_p_powerpercent)"
 PS1="${PS1}%"
-PS1="${PS1}${_pc_b_cyan}"
-PS1="${PS1}]"
-PS1="${PS1}${_pc_nocolour}"
-PS1="${PS1} "
+PS1="${PS1}${_pc_purple}"
+PS1="${PS1}|"
 PS1="${PS1}${_pc_b_purple}"
 PS1="${PS1}\u"
-PS1="${PS1}${_pc_b_cyan}"
+PS1="${PS1}${_pc_purple}"
 PS1="${PS1}@"
 PS1="${PS1}${_pc_b_purple}"
 PS1="${PS1}\h"
+PS1="${PS1}${_pc_purple}"
+PS1="${PS1}]"
 PS1="${PS1}${_pc_b_gray}"
 PS1="${PS1}\$"
 PS1="${PS1}${_pc_nocolour} "

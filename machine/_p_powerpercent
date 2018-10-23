@@ -17,7 +17,11 @@ function _p_powerpercent () {
     then # On a Mac:
         # This matches on Sierra, should also match on El Capitan:
         tmp=$(command pmset -g batt | command tail -1 | command sed 's/.*[[:space:]]\([1-9][0-9]*\)%;.*/\1/')
-        echo -n "${tmp}"
+        re='^[0-9]+$'
+        if [[ ${tmp} =~ ${re} ]]
+        then
+            echo -n "${tmp}"
+        fi # if it's not numeric, the system doesn't have a battery?
     else
         # On an unknown system:
         echo -n "???"
