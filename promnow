@@ -1,5 +1,21 @@
 #!/bin/bash
-# unnecessary, but helps vim identify the filetype
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# 'promnow' sets a prompt if passed a prompt name, or shows a list of
+# available prompts if no name is passed.  It also sets a number of
+# variable values - things that cannot change during the life of the shell,
+# such as the OS type, and whether or not your device has a battery.
+#
+# Variables provided:
+#   _p_os - "Darwin", "Linux", or "?"
+#   _p_has_battery - true or false, does this computer have a battery?
+#   _p_numthreads - integer, how many processor threads are available
+# tmux, screen, and (type)script variables are only available if the
+# associated binary is available:
+#   _p_in_tmux - true or false, is this shell in a tmux session?
+#   _p_in_screen - true or false, is this shell in a screen session?
+#   _p_in_sssh - true or false, is this shell in a ssh session?
+#   _p_in_typescript - true or false, is this shell in a typescript session
 
 export PROMPTDIR="${HOME}/.bashprompt"
 # http://www.thegeekstuff.com/2013/12/bash-completion-complete/
@@ -25,21 +41,21 @@ function _promnow_setup () {
     if [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
     then
         export _p_os="Darwin"
-        # Battery(s):
+        ######################### Darwin Battery(s) check ################
         if command ioreg -l | command grep Capacity >/dev/null
         then
             export _p_has_battery=true
         else
             export _p_has_battery=false
         fi
-        # Threads:
+        ######################## Darwin Thread check #####################
         # this is LOGICAL cores, ie. threads:
         _p_numthreads=$(sysctl -n hw.ncpu)
         export _p_numthreads
     elif [ "$(command uname -a | command grep Linux > /dev/null ; echo $?)" == "0" ]
     then
         export _p_os="Linux"
-        # Battery(s):
+        #########################  Linux Battery(s) check ################
         num_batteries=$(command ls -1d /sys/class/power_supply/BAT* 2>/dev/null | command wc -l)
         if (( num_batteries > 0 ))
         then
@@ -47,12 +63,54 @@ function _promnow_setup () {
         else
             export _p_has_battery=false
         fi
-        # Threads:
+        ######################## Linux Thread check ######################
         # the 'CPU(s)' line seems to be LOGICAL cores, ie. threads:
         _p_numthreads=$(lscpu | grep '^CPU(s):' | awk '{ print $NF }')
         export _p_numthreads
     else
         export _p_os="?"
+    fi
+    ####################### tmux check ###################################
+    # on one Linux machine 'which tmux' error was stdout, on another stderr!:
+    if (( $(command -v tmux > /dev/null 2>&1 ; echo $?) == 0 ))
+    then # tmux is installed
+        if [[ "${TMUX}" =~ "tmux" ]]
+        then
+            export _p_in_tmux=true
+        else
+            export _p_in_tmux=false
+        fi
+    fi
+    ####################### screen check #################################
+    if (( $(command -v screen > /dev/null 2>&1 ; echo $?) == 0 ))
+    then # screen is installed
+        # Default screen behaviour is to not load a new shell, at least not
+        # in the normal way.  Add 'shell -$SHELL' to ~/.screenrc to force
+        # this (saner) behaviour.  Otherwise this is ... unreliable.
+        if [[ "${TERM}" =~ "screen" ]] && [[ "${TMUX}x" == "x" ]]
+        then
+            export _p_in_screen=true
+        else
+            export _p_in_screen=false
+        fi
+    fi
+    ####################### typescript check ##############################
+    if (( $(command -v script > /dev/null 2>&1 ; echo $?) == 0 ))
+    then # script is installed
+        if [[ "${SCRIPT}" =~ "script" ]]
+        then
+            export _p_in_typescript=true
+        else
+            export _p_in_typescript=false
+        fi
+    fi
+    ####################### ssh check ####################################
+    # Not checking to see if it's installed ...
+    if [ -n "$SSH_CLIENT" ]
+    then
+        export _p_in_ssh=true
+    else
+        export _p_in_ssh=false
     fi
 }
 
@@ -60,20 +118,27 @@ function _promnow_setup () {
 # bit):
 _promnow_setup ; unset _promnow_setup
 
+# Reload both promnow and the prompt.  ("preload" with one "r" seemed
+# likely to be in use by other programs.)
+function prreload () {
+    # shellcheck disable=SC1090  # "non-constant source"
+    source "${PROMPTDIR}/promnow"
+    if [ -n "${_p_NAME}" ]
+    then
+        promnow "${_p_NAME}"
+    fi
+}
+
 function promnow () {
-    if [ $# -eq 1 ]
+    if (( $# == 1 ))
     then
         promfullname="${PROMPTDIR}/prompts/${1}"
         if [ -e "${promfullname}" ]
         then
-            # shellcheck disable=SC2164  # "cd could fail"
-            pushd "${PROMPTDIR}" > /dev/null
             unset PROMPT_COMMAND
             # shellcheck disable=SC1090  # "non-constant source"
             source "${promfullname}"
             export _p_NAME="${1}"
-            # shellcheck disable=SC2164  # "cd could fail"
-            popd > /dev/null
         else
             echo "Couldn't find prompt '${1}'"
             _promnow_help

@@ -1,24 +1,27 @@
 #!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC1117  # "backslash is literal"
+# shellcheck disable=SC2154  # "referenced but not assigned"
 #
 # A one- or two-line prompt.  The number of lines varies according to how
 # much content is in the prompt.  Adjust "minRemainingWidth" variable to
 # change the behaviour.  Same as "onetwo" prompt but adds power indicator.
 # Same as "onetwopower" but ... more purple.
 
-pushd "${PROMPTDIR}" > /dev/null
-
 echo "Prompt Title: onetwopowerpurple"
 echo "Includes:     pwd, git, power, user@host"
 echo "For:          a dark background"
 echo "Requires:     git"
 
-source _p_colours # get colours into the environment
-source directory/_p_git
-source directory/_p_xtermtitle
-source machine/_p_powerconnected
-source machine/_p_powerpercent
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_git"
+source "${PROMPTDIR}/directory/_p_xtermtitle"
+source "${PROMPTDIR}/machine/_p_powerconnected"
+source "${PROMPTDIR}/machine/_p_powerpercent"
 export PROMPT_COMMAND="" # blank this if you're not using it
-popd > /dev/null
 
 minRemainingWidth=50
 
@@ -40,7 +43,7 @@ PS1="${PS1}${_p_TITLEBAR}"
 PS1="${PS1}\$(
 remainingWidth=\$(( COLUMNS - \${#p_displayPower} - \${#_p_dir} - \${#p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
 
-if [ \${remainingWidth} -le ${minRemainingWidth} ] ; # the two line version
+if (( remainingWidth <= minRemainingWidth )) ; # the two line version
 then
     fillWidth=\$(( COLUMNS - \${#p_displayPower} - \${#_p_dir} - \${#p_displayGit} ))
     fill=\"\";

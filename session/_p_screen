@@ -2,21 +2,14 @@
 # Indicates whether or not you're in a screen session.
 #
 # screen sets its own env variable (SCREEN), which is easy to detect.
-# Unfortunately, tmux sets this too - thus the double detection system
-# below.
+# Unfortunately, tmux sets this too ...
 
 function _p_screen () {
-    if [ $(which screen > /dev/null ; echo $?) -eq 0 ]
+    if (( $(command -v screen > /dev/null 2>&1 ; echo $?) == 0 ))
     then # screen is installed
         # Thanks to Jasper Boot for this one:
         _p_detached_screens=$(command screen -ls | command grep -c Detach )
         export _p_detached_screens
-        if [[ "${TERM}" =~ "screen" ]] && [[ "${TMUX}x" =~ "x" ]]
-        then
-            export _p_in_screen=true
-        else
-            export _p_in_screen=false
-        fi
     fi
 }
 

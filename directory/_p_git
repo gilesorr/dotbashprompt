@@ -12,7 +12,7 @@ function _p_git () {
 
     function _p_git_dirty () {
         command git diff --no-ext-diff --quiet --exit-code &>/dev/null
-        if [ $? -eq 128 ]
+        if (( $? == 128 ))
         then
             echo -n "(bare)"
         fi

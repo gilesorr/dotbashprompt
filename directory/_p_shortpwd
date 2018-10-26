@@ -12,7 +12,7 @@ function _p_shortpwd () {
     fi
     newPWD=$(builtin pwd)
     newPWD=${newPWD/#${HOME}/\~} # Replace home dir with ~
-    if [ ${#newPWD} -gt ${pwd_len} ]
+    if (( ${#newPWD} > pwd_len ))
     then
         if [ "${newPWD:0:1}" = "~" ]
         then

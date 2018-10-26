@@ -49,11 +49,6 @@ limited choices, you go with what's available.  Unfortunately, on the Mac,
 "bold black" is represented as ... black.  Making prompts that use this
 colour appear somewhat broken.  No fix yet.
 
-Running ``promnow <promptname>`` uses ``pushd`` and ``popd`` to get to and
-from the directory where the prompts are stored.  This will mess with your
-``cd -`` command.  Unfortunately, commands to change the prompt have to be
-run in the current shell so this is hard to avoid.
-
 I use Bash 4 on Linux, and Homebrew's Bash 4 on Mac, not Apple's default
 (and extremely old) Bash 3.  I don't think I'm using any Bash-4-only
 constructs, but that may eventually happen which could potentially break

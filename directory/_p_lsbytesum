@@ -20,16 +20,16 @@ function _p_lsbytesum () {
     # The if...fi's give a more specific output in byte, kilobyte, megabyte,
     # gigabyte, terabyte
 
-    if [ ${TotalBytes} -lt 1024 ]; then
+    if (( TotalBytes < 1024 )); then
         TotalSize="${TotalBytes}"
         suffix="B"
-    elif [ ${TotalBytes} -lt 1048576 ]; then
+    elif (( TotalBytes < 1048576 )); then
         TotalSize=$(echo -e "scale=${_p_scale} ; ${TotalBytes}/1024" | command bc)
         suffix="KiB"
-    elif [ ${TotalBytes} -lt 1073741824 ]; then
+    elif (( TotalBytes < 1073741824 )); then
         TotalSize=$(echo -e "scale=${_p_scale} ; ${TotalBytes}/1048576" | command bc)
         suffix="MiB"
-    elif [ ${TotalBytes} -lt 1099511627776 ]; then
+    elif (( TotalBytes < 1099511627776 )); then
         TotalSize=$(echo -e "scale=${_p_scale} ; ${TotalBytes}/1073741824" | command bc)
         suffix="GiB"
     else

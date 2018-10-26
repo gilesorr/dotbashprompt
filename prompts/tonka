@@ -1,8 +1,12 @@
-#!/bin/bash # helps vim identify the filetype
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC1117  # "backslash is literal"
+# shellcheck disable=SC2154  # "referenced but not assigned"
 #
 # Named for its bright colours.
-
-pushd "${PROMPTDIR}" > /dev/null
 
 echo "Prompt Title: tonka"
 echo "Includes:     user@host, history #, time, date, newline, PWD"
@@ -10,10 +14,9 @@ echo "For:          a dark background"
 echo "Requires:     git"
 
 # Get the components we need:
-source _p_colours # get colours into the environment
-source directory/_p_tildepwd
-source directory/_p_xtermtitle
-popd > /dev/null
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_tildepwd"
+source "${PROMPTDIR}/directory/_p_xtermtitle"
 
 _p_xtermtitle # generates the _p_TITLEBAR variable
 

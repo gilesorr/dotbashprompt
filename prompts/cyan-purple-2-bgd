@@ -1,6 +1,10 @@
-#!/bin/bash # helps vim identify the filetype
-
-pushd "${PROMPTDIR}" > /dev/null
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC1117  # "backslash is literal"
+# shellcheck disable=SC2154  # "referenced but not assigned"
 
 echo "Prompt Title: cyan-purple-2-bgd"
 echo "Includes:     battery, PWD, git status, newline, user@host"
@@ -11,18 +15,17 @@ echo "Requires:     git"
 # user is red if root, otherwise fits colour scheme
 
 # Get the components we need:
-source _p_colours # get colours into the environment
-source directory/_p_xtermtitle
-source directory/_p_git
-source directory/_p_tildepwd
-source machine/_p_powerconnected
-source machine/_p_powerpercent
-popd > /dev/null
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_xtermtitle"
+source "${PROMPTDIR}/irectory/_p_git"
+source "${PROMPTDIR}/directory/_p_tildepwd"
+source "${PROMPTDIR}/machine/_p_powerconnected"
+source "${PROMPTDIR}/machine/_p_powerpercent"
 
 # set the user colour based on privileges:
 # this only needs to be run once per session, so not a part of
 # prompt_command.
-if [ ${UID} -eq 0 ]
+if (( UID == 0 ))
 then
     # Colour indicator when you're logged in as root:
     export _p_usercolour=${_pc_b_red}
@@ -36,9 +39,11 @@ function prompt_command () {
     # set the directory colour based on access:
     if [ -w "${PWD}" ]
     then
-        export _p_dircolour="$(echo -e "${_pc_b_purple}")"
+        _p_dircolour="$(echo -e "${_pc_b_purple}")"
+        export _p_dircolour
     else
-        export _p_dircolour="$(echo -e "${_pc_b_purple}${_pc_bg_gray}")"
+        _p_dircolour="$(echo -e "${_pc_b_purple}${_pc_bg_gray}")"
+        export _p_dircolour
     fi
 }
 

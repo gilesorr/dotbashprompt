@@ -1,20 +1,23 @@
-#!/bin/bash # helps vim identify the filetype
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC1117  # "backslash is literal"
+# shellcheck disable=SC2154  # "referenced but not assigned"
 #
 # Named for its dominant colour.  No git support.
 
-pushd "${PROMPTDIR}" > /dev/null
-
 echo "Prompt Title: greeny"
-echo "Includes:     user@host, history, tty, PWD, newline, time"
+echo "Includes:     user@host, history, tty, PWD, newline, time (no git)"
 echo "For:          a dark background (colours don't work well on Mac)"
 echo "Requires:     "
 
 # Get the components we need:
-source _p_colours # get colours into the environment
-source machine/_p_shorttty
-source directory/_p_xtermtitle
-source directory/_p_tildepwd
-popd > /dev/null
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/machine/_p_shorttty"
+source "${PROMPTDIR}/directory/_p_xtermtitle"
+source "${PROMPTDIR}/directory/_p_tildepwd"
 
 _p_xtermtitle # generates the _p_TITLEBAR variable
 
@@ -22,6 +25,14 @@ export PROMPT_COMMAND="" # blank this if you're not using it
 
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"
+if [ "${_p_in_tmux}" == "true" ]
+then
+    PS1="${PS1}[t]"
+fi
+if [ "${_p_in_screen}" == "true" ]
+then
+    PS1="${PS1}[s]"
+fi
 PS1="${PS1}${_pc_b_black}-${_pc_green}-${_pc_b_green}("
 # User @ Hostname:
 PS1="${PS1}${_pc_nocolour}${_pc_green}\u${_pc_b_black}@${_pc_nocolour}${_pc_green}\h"

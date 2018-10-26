@@ -1,4 +1,10 @@
-#!/bin/bash # helps vim identify the filetype
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC1117  # "backslash is literal"
+# shellcheck disable=SC2154  # "referenced but not assigned"
 #
 # This one has everything.
 #
@@ -8,8 +14,6 @@
 # 2018-05-05: stat fails (missing operand) in a directory where there are
 # no real files - ie. /dev/ where it's all devices and links.
 
-pushd "${PROMPTDIR}" > /dev/null
-
 echo "Prompt Title: overload"
 echo "Includes:     git, load, file data, colourslash PWD, newline, battery, user@host"
 echo "For:          a dark background" # Mac? works on Linux
@@ -17,22 +21,21 @@ echo "Requires:     git"
 echo "Warning:      very processor intensive: switch prompts if it's slow!"
 
 # Get the components we need:
-source _p_colours # get colours into the environment
-source directory/_p_git
-source machine/_p_powerconnected
-source machine/_p_powerpercent
-source machine/_p_load
-source directory/_p_colourslashpwd
-source directory/_p_numvisfiles
-source directory/_p_numhiddenfiles
-source directory/_p_numvisdirs
-source directory/_p_numhiddendirs
-source directory/_p_numalllinks
-source directory/_p_numalldevices
-source directory/_p_tildepwd
-source directory/_p_statbytesum
-source directory/_p_xtermtitle
-popd > /dev/null
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_git"
+source "${PROMPTDIR}/machine/_p_powerconnected"
+source "${PROMPTDIR}/machine/_p_powerpercent"
+source "${PROMPTDIR}/machine/_p_load"
+source "${PROMPTDIR}/directory/_p_colourslashpwd"
+source "${PROMPTDIR}/directory/_p_numvisfiles"
+source "${PROMPTDIR}/directory/_p_numhiddenfiles"
+source "${PROMPTDIR}/directory/_p_numvisdirs"
+source "${PROMPTDIR}/directory/_p_numhiddendirs"
+source "${PROMPTDIR}/directory/_p_numalllinks"
+source "${PROMPTDIR}/directory/_p_numalldevices"
+source "${PROMPTDIR}/directory/_p_tildepwd"
+source "${PROMPTDIR}/directory/_p_statbytesum"
+source "${PROMPTDIR}/directory/_p_xtermtitle"
 
 _p_xtermtitle # generates the _p_TITLEBAR variable
 export PROMPT_COMMAND="" # blank this if you're not using it
@@ -77,15 +80,15 @@ function _p_showobj () {
     #
     _p_vis=${1}
     _p_hid=${2}
-    if [ ${_p_vis} -gt 0 ]
+    if (( _p_vis > 0 ))
     then
         echo -n "${_p_vis}"
     fi
-    if [ ${_p_hid} -gt 0 ]
+    if (( _p_hid > 0 ))
     then
         echo -n ".${_p_hid}"
     fi
-    if [ $(( _p_vis + _p_hid )) -gt 0 ]
+    if (( $(( _p_vis + _p_hid )) > 0 ))
     then
         echo -n " "
     fi

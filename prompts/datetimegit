@@ -1,31 +1,32 @@
-#!/bin/bash # helps vim figure out the filetype
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
 #
-
-pushd "${PROMPTDIR}" > /dev/null
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC1117  # "backslash is literal"
+# shellcheck disable=SC2154  # "referenced but not assigned"
 
 echo "Prompt Title: datetimegit"
 echo "Includes:     date, colourslash pwd, git, uptime, user@host"
 echo "For:          a dark background"
 echo "Requires:     git"
 
-source _p_colours # get colours into the environment
-source directory/_p_colourslashpwd
-source directory/_p_git
-source directory/_p_xtermtitle
-source time/_p_yyyy-mm-dd
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_colourslashpwd"
+source "${PROMPTDIR}/directory/_p_git"
+source "${PROMPTDIR}/directory/_p_xtermtitle"
+source "${PROMPTDIR}/time/_p_yyyy-mm-dd"
 # This one is usually called by _p_uptime, but we need it separately
 # to test uptime in PROMPT_COMMAND:
-source machine/_p_upseconds
-source machine/_p_uptime
+source "${PROMPTDIR}/machine/_p_upseconds"
+source "${PROMPTDIR}/machine/_p_uptime"
 export PROMPT_COMMAND="" # blank this if you're not using it
-popd > /dev/null
 
 function prompt_command () {
     _p_xtermtitle # generates the _p_TITLEBAR variable
     # minimum days of uptime before uptime is shown:
     local minuptime=5
-    # TODO: brutal fail on the Mac
-    if [ $(_p_upseconds) -ge $((${minuptime}*24*60*60)) ]
+    if (( $(_p_upseconds) >= ( minuptime * 24 * 60 * 60 ) ))
     then
         _p_up="$(_p_uptime)"
     else

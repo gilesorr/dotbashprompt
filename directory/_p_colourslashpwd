@@ -54,13 +54,13 @@ function _p_colourslashpwd_internal () {
 function _p_colourslashpwd () {
     # indication that a truncation has occurred:
     local trunc_symbol="..."
-    if [ $# -eq 3 ]
+    if (( $# == 3 ))
     then
         _p_newpwd="${PWD}"
         _p_colourslashpwd_internal "${1}" "${2}" "${3}"
-    elif [ $# -eq 4 ]
+    elif (( $# == 4 ))
     then
-        if [ ${#PWD} -gt ${4} ]
+        if (( ${#PWD} > ${4} ))
         then
             local pwdoffset=$(( ${#PWD} - ${4} + ${#trunc_symbol} ))
             echo -en "${trunc_symbol}"
