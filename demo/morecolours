@@ -1,11 +1,12 @@
 #!/bin/bash
+# shellcheck disable=SC1117
 # From https://unix.stackexchange.com/questions/269077/tput-setaf-color-table-how-to-determine-color-codes
 # which says this is about tput colours ... which it doesn't (directly)
 # use.  This is BG colours only: is there a way to do FG colours?
 
 color(){
     for c; do
-        printf '\e[48;5;%dm%03d' $c $c
+        printf '\e[48;5;%dm %03d ' "${c}" "${c}"
     done
     printf '\e[0m \n'
 }
@@ -23,5 +24,5 @@ echo "Shades of gray (fine on Mac, Fedora, probably breaks on default Debian):"
 color {232..255}
 
 echo ""
-echo -e "Example colour gradient: \e[48;5;005m \e[48;5;201m \e[48;5;207m \e[48;5;213m \e[48;5;218m \e[48;5;224m \e[48;5;229m \e[48;5;011m \e[0m (005,201,207,213,218,224,229,011)"
+echo -e "Example colour gradient: \033[48;5;005m \033[48;5;201m \033[48;5;207m \033[48;5;213m \033[48;5;218m \033[48;5;224m \033[48;5;229m \033[48;5;011m \033[0m (005,201,207,213,218,224,229,011)"
 
