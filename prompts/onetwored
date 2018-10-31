@@ -1,0 +1,121 @@
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC1117  # "backslash is literal"
+# shellcheck disable=SC2154  # "referenced but not assigned"
+
+# The onetwo prompt with uptime in days and hours (although it only shows
+# up after 'minuptime' days).  This version, onetwored.private, is a
+# modification of onetwo.private initially intented for a Raspberry Pi
+# (2018-03).
+#
+# NOTE: the ${remainingWidth} is very approximate (ie. probably flat out
+# wrong).  As I'm not using it to fill width, I haven't worried about the
+# precision.
+#
+# BUG (not specific to this prompt, but more apparent than most), bold
+# colours don't work on Mac, and this uses them a lot.  The two reds are
+# the same, and _pc_darkgray is simply black on the Mac.
+
+echo "Prompt Title: onetwored"
+echo "Includes:     pwd, git, uptime (conditionally), user@host"
+echo "For:          a dark background"
+echo "Requires:     git"
+
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_git"
+source "${PROMPTDIR}/directory/_p_xtermtitle"
+source "${PROMPTDIR}/machine/_p_uptime"
+source "${PROMPTDIR}/machine/_p_upseconds"
+unset  PROMPT_COMMAND # blank this if you're not using it
+
+minRemainingWidth=50
+
+prompt_command () {
+    p_displayGit="$(_p_git)"
+    _p_tilde="~"
+    # on Linux/Bash4 we need "\~", on Mac/Bash3 we need "~" in this
+    # substitution, so we get around it by making it a variable ...:
+    _p_dir="${PWD/${HOME}/${_p_tilde}}"
+    local minuptime=7 # days
+    _p_up="$(_p_uptime)"
+    if (( $(_p_upseconds) >= ( minuptime * 24 * 60 * 60 ) ))
+    then
+        p_show_up=0
+    else
+        p_show_up=1
+    fi
+    _p_xtermtitle # generates the _p_TITLEBAR variable
+}
+
+PROMPT_COMMAND=prompt_command
+
+PS1=""
+PS1="${PS1}${_p_TITLEBAR}"
+PS1="${PS1}\$(
+if (( p_show_up == 0 ))
+then
+    remainingWidth=\$(( COLUMNS - \${#_p_up} - 3 - \${#_p_dir} - \${#p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
+else
+    remainingWidth=\$(( COLUMNS - \${#_p_dir} - \${#p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
+fi
+
+if (( remainingWidth <= minRemainingWidth )) ;  # the two line version
+then
+    echo -en \"${_pc_darkgray}-${_pc_red}-${_pc_b_red}(\"
+    if (( p_show_up == 0 ))
+    then
+        echo -en \"${_pc_b_yellow}\${_p_up}\"
+        echo -en \"${_pc_b_gray}|${_pc_nocolour}\"
+        echo -en \"${_pc_b_red})-${_pc_red}-${_pc_b_red}(\"
+    fi
+    echo -en \"${_pc_red}\${_p_dir}\"
+    echo -en \"${_pc_b_red})-${_pc_red}-\"
+    if ! [ \"\${p_displayGit}x\" = \"x\" ]
+    then
+        echo -en \"${_pc_b_red}(\"
+        echo -en \"${_pc_b_gray}\${p_displayGit}${_pc_nocolour}\"
+        echo -en \"${_pc_b_red})-${_pc_red}-\"
+    fi
+    echo -en \"${_pc_darkgray}-${_pc_nocolour}\"
+    echo -en \"\n\"
+    echo -en \"${_pc_darkgray}-${_pc_red}-${_pc_b_red}(\"
+    echo -en \"${_pc_red}\u${_pc_darkgray}@${_pc_red}\h\"
+    echo -en \"${_pc_darkgray}\$\"
+    echo -en \"${_pc_b_red})-${_pc_red}-${_pc_darkgray}-\"
+    echo -e  \"${_pc_nocolour} \";
+else   # the one line version
+    echo -en \"${_pc_darkgray}-${_pc_red}-${_pc_b_red}(\"
+    if (( p_show_up == 0 ))
+    then
+        echo -en \"${_pc_b_yellow}\${_p_up}\"
+        echo -en \"${_pc_b_gray}|${_pc_nocolour}\"
+        echo -en \"${_pc_b_red})-${_pc_red}-${_pc_b_red}(\"
+    fi
+    echo -en \"${_pc_red}\${_p_dir}\"
+    if [ \"\${p_displayGit}x\" != \"x\" ]
+    then
+        echo -en \"${_pc_darkgray}|\"
+        echo -en \"${_pc_b_gray}\${p_displayGit}\"
+    fi
+    echo -en \"${_pc_darkgray}|${_pc_nocolour}\"
+    echo -en \"${_pc_red}\u${_pc_darkgray}@${_pc_red}\h\"
+    echo -en \"${_pc_darkgray}\$\"
+    echo -en \"${_pc_b_red})-${_pc_red}-${_pc_darkgray}-\"
+    echo -e  \"${_pc_nocolour} \";
+fi
+)"
+
+if ${_p_in_typescript}
+then
+    echo "you're in typescript"
+    unset PROMPT_COMMAND
+    PS1="\u@\w\$ "
+else
+    PROMPT_COMMAND=prompt_command
+fi
+
+export PS1
+
