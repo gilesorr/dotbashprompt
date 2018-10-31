@@ -7,6 +7,7 @@
 # such as the OS type, and whether or not your device has a battery.
 #
 # Variables provided:
+#   _p_uid0 - user ID is 0 (ie. root or root-equivalent)
 #   _p_os - "Darwin", "Linux", or "?"
 #   _p_has_battery - true or false, does this computer have a battery?
 #   _p_numthreads - integer, how many processor threads are available
@@ -37,6 +38,12 @@ function _promnow_help () {
 }
 
 function _promnow_setup () {
+    if (( UID == 0 ))
+    then
+        export _p_uid0=true
+    else
+        export _p_uid0=false
+    fi
     # set _p_os to string "Darwin" or "Linux"
     if [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
     then
@@ -84,10 +91,10 @@ function _promnow_setup () {
     ####################### screen check #################################
     if (( $(command -v screen > /dev/null 2>&1 ; echo $?) == 0 ))
     then # screen is installed
-        # Default screen behaviour is to not load a new shell, at least not
-        # in the normal way.  Add 'shell -$SHELL' to ~/.screenrc to force
-        # this (saner) behaviour.  Otherwise this is ... unreliable.
-        if [[ "${TERM}" =~ "screen" ]] && [[ "${TMUX}x" == "x" ]]
+        # screen sometime (Mac?) sets TERM, sometimes (Fedora) sets TERMCAP
+        # ... but tmux will sometimes set TERM to "screen" so we have to do
+        # a lot of checking.
+        if [[ "${TERM}" =~ "screen" ]] || [[ "${TERMCAP}" =~ "screen" ]] && [[ "${TMUX}x" == "x" ]]
         then
             export _p_in_screen=true
         else
