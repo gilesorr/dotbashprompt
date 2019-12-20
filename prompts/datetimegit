@@ -20,7 +20,6 @@ source "${PROMPTDIR}/time/_p_yyyy-mm-dd"
 # to test uptime in PROMPT_COMMAND:
 source "${PROMPTDIR}/machine/_p_upseconds"
 source "${PROMPTDIR}/machine/_p_uptime"
-export PROMPT_COMMAND="" # blank this if you're not using it
 
 function prompt_command () {
     _p_xtermtitle # generates the _p_TITLEBAR variable
@@ -33,7 +32,8 @@ function prompt_command () {
         _p_up=""
     fi
 }
-export PROMPT_COMMAND=prompt_command
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"

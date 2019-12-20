@@ -26,7 +26,7 @@ function prompt_command () {
     _p_xtermtitle # generates the _p_TITLEBAR variable
 }
 
-export PROMPT_COMMAND=prompt_command
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"

@@ -21,8 +21,6 @@ source "${PROMPTDIR}/directory/_p_tildepwd"
 
 _p_xtermtitle # generates the _p_TITLEBAR variable
 
-export PROMPT_COMMAND="" # blank this if you're not using it
-
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"
 if [ "${_p_in_tmux}" == "true" ]

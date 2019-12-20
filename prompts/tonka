@@ -20,8 +20,6 @@ source "${PROMPTDIR}/directory/_p_xtermtitle"
 
 _p_xtermtitle # generates the _p_TITLEBAR variable
 
-export PROMPT_COMMAND="" # blank this if you're not using it
-
 PS1="${_pc_b_red}-${_pc_b_blue}-("
 # User @ Hostname:
 PS1="${PS1}${_pc_b_yellow}\u${_pc_b_red}@${_pc_b_yellow}\h"

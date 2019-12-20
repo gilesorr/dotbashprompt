@@ -30,7 +30,7 @@ function prompt_command () {
     fi
 }
 
-export PROMPT_COMMAND=prompt_command
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"

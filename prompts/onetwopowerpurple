@@ -21,7 +21,6 @@ source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
-export PROMPT_COMMAND="" # blank this if you're not using it
 
 minRemainingWidth=50
 
@@ -36,7 +35,7 @@ prompt_command () {
     _p_xtermtitle # generates the _p_TITLEBAR variable
 }
 
-PROMPT_COMMAND=prompt_command
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"

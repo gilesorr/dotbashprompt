@@ -6,14 +6,14 @@
 # - Linux version would almost certainly barf on dual batteries
 
 function _p_powerpercent () {
-    if [ -e /sys ]
+    if [ "${_p_os}" == "Linux" ]
     then
         # On a Linux system:
         if [ -d /sys/class/power_supply/BAT?/ ] # Check there's a battery
         then
             cat /sys/class/power_supply/BAT?/capacity
         fi
-    elif [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
+    elif [ "${_p_os}" == "Darwin" ]
     then # On a Mac:
         # This matches on Sierra, should also match on El Capitan:
         tmp=$(command pmset -g batt | command tail -1 | command sed 's/.*[[:space:]]\([1-9][0-9]*\)%;.*/\1/')

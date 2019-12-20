@@ -17,7 +17,7 @@ echo "Requires:     git"
 # Get the components we need:
 source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source "${PROMPTDIR}/directory/_p_xtermtitle"
-source "${PROMPTDIR}/irectory/_p_git"
+source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/directory/_p_tildepwd"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
@@ -47,7 +47,7 @@ function prompt_command () {
     fi
 }
 
-export PROMPT_COMMAND=prompt_command
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"

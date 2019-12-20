@@ -18,8 +18,6 @@ source "${PROMPTDIR}/directory/_p_colourslashpwd"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
 
-export PROMPT_COMMAND="" # blank this if you're not using it
-
 PS1="${_pc_b_gray}-"
 PS1="${PS1}${_pc_b_blue}-"
 PS1="${PS1}${_pc_b_purple}\$(_p_git)"

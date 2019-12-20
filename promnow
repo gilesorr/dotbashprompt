@@ -137,12 +137,16 @@ function prreload () {
 }
 
 function promnow () {
+    # Let's always reload the available prompts:
+    complete -W "$(ls "${PROMPTDIR}/prompts")" promnow
+
     if (( $# == 1 ))
     then
         promfullname="${PROMPTDIR}/prompts/${1}"
         if [ -e "${promfullname}" ]
         then
-            unset PROMPT_COMMAND
+            # replace any occurrences of 'prompt_command' with a no-op:
+            PROMPT_COMMAND="${PROMPT_COMMAND//prompt_command/:}"
             # shellcheck disable=SC1090  # "non-constant source"
             source "${promfullname}"
             export _p_NAME="${1}"

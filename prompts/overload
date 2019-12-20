@@ -37,8 +37,24 @@ source "${PROMPTDIR}/directory/_p_tildepwd"
 source "${PROMPTDIR}/directory/_p_statbytesum"
 source "${PROMPTDIR}/directory/_p_xtermtitle"
 
-_p_xtermtitle # generates the _p_TITLEBAR variable
-export PROMPT_COMMAND="" # blank this if you're not using it
+if (( UID == 0 ))
+then
+    _p_usercolour="${_pc_b_red}"
+else
+    _p_usercolour="${_pc_b_gray}"
+fi
+
+function prompt_command () {
+    _p_retval=$? # capture the return value before you change it w/prompt
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+    _p_xtermtitle # generates the _p_TITLEBAR variable
+}
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 #####################################################################
 #               OS-based Colour Settings                            #
@@ -46,30 +62,23 @@ export PROMPT_COMMAND="" # blank this if you're not using it
 # Going to have to do Colour Settings for file types by the OS ...
 #
 # This is a do-once setting, doesn't need to be done for every prompt.
-if [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
+if [ "${_p_os}" == "Darwin" ]
 then
     # character devices on Mac are blue FG, yellow BG
     # block     devices on Mac are blue FG, cyan   BG
     # Going with "character" as it's more common ...
     # This didn't work:
-    #_p_device_colour="${_p_b_blue}${_p_bg_yellow}"
-    _p_device_colour="\[\033[43;1;34m\]"
-else
-    # assuming Linux, more fine-grained control may be needed
-    #_p_device_colour="${_p_b_yellow}"
-    _p_device_colour="\[\033[1;33m\]"
-fi
-if [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
+    _p_device_colour="${_p_b_blue}${_p_bg_yellow}"
+    _p_link_colour="${_pc_b_purple}"
+elif [ "${_p_os}" == "Linux" ]
 then
-    # Didn't work:
-    #_p_link_colour="${_p_b_purple}"
-    _p_link_colour="\[\033[1;35m\]"
+    _p_device_colour="${_pc_b_yellow}"
+    _p_link_colour="${_pc_b_cyan}"
 else
-    #_p_link_colour="${_p_b_cyan}"
-    _p_link_colour="\[\033[1;36m\]"
+    # just Linux colours again:
+    _p_device_colour="${_p_b_yellow}"
+    _p_link_colour="${_pc_b_cyan}"
 fi
-
-unset prompt_command
 
 function _p_showobj () {
     # takes two params (whole numbers, no negatives), outputs "x.y":
@@ -127,12 +136,14 @@ PS1="${PS1}${_pc_b_gray}-"
 PS1="${PS1}${_pc_b_blue}-("
 PS1="${PS1}${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
 PS1="${PS1}${_pc_nocolour} "
-PS1="${PS1}${_pc_b_gray}\u"
+PS1="${PS1}${_p_usercolour}\u"
 PS1="${PS1}${_pc_b_blue}@"
 PS1="${PS1}${_pc_b_gray}\h"
 PS1="${PS1}${_pc_b_blue})-"
 PS1="${PS1}${_pc_b_gray}-"
-PS1="${PS1}\$"
+PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
+PS1="${PS1}${_pc_nocolour}"
+PS1="${PS1}${_pc_b_gray}\$"
 PS1="${PS1}${_pc_nocolour} "
 
 export PS1

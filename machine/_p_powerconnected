@@ -2,21 +2,22 @@
 # Gives a single character indicator of whether power is available.
 
 function _p_powerconnected () {
-    if [ -e /sys ]
+    if [ "${_p_os}" == "Linux" ]
     then
         # On a Linux system:
         if [ -d /sys/class/power_supply/BAT?/ ] # Check there's a battery
         then
             case $(cat /sys/class/power_supply/BAT?/status) in
-                Full)        echo "" ;;
-                Discharging) echo "v";;
-                Charging)    echo "^";;
+                Full)           echo "" ;;
+                Discharging)    echo "v";;
+                Charging)       echo "^";;
+                "Not charging") echo "~";;
                 # silencing this: works better if the system doesn't have a
                 # battery:
                 *)           echo "";;
             esac
         fi
-    elif [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
+    elif [ "${_p_os}" == "Darwin" ]
     then # On a Mac:
         # This matches on Sierra and should work on El Capitan:
         tmp=$(command pmset -g batt | command tail -1 | command sed 's/.*[[:space:]]\([^[:space:]]*charg[^[:space:]]*\);.*/\1/')

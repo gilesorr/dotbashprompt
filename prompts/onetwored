@@ -16,8 +16,9 @@
 # precision.
 #
 # BUG (not specific to this prompt, but more apparent than most), bold
-# colours don't work on Mac, and this uses them a lot.  The two reds are
-# the same, and _pc_darkgray is simply black on the Mac.
+# colours don't work on Mac, and this uses them a lot.  The two reds
+# (_pc_red and _pc_b_red) are the same, and _pc_darkgray is simply black on
+# the Mac.  Can we reset them to Mac-specific colours if Mac is detected?
 
 echo "Prompt Title: onetwored"
 echo "Includes:     pwd, git, uptime (conditionally), user@host"
@@ -29,7 +30,6 @@ source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/machine/_p_uptime"
 source "${PROMPTDIR}/machine/_p_upseconds"
-unset  PROMPT_COMMAND # blank this if you're not using it
 
 minRemainingWidth=50
 
@@ -50,7 +50,7 @@ prompt_command () {
     _p_xtermtitle # generates the _p_TITLEBAR variable
 }
 
-PROMPT_COMMAND=prompt_command
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"
@@ -91,7 +91,6 @@ else   # the one line version
     if (( p_show_up == 0 ))
     then
         echo -en \"${_pc_b_yellow}\${_p_up}\"
-        echo -en \"${_pc_b_gray}|${_pc_nocolour}\"
         echo -en \"${_pc_b_red})-${_pc_red}-${_pc_b_red}(\"
     fi
     echo -en \"${_pc_red}\${_p_dir}\"
@@ -111,10 +110,11 @@ fi
 if ${_p_in_typescript}
 then
     echo "you're in typescript"
-    unset PROMPT_COMMAND
+    # replace any occurrences of 'prompt_command' with a no-op:
+    PROMPT_COMMAND="${PROMPT_COMMAND//prompt_command/:}"
     PS1="\u@\w\$ "
 else
-    PROMPT_COMMAND=prompt_command
+    PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 fi
 
 export PS1

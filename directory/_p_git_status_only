@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+# Large portions of this were lovingly borrowed from nitrous.io's prompt
+# because it's simple, readable, and works well.  Thanks!  It's since been
+# modified a LOT.
+#
+# 2016-02-24: added "+" after ahead("^") and/or behind("v") if there are
+# untracked files.  Still doesn't show if there are staged-but-uncommitted
+# files.
+
+function _p_git_status_only () {
+    command git diff --no-ext-diff --quiet --exit-code &>/dev/null
+    if (( $? == 128 ))
+    then
+        echo -n "(bare)"
+    fi
+    status="$(command git status 2> /dev/null)"
+    upstream="$(echo "${status}" | command grep 'Your branch')"
+    if [ "${upstream}x" != "x" ]
+    then
+        # we appear to have an origin
+        _p_git_uptodate=$(echo "${upstream}" | command grep "up to date"      -q ; echo $?)
+        _p_git_ahead=$(   echo "${upstream}" | command grep "ahead of"        -q ; echo $?)
+        _p_git_behind=$(  echo "${upstream}" | command grep "behind"          -q ; echo $?)
+        _p_git_diverged=$(echo "${upstream}" | command grep "diverged"        -q ; echo $?)
+        _p_git_modified=$(echo "${status}"   | command grep "not staged for"  -q ; echo $?)
+        _p_git_untrack=$( echo "${status}"   | command grep "ntrack"          -q ; echo $?)
+        _p_git_staged=$( echo "${status}"    | command grep "to be committed" -q ; echo $?)
+        if (( _p_git_uptodate == 0 ))
+        then
+            echo -n "-"
+        fi
+        if (( _p_git_ahead == 0 ))
+        then
+            echo -n "^"
+        fi
+        if (( _p_git_behind == 0 ))
+        then
+            echo -n "v"
+        fi
+        if (( _p_git_diverged == 0 ))
+        then
+            echo -n "^v"
+        fi
+        if (( _p_git_modified == 0 ))
+        then
+            echo -n "!"
+        fi
+        if (( _p_git_untrack == 0 ))
+        then
+            echo -n "+"
+        fi
+        if (( _p_git_staged == 0 ))
+        then
+            echo -n "_"
+        fi
+    fi
+}
+
+_p_git_status_only
+

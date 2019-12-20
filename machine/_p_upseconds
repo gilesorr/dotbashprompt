@@ -6,16 +6,15 @@
 # in a more human-readable form (see _p_uptime).
 
 function _p_upseconds () {
-    if [ -e /proc/uptime ]
+    if [ "${_p_os}" == "Linux" ]
     then
         # http://askubuntu.com/questions/335592/how-to-display-time-elapsed-since-last-system-boot-using-uptime
         # /proc/uptime provides two numbers, the first is how long the
         # system has been up in seconds, the second is how much of that
         # time the machine has spent idle in seconds.
         upSeconds="$(command awk -F "." '{print $1}' /proc/uptime)"
-    elif [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
+    elif [ "${_p_os}" == "Darwin" ]
     then
-        # On a Mac.
         # "sysctl kern.boottime" shows the time of the last boot in seconds
         # since the millennia, so we need to work out the number of seconds
         # since then.
