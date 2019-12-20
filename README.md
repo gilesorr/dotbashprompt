@@ -49,10 +49,10 @@ limited choices, you go with what's available.  Unfortunately, on the Mac,
 "bold black" is represented as ... black.  Making prompts that use this
 colour appear somewhat broken.  No fix yet.
 
-I use Bash 4 on Linux, and Homebrew's Bash 4 on Mac, not Apple's default
-(and extremely old) Bash 3.  I don't think I'm using any Bash-4-only
-constructs, but that may eventually happen which could potentially break
-some prompts on Mac Bash 3.
+I use Bash 5 on Linux, and Homebrew's Bash 5 on Mac, not Apple's default
+(and extremely old) Bash 3.  (MacOS Catalina now defaults to ZSH.)  I don't
+think I'm using any Bash-4+-only constructs, but that may eventually happen
+which could potentially break some prompts on Mac Bash 3.
 
 
 ## Acknowledgements
