@@ -5,7 +5,7 @@
 # same.  And the value shouldn't change during a session, so don't escape
 # it - just run it once.
 
-function _p_bogomips () {
+_p_bogomips () {
     command grep bogo /proc/cpuinfo | command head -n 1 | command awk '{print $NF}' | command awk -F "." '{print $1}'
 }
 

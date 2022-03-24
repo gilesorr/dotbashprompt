@@ -3,7 +3,7 @@
 #
 # gets the current speed of all cores and averages them.
 
-function _p_avgmhz () {
+_p_avgmhz () {
     (( sum=0 ))
     (( numproc=0 ))
 

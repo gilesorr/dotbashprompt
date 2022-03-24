@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+#
+#- to determine the "capname" for the capabilities 'tput' has, you have to
+#  search the 'terminfo' man page.  'tput sgr0' resets everything, but most
+#  capabilities can be reset individually.  For underline it's 'smul' to
+#  turn it on, 'rmul' to turn it off.  I need to create a demo script for
+#  all the modes (or at least the ones that are sane in a prompt) in the
+#  demo/ folder.
+
+# Create a list of variables that are simply capability names (don't look
+# at "man tput" for this, look at "man terminfo"):
+
+smul="$(tput smul)"   # underline
+rmul="$(tput rmul)"   # end underline
+bold="$(tput bold)"
+blink="$(tput blink)"
+sitm="$(tput sitm)"   # italics mode
+ritm="$(tput ritm)"   # end italics mode
+sgr0="$(tput sgr0)"   # end all 'tput' capabilities/attributes
+rev="$(tput rev)"     # reverse video
+smso="$(tput smso)"   # standout mode (same as reverse video??)
+rmso="$(tput rmso)"   # end standout mode
+redf="$(tput setaf 1)"
+yellowb="$(tput setab 3)"
+
+cat << EOF
+'tput' abstracts terminal capabilities.  Some of its functionality is
+reporting, some is flipping switches.  To see 'tput' capabilities for this
+terminal type, run 'infocmp ${TERM}' (the output is long and ugly, read
+"man terminfo" to hope to understand it).
+
+Capabilities are highly terminal-dependent.  For example, italics work
+in 'xterm' but are implemented in tmux the same as reverse video.
+
+According to tput, this terminal is $(tput lines) lines by $(tput cols) columns,
+and supports up to $(tput colors) colours.
+
+${smul}Underline is triggered by${rmul} 'tput smul' and turned off with
+'tput rmul'.
+
+Sadly, as evil as it is, ${blink}blink${sgr0} still exists in some terminals -
+usually older ones like 'xterm'.
+
+${sitm}Italics are started by sitm (may not work on Mac)${ritm}.  And more
+intuitive, ${bold}bold${sgr0} for bold.
+
+${rev}Reverse video with 'rev',${sgr0}, similarly ${smso}Standout Mode${rmso}
+which appears to be the same as reverse video on most terminals.
+
+Most of these can be combined:
+${redf}Red ${bold}bold ${rev} reversed, with ${yellowb}yellow background${sgr0}
+${yellowb}${redf}(remember, it was reversed - this isn't.)${sgr0}
+
+'tput' has ${sitm}many${ritm} other capabilities: this is a look at those most
+useful to constructing prompts.
+EOF
+

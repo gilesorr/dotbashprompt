@@ -24,7 +24,7 @@
 #
 # var is _p_numthreads
 
-function _p_threadload () {
+_p_threadload () {
     # Get the loads:
     # (on Linux, commas between load values, on Mac just space separation)
     # shellcheck disable=SC2034  # yes, l15 is assigned and not used ...

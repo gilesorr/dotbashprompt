@@ -2,7 +2,7 @@
 #
 # Shows the current date in YYYY-MM-DD format.
 
-function _p_yyyy-mm-dd () {
+_p_yyyy-mm-dd () {
     command date +%Y-%m-%d
 }
 

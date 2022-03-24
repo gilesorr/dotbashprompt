@@ -2,7 +2,7 @@
 #
 # Shows the current time in HHMM (24 hour) format.
 
-function _p_hhmm () {
+_p_hhmm () {
     command date +%H%M
 }
 
