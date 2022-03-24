@@ -1,0 +1,33 @@
+#!/bin/bash
+#
+#   This file echoes a bunch of colour codes to the terminal to demonstrate
+#   what's available.  Each line is the colour code of one forground
+#   colour, out of 17 (default + 16 escapes), followed by a test use of
+#   that colour on all nine background colours (default + 8 escapes).
+#
+#   This echoes the 'colours' script but uses the base 16 colours of the
+#   256 colour set.
+#
+
+T='gYw'   # The test text
+
+echo "Background colours ->"
+echo "48;5;... ->      000m  001m  002m  003m  004m  005m  006m  007m"
+echo "38;5;..."
+
+for FGs in '       0m' '     1;0m' '38;5;000m' '38;5;008m' '38;5;001m' \
+           '38;5;009m' '38;5;002m' '38;5;010m' '38;5;003m' '38;5;011m' \
+           '38;5;004m' '38;5;012m' '38;5;005m' '38;5;013m' '38;5;006m' \
+           '38;5;014m' '38;5;007m' '38;5;015m'
+    do
+        FG=${FGs// /}
+        echo -en " ${FGs} \033[${FG} ${T} "
+        for BG in "48;5;000m" "48;5;001m" "48;5;002m" "48;5;003m" "48;5;004m" \
+                  "48;5;005m" "48;5;006m" "48;5;007m"
+        do
+            echo -en " \033[${FG}\033[${BG} ${T} \033[0m"
+        done
+    echo
+    done
+echo
+

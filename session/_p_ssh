@@ -1,8 +1,12 @@
 #!/bin/bash
 # Indicates whether or not you're in an SSH session.
 #
+# At this point, 'promnow' sets _p_in_tmux, _p_in_screen, _p_in_ssh,
+# _p_in_typescript.  Since _p_detached_screens and _p_detached_tmuxs can
+# change during a session, 'promnow' can't set it for the session.
+#
 
-function _p_ssh () {
+_p_ssh () {
     if [ -n "$SSH_CLIENT" ]
     then
         echo "ssh"

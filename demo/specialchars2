@@ -1,0 +1,16 @@
+#!/bin/bash
+
+cat << EOF
+These are just some of the special characters that exist in most TTF
+fonts(? check, and check more carefully if you're using an older PCF/BDF
+font), selected mostly because I like them ...  To use them in your
+prompts, just cut-and-paste the character(s) you want:
+
+‡ ¤ ☆ ★ ♡ ◆ ◇ ✓ ✗
+⋅ · ○ ∙ ∘ ∴ ∵ ∶ ∷
+⊙ ⊚ ◎ □ ▪ ≡ √ ×
+▲ △ ▼ ▽ ▶ ▷ ◀ ◁
+» « 〈〉‹ ›
+← → ↑ ↓ ↕ ↔ ⇐ ⇒ ⇔
+EOF
+

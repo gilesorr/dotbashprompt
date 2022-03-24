@@ -1,10 +1,14 @@
 #!/bin/bash
 # Indicates whether or not you're in a tmux session.
 #
+# At this point, 'promnow' sets _p_in_tmux, _p_in_screen, _p_in_ssh,
+# _p_in_typescript.  Since _p_detached_screens and _p_detached_tmuxs can
+# change during a session, 'promnow' can't set it for the session.
+#
 # Happily, tmux sets its own environment variable (TMUX) that's easy to
 # detect.  Unfortunately, it also sets the SCREEN env variable.
 
-function _p_tmux () {
+_p_tmux () {
     if (( $(command -v tmux > /dev/null 2>&1 ; echo $?) == 0 ))
     then # tmux is installed
         # if tmux isn't running, dump the error, otherwise count unattached
