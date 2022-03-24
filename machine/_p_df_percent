@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# Shows each (Linux) system-attached disc and percentage df use on that
+# disc.  Doesn't handle Mac.
+
+_p_df_percent () {
+    # shellcheck disable=SC2154  # "referenced but not assigned"
+    if [ "${_p_os}" == "Linux" ]
+    then
+        # finds all local mount-points and shows their percent use in parens
+        while read -r mountpoint
+        do
+            echo -n "($( df --output=pcent "${mountpoint}" | tail -n +2 | tr -d " " ))"
+        done < <(lsblk --output MOUNTPOINT --noheadings | grep -v '^$' | grep -v '[SWAP]' )
+    elif [ "${_p_os}" == "Darwin" ]
+    then
+        echo -n "?"
+    else
+        echo -n "?"
+    fi
+}
+

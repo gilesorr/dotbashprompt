@@ -1,0 +1,42 @@
+#!/bin/bash
+# shows an average percent of disk usage across all disks - also turns red
+# if any individual disk is over threshold value full.
+#
+# Lots of improvements could be made:
+#   - don't assume _p_colours has been loaded!  Load it, or put in colour
+#     codes
+#   - only colourize the percentage
+#   - passing in colour(s) that would be used for the brackets
+#   - passing in a threshold
+#   - almost certainly Linux-only, I would expect it to bork horribly on Mac
+
+_p_df () {
+    threshold=90  # percentage
+    overthreshold=false
+    diskcount=0
+    sum=0
+
+    while read -r mountpoint
+    do
+        percent=$( df --output=pcent "${mountpoint}" | tail -n +2 | tr -d '%' )
+        (( sum += percent ))
+        # shellcheck disable=SC2086  # "Double quote to prevent globbing and word splitting."
+        if [ ${percent} -gt ${threshold} ]
+        then
+            overthreshold=true
+        fi
+        (( diskcount++ ))
+    done < <( lsblk --output MOUNTPOINT --noheadings | grep -v '^$' | grep -v '[SWAP]' ; mount | grep " cifs " | awk '{ print $3 }' )
+
+    (( average = sum / diskcount ))
+
+    if ${overthreshold}
+    then
+        # shellcheck disable=SC2154  # "[colour] referenced but not assigned"
+        echo -en "${_pc_b_red}"
+    fi
+
+    # shellcheck disable=SC2154  # "[colour] referenced but not assigned"
+    echo -e "[df:${average}%]${_pc_nocolour}"
+}
+

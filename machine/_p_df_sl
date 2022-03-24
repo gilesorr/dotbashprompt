@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+# Show one block for each mount point on the machine.  Same as
+# _p_df_stoplight but with no colours.  Each block is a circle: empty if
+# below the "okay" threshold, half filled if above it, and full if above
+# the "warning" threshold.
+#
+# WARNING: untested on Mac, guaranteed to not work there.
+
+_p_df_sl () {
+    # shellcheck disable=SC2154  # "referenced but not assigned"
+    if [ "${_p_os}" == "Darwin" ]
+    then
+        # This doesn't work on Mac
+        return
+    fi
+
+    okay=70     # percentage
+    warning=90
+
+    warning_char="●"
+    mid_char="◐"
+    okay_char="○"
+
+    while read -r mountpoint
+    do
+        percent=$( df --output=pcent "${mountpoint}" | tail -n +2 | tr -d '%' )
+        if [ "${percent}" -gt "${warning}" ]
+        then
+            echo -n "${warning_char}"
+        elif [ "${percent}" -gt "${okay}" ]
+        then
+            echo -n "${mid_char}"
+        else
+            echo -n "${okay_char}"
+        fi
+    done < <( lsblk --output MOUNTPOINT --noheadings | grep -v '^$' | grep -v '[SWAP]' ; mount | grep " cifs " | awk '{ print $3 }' )
+}
+

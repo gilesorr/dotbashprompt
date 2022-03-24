@@ -1,0 +1,47 @@
+#!/bin/bash
+# shellcheck disable=SC2154  # "[colour] referenced but not assigned"
+#
+# Show one block for each mount point on the machine.  Each block
+# is coloured: green if below the "okay" threshold, yellow if above it, and
+# red if above the "warning" threshold.
+#
+# WARNING: untested on Mac, guaranteed to not work there.
+
+# Specialty characters are probably font-dependent and you may have to make
+# substitutions.  I use ':digraphs' in Vim to find specialty characters
+# like these (if you don't know what that means, don't worry about it).
+
+_p_df_stoplight () {
+    if [ "${_p_os}" == "Darwin" ]
+    then
+        # This doesn't work on Mac
+        return
+    fi
+
+    okay=70     # percentage
+    warning=90
+
+    warning_char="●"
+    mid_char="◐"
+    okay_char="○"
+
+    _pc_b_okay="${_pc_b_green}"
+    _pc_b_mid="${_pc_b_yellow}"
+    _pc_b_warning="${_pc_b_red}"
+
+    while read -r mountpoint
+    do
+        percent=$( df --output=pcent "${mountpoint}" | tail -n +2 | tr -d '%' )
+        # shellcheck disable=SC2086  # "Double quote to prevent globbing and word splitting."
+        if [ ${percent} -gt ${warning} ]
+        then
+            echo -en "${_pc_b_warning}${warning_char}${_pc_nocolour}"
+        elif [ ${percent} -gt ${okay} ]
+        then
+            echo -en "${_pc_b_mid}${mid_char}${_pc_nocolour}"
+        else
+            echo -en "${_pc_b_okay}${okay_char}${_pc_nocolour}"
+        fi
+    done < <( lsblk --output MOUNTPOINT --noheadings | grep -v '^$' | grep -v '[SWAP]' ; mount | grep " cifs " | awk '{ print $3 }' )
+}
+
