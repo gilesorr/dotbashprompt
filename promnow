@@ -15,29 +15,40 @@
 # associated binary is available:
 #   _p_in_tmux - true or false, is this shell in a tmux session?
 #   _p_in_screen - true or false, is this shell in a screen session?
-#   _p_in_sssh - true or false, is this shell in a ssh session?
+#   _p_in_ssh - true or false, is this shell in a ssh session?
 #   _p_in_typescript - true or false, is this shell in a typescript session
 
 export PROMPTDIR="${HOME}/.bashprompt"
 # http://www.thegeekstuff.com/2013/12/bash-completion-complete/
 # If you add a new prompt, it won't be visible in bash completion until you
 # run the following command again.
-complete -W "$(ls "${PROMPTDIR}/prompts")" promnow
+
+_pn_dir="${PROMPTDIR}/prompts"
+export _pn_dir
+
+_promnow () {
+    local cur="${2}"
+    local _cur compreply
+    _cur="${_pn_dir}/${cur}"
+    mapfile compreply < <( compgen -f "${_cur}" )
+    COMPREPLY=( ${compreply[@]#${_pn_dir}/} )
+}
+complete -F _promnow promnow
 
 # as this isn't called directly by the user, give it a name that won't
 # clutter the user's name space (as much - originally "promnow_help").
-function _promnow_help () {
+_promnow_help () {
     echo "promnow <PROMPTNAME>"
-    if [ -n "${_p_NAME}" ]
-    then
-        echo "You are currently using the '${_p_NAME}' prompt."
-    fi
     echo "You must supply a single prompt name."
     echo "Available prompts are:"
     ls "${PROMPTDIR}/prompts/"
+    if [ -n "${_p_NAME}" ]
+    then
+        echo "    You are currently using the '${_p_NAME}' prompt."
+    fi
 }
 
-function _promnow_setup () {
+_promnow_setup () {
     if (( UID == 0 ))
     then
         export _p_uid0=true
@@ -45,24 +56,24 @@ function _promnow_setup () {
         export _p_uid0=false
     fi
     # set _p_os to string "Darwin" or "Linux"
-    if [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
+    if ( command uname -a | command grep Darwin > /dev/null )
     then
         export _p_os="Darwin"
-        ######################### Darwin Battery(s) check ################
+        ######################### Darwin Battery(s) check #####################
         if command ioreg -l | command grep Capacity >/dev/null
         then
             export _p_has_battery=true
         else
             export _p_has_battery=false
         fi
-        ######################## Darwin Thread check #####################
+        ######################## Darwin Thread check ##########################
         # this is LOGICAL cores, ie. threads:
         _p_numthreads=$(sysctl -n hw.ncpu)
         export _p_numthreads
-    elif [ "$(command uname -a | command grep Linux > /dev/null ; echo $?)" == "0" ]
+    elif ( command uname -a | command grep Linux > /dev/null )
     then
         export _p_os="Linux"
-        #########################  Linux Battery(s) check ################
+        #########################  Linux Battery(s) check #####################
         num_batteries=$(command ls -1d /sys/class/power_supply/BAT* 2>/dev/null | command wc -l)
         if (( num_batteries > 0 ))
         then
@@ -70,14 +81,14 @@ function _promnow_setup () {
         else
             export _p_has_battery=false
         fi
-        ######################## Linux Thread check ######################
+        ######################## Linux Thread check ###########################
         # the 'CPU(s)' line seems to be LOGICAL cores, ie. threads:
         _p_numthreads=$(lscpu | grep '^CPU(s):' | awk '{ print $NF }')
         export _p_numthreads
     else
         export _p_os="?"
     fi
-    ####################### tmux check ###################################
+    ####################### tmux check ########################################
     # on one Linux machine 'which tmux' error was stdout, on another stderr!:
     if (( $(command -v tmux > /dev/null 2>&1 ; echo $?) == 0 ))
     then # tmux is installed
@@ -88,7 +99,7 @@ function _promnow_setup () {
             export _p_in_tmux=false
         fi
     fi
-    ####################### screen check #################################
+    ####################### screen check ######################################
     if (( $(command -v screen > /dev/null 2>&1 ; echo $?) == 0 ))
     then # screen is installed
         # screen sometime (Mac?) sets TERM, sometimes (Fedora) sets TERMCAP
@@ -100,8 +111,10 @@ function _promnow_setup () {
         else
             export _p_in_screen=false
         fi
+    else
+        export _p_in_screen=false
     fi
-    ####################### typescript check ##############################
+    ####################### typescript check ###################################
     if (( $(command -v script > /dev/null 2>&1 ; echo $?) == 0 ))
     then # script is installed
         if [[ "${SCRIPT}" =~ "script" ]]
@@ -111,13 +124,20 @@ function _promnow_setup () {
             export _p_in_typescript=false
         fi
     fi
-    ####################### ssh check ####################################
+    ####################### ssh check #########################################
     # Not checking to see if it's installed ...
     if [ -n "$SSH_CLIENT" ]
     then
         export _p_in_ssh=true
     else
         export _p_in_ssh=false
+    fi
+    ####################### shell inside NeoVim check #########################
+    if [ "${NVIM_LISTEN_ADDRESS}x" != "x" ]
+    then
+        export _p_in_nvim=true
+    else
+        export _p_in_nvim=false
     fi
 }
 
@@ -127,7 +147,7 @@ _promnow_setup ; unset _promnow_setup
 
 # Reload both promnow and the prompt.  ("preload" with one "r" seemed
 # likely to be in use by other programs.)
-function prreload () {
+prreload () {
     # shellcheck disable=SC1090  # "non-constant source"
     source "${PROMPTDIR}/promnow"
     if [ -n "${_p_NAME}" ]
@@ -136,10 +156,7 @@ function prreload () {
     fi
 }
 
-function promnow () {
-    # Let's always reload the available prompts:
-    complete -W "$(ls "${PROMPTDIR}/prompts")" promnow
-
+promnow () {
     if (( $# == 1 ))
     then
         promfullname="${PROMPTDIR}/prompts/${1}"
