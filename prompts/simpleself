@@ -1,0 +1,74 @@
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# Single line simple (but coloured) prompt, self-contained.
+# 'git' support only show "yes-no in a git repo."
+#
+# This can be copied as just the contents of the file and pasted into a
+# bashrc file and it will work without any other code.
+
+echo "Prompt Title: simpleself"
+echo "Includes:     battery, user@host, PWD, basic git, basic svn, return value"
+echo "For:          a dark background"
+echo "Requires:     git, svn"
+
+export red='\001\033[38;5;009m\002'
+export yellow='\001\033[38;5;011m\002'
+export green='\001\033[38;5;010m\002'
+export white='\001\033[38;5;015m\002'
+export gray='\001\033[38;5;007m\002'
+export bg_gray='\001\033[48;5;007m\002'
+export nocolour='\001\033[0;0m\002'
+
+case ${TERM} in
+    xterm*|rxvt*)
+        # the first "\u@\h" is the Icon Title
+        # the second "\u@\h:\w" is goes into the XTerm Title Bar
+        # shellcheck disable=SC1117 #  Backslash is literal in ...
+        export _p_TITLEBAR="\033]1;\u@\h\007\033]2;\u@\h:\w\007"
+        if [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
+        then
+            # Macs don't understand the "Icon Title":
+            # shellcheck disable=SC1117 #  Backslash is literal in ...
+            export _p_TITLEBAR="\033]0;\u@\h:\w\007"
+        fi
+        ;;
+    *)
+        export _p_TITLEBAR=""
+        ;;
+esac
+
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+    echo -en "${_p_TITLEBAR}"
+}
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
+
+PS1=""
+PS1="${PS1}${_p_TITLEBAR}"
+num_batteries=$(command ls -1d /sys/class/power_supply/BAT* 2>/dev/null | command wc -l)
+if (( num_batteries > 0 ))
+then
+    PS1="${PS1}${red}{"
+    PS1="${PS1}${nocolour}\$(cat /sys/class/power_supply/BAT?/capacity)%"
+    PS1="${PS1}${red}}"
+fi
+# shellcheck disable=SC1117 #  Backslash is literal in ...
+PS1="${PS1}${nocolour}\u@\h"
+PS1="${PS1}${red}{"
+PS1="${PS1}${green}\$(if command git status >/dev/null 2>&1; then echo 'git '; fi)"
+PS1="${PS1}${green}\$(if command svn info   >/dev/null 2>&1; then echo 'svn '; fi)"
+# shellcheck disable=SC1117 #  Backslash is literal in ...
+PS1="${PS1}${nocolour}\w"
+PS1="${PS1}${red}}"
+PS1="${PS1}${bg_gray}${red}\${_p_retval}"
+PS1="${PS1}${nocolour}"
+PS1="${PS1}${yellow}\\\$ "
+PS1="${PS1}${nocolour}"
+

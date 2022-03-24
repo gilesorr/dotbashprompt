@@ -1,0 +1,167 @@
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC2154  # "referenced but not assigned"
+#
+# Modified "shelluser" prompt with modern updates.
+#
+# ... 2021-04-16: TODO changes partly implemented
+#
+# TODO:
+# - add "[$COLUMNSx$LINES]" to titlebar? (at end)
+
+# User-settable:
+wants_datetime=false
+# Choose if you want directory (and git info, if available) in red (the
+# alternative is white):
+wants_allred=true
+
+echo "Prompt Title: shelluser2"
+echo "Includes:     'screen' detection, ephemeral messages, top corner clock"
+echo "For:          a dark background"
+echo "Requires:     git"
+
+# Get the components we need:
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_git"
+source "${PROMPTDIR}/machine/_p_df_sl"
+
+if ${wants_allred}
+then
+    _p_dir_colour="${_pc_red}"
+else
+    _p_dir_colour="${_pc_b_gray}"
+fi
+
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+
+    ####################### in a git dir check ################################
+    if git rev-parse 2> /dev/null
+    then
+        export _p_in_git=true
+    else
+        export _p_in_git=false
+    fi
+
+    #  the command whose output is written in the upper right corner:
+    if ${_p_in_git}
+    then
+        #topRight="echo -n git:$(_p_git_status_only) $(date +%H%M)"
+        topRight="echo -n $(_p_git_status_only) $(date +%H%M)"
+    else
+        topRight="echo -n $(date +%H%M)"
+    fi
+    #  prompt_x is where to position the cursor to write the clock
+    prompt_x=$(( $(tput cols)-$(${topRight} | wc -c) ))
+    #  Move up one if in rxvt (a quirk of rxvt ...)
+    #  stopped being necessary when I added a second line to the upper section
+    if [ "${TERM}" = "rxvt" ]
+    then
+        echo -n ""
+    fi
+    #  save cursor position:
+    tput sc
+    #  with a two line prompt, move to line 1 not line 0:
+    tput cup 1 ${prompt_x}
+    #  set up the colours:
+    tput setaf 0 ; tput bold ; tput setab 1
+    ${topRight}
+    tput cup 2 $(($(tput cols)-2))
+    tput sgr0
+    #  restore cursor position:
+    tput rc
+}
+
+shelluser_prompt () {
+    if [ "$(tty | grep pts)" != "" ]
+    then
+        #   We're in X (I think)
+        Xyes=0
+    fi
+    if ${_p_in_screen}
+    then
+        SCR="[s]"
+    else
+        SCR=""
+    fi
+    if ${_p_in_tmux}
+    then
+        SCR="${SCR}[t]"
+    fi
+
+    TITLEBAR="\[\033]1;\u@\h\007\033]2;${SCR}\u@\h:\w\007\]"
+    case $TERM in
+        xterm*|rxvt*)
+            echo -n ""  # nop
+            ;;
+        screen*)
+            if [ "${Xyes}" -ne "0" ]
+            then
+                TITLEBAR=""
+            fi
+            ;;
+        *)
+            TITLEBAR=""
+            ;;
+    esac
+
+    PS1="${TITLEBAR}"
+    PS1="${PS1}${_pc_gray}-${_pc_red}-${_pc_b_red}("
+    PS1="${PS1}${_pc_red}\u${_pc_gray}@${_pc_red}\h$SCR"
+    PS1="${PS1}${_pc_b_red})${_pc_red}-"
+    if ${wants_datetime}
+    then
+        PS1="${PS1}${_pc_b_red}("
+        PS1="${PS1}${_pc_red}\D{%Y}${_pc_gray}-"
+        PS1="${PS1}${_pc_red}\D{%m}${_pc_gray}-"
+        PS1="${PS1}${_pc_red}\D{%d}${_pc_gray}:"
+        PS1="${PS1}${_pc_red}\D{%H%M}"
+        PS1="${PS1}${_pc_b_red})${_pc_red}-"
+    fi
+    PS1="${PS1}${_pc_b_red}("
+    PS1="${PS1}${_p_dir_colour}\w"
+    PS1="${PS1}${_pc_b_red})${_pc_red}-${_pc_gray}-"
+    # show git status in a wrapper, if we're in a git dir
+    PS1="${PS1}\$(
+        if \${_p_in_git}
+        then
+            kols=\$(tput cols)
+            testOutString=\"-(\$(_p_git))-\"
+            len=\${#testOutString}
+            pos=\$((kols - len + 1))
+            echo -en \"\033[\${pos}G\"
+            echo -en \"${_pc_red}-${_pc_b_red}(\"
+            echo -en \"${_p_dir_colour}\$(_p_git)\"
+            echo -en \"${_pc_b_red})${_pc_red}-\"
+        fi
+    )"
+    # newline
+    PS1="${PS1}\n"
+    PS1="${PS1}${_pc_gray}-${_pc_red}-"
+    PS1="${PS1}${_pc_b_red}("
+    PS1="${PS1}${_pc_gray}\!"
+    PS1="${PS1}${_pc_red}:"
+    PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
+    PS1="${PS1}${_pc_nocolour}${_pc_gray}\\\$"
+    PS1="${PS1}${_pc_b_red})${_pc_red}-${_pc_gray}-${_pc_nocolour} "
+    # This prints the date and time in FRONT of the prompt.
+    PS1="${PS1}\[\$(
+        tput sc
+        echo -en \"        ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
+        tput rc
+    )\]"
+
+    PS2="${_pc_b_red}-${_pc_red}-${_pc_gray}-${_pc_nocolour} "
+}
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
+shelluser_prompt
+unset shelluser_prompt
+
