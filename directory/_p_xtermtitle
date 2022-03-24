@@ -2,13 +2,13 @@
 #
 # This only needs to be done once per session, ie. call it outside the
 # PS1 string and then use the _p_TITLEBAR variable in the PS1.
-function _p_xtermtitle () {
+_p_xtermtitle () {
     case ${TERM} in
         xterm*|rxvt*)
             # the first "\u@\h" is the Icon Title
-            # the second "\u@\h:\w" is goes into the XTerm Title Bar
-            export _p_TITLEBAR="\[\033]1;\u@\h\007\033]2;\u@\h:\w\007\]"
-            if [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
+            # the second "\u@\h:\w" goes into the XTerm Title Bar
+            export _p_TITLEBAR="\[\033]1;\u@\h\007\033]2;\u@\h:\w (\${COLUMNS}x\${LINES})\007\]"
+            if [ "${_p_os}" == "Darwin" ]
             then
                 # Macs don't understand the "Icon Title":
                 export _p_TITLEBAR="\[\033]0;\u@\h:\w\007\]"

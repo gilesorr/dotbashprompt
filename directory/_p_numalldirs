@@ -3,7 +3,7 @@
 # Shows a count of the number of directories (hidden and visible) in the
 # current directory.
 
-function _p_numalldirs () {
+_p_numalldirs () {
     command ls -A -l | command grep -c "^d" | command tr -d " "
 }
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Gives a single character indicator of whether power is available.
 
-function _p_powerconnected () {
+_p_powerconnected () {
     if [ "${_p_os}" == "Linux" ]
     then
         # On a Linux system:

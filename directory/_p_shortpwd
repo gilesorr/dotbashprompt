@@ -3,7 +3,7 @@
 # Shortens the PWD to the length provided by the first parameter.  If no
 # value is provided, "20" is used.
 
-function _p_shortpwd () {
+_p_shortpwd () {
     if [ "${1}x" == "x" ]
     then
         (( pwd_len = 20 ))

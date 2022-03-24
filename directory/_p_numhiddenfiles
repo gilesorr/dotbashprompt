@@ -3,7 +3,7 @@
 # Shows a count of the number of hidden/dot files in the current directory.
 # Does NOT include directories.
 
-function _p_numhiddenfiles () {
+_p_numhiddenfiles () {
     command ls -A -l -d .* | command grep -c "^-" | command tr -d " "
 }
 

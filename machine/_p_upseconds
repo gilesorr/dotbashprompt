@@ -5,19 +5,24 @@
 # Intended for internal use - would usually be used to calculate the uptime
 # in a more human-readable form (see _p_uptime).
 
-function _p_upseconds () {
+_p_upseconds () {
+    # shellcheck disable=2154  # _p_os referenced but not assigned
     if [ "${_p_os}" == "Linux" ]
     then
         # http://askubuntu.com/questions/335592/how-to-display-time-elapsed-since-last-system-boot-using-uptime
         # /proc/uptime provides two numbers, the first is how long the
         # system has been up in seconds, the second is how much of that
         # time the machine has spent idle in seconds.
+        # shellcheck disable=2016  # "expressions don't expand in single
+        # quotes" (true enough, but this is awk)
         upSeconds="$(command awk -F "." '{print $1}' /proc/uptime)"
     elif [ "${_p_os}" == "Darwin" ]
     then
         # "sysctl kern.boottime" shows the time of the last boot in seconds
         # since the millennia, so we need to work out the number of seconds
         # since then.
+        # shellcheck disable=2016  # "expressions don't expand in single
+        # quotes" (true enough, but this is awk)
         upSeconds=$(( $(command date +%s) - $(sysctl kern.boottime | command awk '{print $5}' | command tr -d ",") ))
     fi
     echo -n "${upSeconds}"

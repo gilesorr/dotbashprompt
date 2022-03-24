@@ -3,7 +3,7 @@
 # shows your tty number: on console "/dev/tty4" becomes "tty4" in the
 # prompt, and in X "/dev/pts/4" becomes "4" in the prompt.
 
-function _p_shorttty () {
+_p_shorttty () {
     command basename "$(command tty)"
 }
 

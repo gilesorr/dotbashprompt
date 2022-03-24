@@ -3,7 +3,7 @@
 # Uses the long output of "ls" to print the size of the current directory
 # in kb.
 
-function _p_lssize () {
+_p_lssize () {
     lskb=$(command ls -l | command grep "^total " | command awk '{print $2}')
     echo -n "${lskb}kb"
 }

@@ -20,7 +20,7 @@
 #   digits, but it lies).  Tried a variety of work-arounds, none fixed the
 #   problem - so back to looping.
 
-function _p_colourslashpwd_internal () {
+_p_colourslashpwd_internal () {
     # accepts and prints directory with coloured slashes AFTER
     # lead-in substitution
 
@@ -51,7 +51,7 @@ function _p_colourslashpwd_internal () {
     IFS=$ORIGIFS
 }
 
-function _p_colourslashpwd () {
+_p_colourslashpwd () {
     # indication that a truncation has occurred:
     local trunc_symbol="..."
     if (( $# == 3 ))

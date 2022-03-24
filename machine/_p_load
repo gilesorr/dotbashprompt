@@ -3,7 +3,7 @@
 #
 # Removing the trailing comma isn't necessary on Mac, but is on Linux
 
-function _p_load () {
+_p_load () {
     # If you wanted:
     # - the  5 minute load: $(NF-1)
     # - the 15 minute load: $NF

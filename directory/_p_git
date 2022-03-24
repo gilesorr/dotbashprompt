@@ -1,17 +1,10 @@
 #!/bin/bash
-#
-# Large portions of this were lovingly borrowed from nitrous.io's prompt
-# because it's simple, readable, and works well.  Thanks!  It's since been
-# modified a LOT.
-#
-# 2016-02-24: added "+" after ahead("^") and/or behind("v") if there are
-# untracked files.  Still doesn't show if there are staged-but-uncommitted
-# files.
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
 
 source "${PROMPTDIR}/directory/_p_git_branch_only"
 source "${PROMPTDIR}/directory/_p_git_status_only"
 
-function _p_git () {
+_p_git () {
     if [ "$(_p_git_branch_only)x" != "x" ]
     then
         _p_git_branch_only

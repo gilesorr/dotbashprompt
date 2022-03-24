@@ -3,7 +3,7 @@
 # Shows a count of the number of links (hidden and visible) in the current
 # directory.
 
-function _p_numalllinks () {
+_p_numalllinks () {
     command ls -A -l | command grep -c "^l" | command tr -d " "
 }
 

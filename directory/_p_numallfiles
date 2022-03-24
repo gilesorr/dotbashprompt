@@ -3,7 +3,7 @@
 # Shows a count of all files, hidden or not, in the current directory.  Does
 # NOT include directories.
 
-function _p_numallfiles () {
+_p_numallfiles () {
     command ls -Al | command grep -c "^-" | command tr -d " "
 }
 

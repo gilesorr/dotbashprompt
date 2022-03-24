@@ -3,7 +3,7 @@
 # Shows a count of visible (ie. not hidden) files in the current directory.
 # Does NOT include directories.
 
-function _p_numvisfiles () {
+_p_numvisfiles () {
     command ls -l | command grep -c "^-" | command tr -d " "
 }
 

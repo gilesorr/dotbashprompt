@@ -5,7 +5,7 @@
 # TODO:
 # - Linux version would almost certainly barf on dual batteries
 
-function _p_powerpercent () {
+_p_powerpercent () {
     if [ "${_p_os}" == "Linux" ]
     then
         # On a Linux system:

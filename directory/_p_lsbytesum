@@ -8,7 +8,7 @@
 # 'statbytesum' seemed simpler overall (it's also OS-dependent
 # unfortunately).
 
-function _p_lsbytesum () {
+_p_lsbytesum () {
     (( _p_scale=1 ))      # number of digits after the decimal place
     (( TotalBytes=0 ))
 

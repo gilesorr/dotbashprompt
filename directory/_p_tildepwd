@@ -2,7 +2,7 @@
 #
 # Replaces ${HOME} with "~" in the current directory
 
-function _p_tildepwd () {
+_p_tildepwd () {
     # Why the weird "tilde=" abstraction?:
     # If you use a literal "~", older versions of Bash (v3.*? Apple, it's
     # time to upgrade) will expand it to your home directory, thus negating

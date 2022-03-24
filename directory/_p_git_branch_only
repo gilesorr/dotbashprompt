@@ -1,6 +1,6 @@
 #!/bin/bash
-#
-function _p_git_branch_only () {
+
+_p_git_branch_only () {
     branch_name=$(command git branch --no-color 2> /dev/null | command sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/")
     if [ "${branch_name}x" != "x" ]
     then

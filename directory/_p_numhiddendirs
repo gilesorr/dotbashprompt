@@ -2,7 +2,7 @@
 # Shows a count of the number of hidden/dot directories in the current
 # directory.
 
-function _p_numhiddendirs () {
+_p_numhiddendirs () {
     # This method counts "." and ".." as dirs, so subtract 2
     # ("-A" doesn't work because you requested dot files(?))
     echo -n "$(( $(command ls -l -d .* | command grep -c '^d' | command tr -d ' ') - 2 ))"

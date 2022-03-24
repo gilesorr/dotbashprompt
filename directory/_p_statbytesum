@@ -4,7 +4,7 @@
 # recommends the printf in awk to compensate for bad behaviour of some
 # (older?) awks above the 2G mark (2^31).
 
-function _p_statbytesum () {
+_p_statbytesum () {
     (( _p_scale=1 ))      # number of digits after the decimal place
 
     if [ "${_p_os}" == "Darwin" ]
