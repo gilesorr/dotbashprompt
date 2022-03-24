@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# This is "experimental" at best.  'svn status' can be very slow (it
+# makes a remote call!).  And I'm just cumulating all the
+# status signs (I usually see "?" - new file - and "M" - modified - but
+# there are around 15 others ...).  So: may or may not work.
+#
+# Initial tests seem to indicate speed is inversely proportional to the
+# number of changes.  More changes, less responsive.
+#
+# I would STRONGLY discourage you using this.  You won't like the results.
+
+_p_svn_status_only () {
+    command svn status 2> /dev/null | sed 's/\(.\).*/\1/' | sort | uniq | awk '{ ORS="" } { print $1 }'
+}
+

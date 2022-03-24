@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Please DO NOT use this.  See the notes in _p_svn_status_only!
+# _p_svn_branch_only is usable, but _p_svn_status_only is both incomplete
+# and appallingly slow!
+
+source "${PROMPTDIR}/directory/_p_svn_branch_only"
+source "${PROMPTDIR}/directory/_p_svn_status_only"
+
+_p_svn () {
+    if [ "$(_p_svn_branch_only)x" != "x" ]
+    then
+        _p_svn_branch_only
+        _p_svn_status_only
+    fi
+}
+

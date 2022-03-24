@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if isMac > /dev/null
+then
+    # Mac's default 'readlink' doesn't support '-f' which we need.
+    # requires 'brew install coreutils':
+    _p_readlink="/usr/local/bin/greadlink"
+    # I'm not checking for binary existence: it's better it fails on
+    # prompt load and directs them here than fails later with a
+    # "readlink: illegal option -- f" error of less clear origin.
+else
+    _p_readlink="readlink"
+fi
+
+_p_svn_branch_only () {
+    # get the relative URL:
+    relativeURL="$(command svn info --show-item relative-url 2> /dev/null)"
+    # get the working copy root:
+    wcroot="$(command svn info --show-item wc-root 2> /dev/null)"
+    # get real path to current directory:
+    curDir="$(command "${_p_readlink}" -f "${PWD}")"
+    # remove the wcroot from the beginning of PWD
+    svnPath="${curDir#${wcroot}}"
+
+    echo -n "${relativeURL%${svnPath}}"
+}
+
