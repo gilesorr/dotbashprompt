@@ -3,9 +3,8 @@
 #- to determine the "capname" for the capabilities 'tput' has, you have to
 #  search the 'terminfo' man page.  'tput sgr0' resets everything, but most
 #  capabilities can be reset individually.  For underline it's 'smul' to
-#  turn it on, 'rmul' to turn it off.  I need to create a demo script for
-#  all the modes (or at least the ones that are sane in a prompt) in the
-#  demo/ folder.
+#  turn it on, 'rmul' to turn it off.  This script is meant to show the
+#  the modes that might be sane in a prompt.
 
 # Create a list of variables that are simply capability names (don't look
 # at "man tput" for this, look at "man terminfo"):

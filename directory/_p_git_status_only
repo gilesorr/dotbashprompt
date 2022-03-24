@@ -4,13 +4,17 @@
 # because it's simple, readable, and works well.  Thanks!  It's since been
 # modified a LOT.
 #
-# 2016-02-24: added "+" after ahead("^") and/or behind("v") if there are
-# untracked files.  Still doesn't show if there are staged-but-uncommitted
-# files.
+# The "bare" repo exception runs into a really weird edge case.  If the
+# directory your terminal is in vanishes (deleted by another process, such
+# as 'git' which deletes empty folders when you 'rm' the last file in them,
+# even if you're still in the folder), the 'git diff ...' command returns
+# the same error code as on encountering a bare repo.  to distinguish, I
+# added '[ -r "${PWD}" ]' which checks if the directory is still readable.
+# (In this context '[ -r . ]' is NOT the same.)
 
-function _p_git_status_only () {
+_p_git_status_only () {
     command git diff --no-ext-diff --quiet --exit-code &>/dev/null
-    if (( $? == 128 ))
+    if (( $? == 128 )) && [ -r "${PWD}" ]
     then
         echo -n "(bare)"
     fi
@@ -19,43 +23,56 @@ function _p_git_status_only () {
     if [ "${upstream}x" != "x" ]
     then
         # we appear to have an origin
-        _p_git_uptodate=$(echo "${upstream}" | command grep "up to date"      -q ; echo $?)
-        _p_git_ahead=$(   echo "${upstream}" | command grep "ahead of"        -q ; echo $?)
-        _p_git_behind=$(  echo "${upstream}" | command grep "behind"          -q ; echo $?)
-        _p_git_diverged=$(echo "${upstream}" | command grep "diverged"        -q ; echo $?)
-        _p_git_modified=$(echo "${status}"   | command grep "not staged for"  -q ; echo $?)
-        _p_git_untrack=$( echo "${status}"   | command grep "ntrack"          -q ; echo $?)
-        _p_git_staged=$( echo "${status}"    | command grep "to be committed" -q ; echo $?)
-        if (( _p_git_uptodate == 0 ))
-        then
-            echo -n "-"
-        fi
-        if (( _p_git_ahead == 0 ))
-        then
-            echo -n "^"
-        fi
-        if (( _p_git_behind == 0 ))
-        then
-            echo -n "v"
-        fi
-        if (( _p_git_diverged == 0 ))
-        then
-            echo -n "^v"
-        fi
-        if (( _p_git_modified == 0 ))
-        then
-            echo -n "!"
-        fi
-        if (( _p_git_untrack == 0 ))
-        then
-            echo -n "+"
-        fi
-        if (( _p_git_staged == 0 ))
-        then
-            echo -n "_"
-        fi
+        _p_git_uptodate=$(echo "${upstream}" | command grep "up to date" -q ; echo $?)
+        _p_git_ahead=$(   echo "${upstream}" | command grep "ahead of"   -q ; echo $?)
+        _p_git_behind=$(  echo "${upstream}" | command grep "behind"     -q ; echo $?)
+        _p_git_diverged=$(echo "${upstream}" | command grep "diverged"   -q ; echo $?)
+    else
+        _p_git_uptodate="1"
+        _p_git_ahead="1"
+        _p_git_behind="1"
+        _p_git_diverged="1"
+    fi
+    _p_git_modified=$(echo "${status}"   | command grep "not staged for"  -q ; echo $?)
+    _p_git_untrack=$( echo "${status}"   | command grep "ntrack"          -q ; echo $?)
+    _p_git_staged=$(  echo "${status}"   | command grep "to be committed" -q ; echo $?)
+    _p_git_stashed=1
+    if [ $(git stash list | wc -l) -ne 0 ]
+    then
+        _p_git_stashed=0
+    fi
+    # ------------------------------------------------------------------
+    if (( _p_git_uptodate == 0 ))
+    then
+        echo -n "-"
+    fi
+    if (( _p_git_ahead == 0 ))
+    then
+        echo -n "^"
+    fi
+    if (( _p_git_behind == 0 ))
+    then
+        echo -n "v"
+    fi
+    if (( _p_git_diverged == 0 ))
+    then
+        echo -n "^v"
+    fi
+    if (( _p_git_modified == 0 ))
+    then
+        echo -n "!"
+    fi
+    if (( _p_git_untrack == 0 ))
+    then
+        echo -n "+"
+    fi
+    if (( _p_git_staged == 0 ))
+    then
+        echo -n "_"
+    fi
+    if (( _p_git_stashed == 0 ))
+    then
+        echo -n "S"
     fi
 }
-
-_p_git_status_only
 
