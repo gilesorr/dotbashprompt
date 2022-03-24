@@ -18,7 +18,7 @@ source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/directory/_p_git"
 
-function prompt_command () {
+prompt_command () {
     _p_xtermtitle # generates the _p_TITLEBAR variable
     local tmp
     tmp=$(_p_git)

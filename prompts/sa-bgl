@@ -19,7 +19,7 @@ source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
 
-function prompt_command () {
+prompt_command () {
     _p_xtermtitle # generates the _p_TITLEBAR variable
 }
 
