@@ -2,14 +2,14 @@
 #
 # Colours for prompts:
 #    _pc_color          foreground colour
-#    _pc_b_color   bold foreground colour
+#    _pc_b_color bright foreground colour
 #    _pc_bg_color       background colour
 #
 # NOTE: to combine a BG and FG, list the FG FIRST, then the BG colour.
 #
 # Colours without the prompt escape sequences:
 #    _c_color           foreground colour
-#    _c_b_color    bold foreground colour
+#    _c_b_color  bright foreground colour
 #    _c_bg_color        background colour
 #
 # NOTE:
@@ -22,6 +22,13 @@ export _pc_nocolour='\001\033[0;0m\002'
 export _pc_nocolor='\001\033[0;0m\002' # for our American friends
 export _c_nocolour='\033[0m'
 export _c_nocolor='\033[0m'
+
+export _pc_bold='\001$(tput bold)\002'
+export _pc_underline='\001$(tput smul)\002'
+# italics display is very terminal-dependent: on some, it's reverse video.
+export _pc_italics='\001$(tput sitm)\002'
+export _pc_reverse='\001$(tput rev)\002'
+export _pc_blink='\001$(tput blink)\002'
 
 export _pc_black='\001\033[38;5;000m\002'
 export _pc_b_black='\001\033[38;5;008m\002' # dark gray
