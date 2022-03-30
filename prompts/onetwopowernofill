@@ -27,8 +27,8 @@ minRemainingWidth=50
 
 prompt_command () {
     # set some variables to be displayed later
-    p_displayGit="$(_p_git)"
-    p_displayPower="($(_p_powerconnected)$(_p_powerpercent)%)"
+    _p_displayGit="$(_p_git)"
+    _p_displayPower="($(_p_powerconnected)$(_p_powerpercent)%)"
     _p_tilde="~"
     # on Linux/Bash4 we need "\~", on Mac/Bash3 we need "~" in this
     # substitution, so we get around it by making it a variable ...:
@@ -41,14 +41,14 @@ PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"
 PS1="${PS1}\$(
-remainingWidth=\$(( COLUMNS - \${#p_displayPower} - \${#_p_dir} - \${#p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
+remainingWidth=\$(( COLUMNS - \${#_p_displayPower} - \${#_p_dir} - \${#_p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
 
-echo -en \"${_pc_b_gray}\${p_displayPower}${_pc_nocolour}\"
+echo -en \"${_pc_b_gray}\${_p_displayPower}${_pc_nocolour}\"
 echo -en \"\${_p_dir}\"
-if [ \"\${p_displayGit}x\" != \"x\" ]
+if [ \"\${_p_displayGit}x\" != \"x\" ]
 then
     echo -en \"${_pc_b_gray}|\"
-    echo -en \"${_pc_b_green}\${p_displayGit}\"
+    echo -en \"${_pc_b_green}\${_p_displayGit}\"
 fi
 
 if (( remainingWidth <= minRemainingWidth )) ; # the two line version
