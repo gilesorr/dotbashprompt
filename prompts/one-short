@@ -20,8 +20,9 @@ source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/directory/_p_shortpwd"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
+source "${PROMPTDIR}/machine/_p_df_stoplight"
 
-function prompt_command () {
+prompt_command () {
     _p_xtermtitle # generates the _p_TITLEBAR variable
     local tmp
     tmp=$(_p_git)
@@ -29,7 +30,7 @@ function prompt_command () {
     then
         _p_git_output=""
     else
-        _p_git_output="-${tmp}"
+        _p_git_output="${tmp}"
     fi
 }
 
@@ -37,12 +38,17 @@ PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"
-PS1="${PS1}${_pc_nocolour}\$(_p_powerconnected)\$(_p_powerpercent)%"
-PS1="${PS1}${_p_nocolour} "
+if ${_p_has_battery}
+then
+    PS1="${PS1}${_pc_nocolour}\$(_p_powerconnected)\$(_p_powerpercent)%"
+    PS1="${PS1}${_p_nocolour} "
+fi
+PS1="${PS1}\$(_p_df_stoplight)"
 PS1="${PS1}${_pc_b_gray}\u${_pc_b_black}@${_pc_b_gray}\h"
 PS1="${PS1}${_p_nocolour}:"
 PS1="${PS1}${_pc_nocolour}\$(_p_shortpwd 15)"
-PS1="${PS1}${_pc_b_gray}\${_p_git_output}"
+PS1="${PS1}${_pc_b_red}≡"
+PS1="${PS1}${_pc_nocolour}\${_p_git_output}"
 PS1="${PS1}${_pc_b_yellow}\$${_pc_nocolour} "
 
 export PS1
