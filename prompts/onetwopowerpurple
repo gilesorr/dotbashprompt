@@ -25,9 +25,15 @@ source "${PROMPTDIR}/machine/_p_powerpercent"
 minRemainingWidth=50
 
 prompt_command () {
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
     # set some variables to be displayed later
-    p_displayGit="$(_p_git)"
-    p_displayPower="($(_p_powerconnected)$(_p_powerpercent)%)"
+    _p_displayGit="$(_p_git)"
+    _p_displayPower="($(_p_powerconnected)$(_p_powerpercent)%)"
     _p_tilde="~"
     # on Linux/Bash4 we need "\~", on Mac/Bash3 we need "~" in this
     # substitution, so we get around it by making it a variable ...:
@@ -40,34 +46,36 @@ PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"
 PS1="${PS1}\$(
-remainingWidth=\$(( COLUMNS - \${#p_displayPower} - \${#_p_dir} - \${#p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
+remainingWidth=\$(( COLUMNS - \${#_p_displayPower} - \${#_p_dir} - \${#_p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
 
 if (( remainingWidth <= minRemainingWidth )) ; # the two line version
 then
-    fillWidth=\$(( COLUMNS - \${#p_displayPower} - \${#_p_dir} - \${#p_displayGit} ))
+    fillWidth=\$(( COLUMNS - \${#_p_displayPower} - \${#_p_dir} - \${#_p_displayGit} ))
     fill=\"\";
     for (( i=0 ; i<\${fillWidth} ; i=i+1))
     do
         fill=\"\${fill} \"
     done
 
-    echo -en \"${_pc_b_purple}\${p_displayPower}${_pc_nocolour}\"
+    echo -en \"${_pc_b_purple}\${_p_displayPower}${_pc_nocolour}\"
     echo -en \"${_pc_purple}\${_p_dir}${_pc_nocolour}\"
     echo -en \"\${fill}\"
-    echo -en \"${_pc_b_gray}\${p_displayGit}${_pc_nocolour}\"
+    echo -en \"${_pc_b_gray}\${_p_displayGit}${_pc_nocolour}\"
     echo -en \"\n\"
     echo -en \"${_pc_b_yellow}\u${_pc_b_purple}@${_pc_b_yellow}\h\"
     echo -e  \"${_pc_b_purple}\$${_pc_nocolour} \";
 else   # the one line version
-    echo -en \"${_pc_b_purple}\${p_displayPower}${_pc_nocolour}\"
+    echo -en \"${_pc_b_purple}\${_p_displayPower}${_pc_nocolour}\"
     echo -en \"${_pc_purple}\${_p_dir}${_pc_nocolour}\"
-    if [ \"\${p_displayGit}x\" != \"x\" ]
+    if [ \"\${_p_displayGit}x\" != \"x\" ]
     then
         echo -en \"${_pc_b_purple}|\"
-        echo -en \"${_pc_b_gray}\${p_displayGit}\"
+        echo -en \"${_pc_b_gray}\${_p_displayGit}\"
     fi
     echo -en \"${_pc_b_purple}|\"
     echo -en \"${_pc_b_yellow}\u${_pc_b_purple}@${_pc_b_yellow}\h\"
+    echo -en \"${_pc_bg_gray}${_pc_b_red}\${_p_retval}\"
+    echo -en \"${_pc_nocolour}\"
     echo -e  \"${_pc_b_purple}\$${_pc_nocolour} \";
 fi
 )"
