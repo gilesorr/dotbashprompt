@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# Shows a clock in the top right of the terminal.
+#
+# NOTE:
+# If the prompt is multi-line, place the call to this function on the last
+# line: otherwise the clock will be printed at the top of the screen and
+# then forced off-screen when the next prompt-line is printed.
+#
+# This needs to be passed two colour parameters (a main and a highlight
+# colour) that DON'T include the non-counting-characters code because the
+# entire clock needs to be surrounded by that (which needs to be handled at
+# the prompt level, not in this function, see prompts/raw/onetwo for an
+# example) and passing it in the colours would break this.  So use the
+# _c_<code> not the _pc_<colour> code for colours.
+
+_p_topright_clock () {
+    _p_clock_colour="${1}"
+    _p_clock_hilight="${2}"
+
+    #  the command whose output is written in the upper right corner:
+    topRight="echo -n $(date +%H%M)"
+    # prompt_x is where to position the cursor to write the clock
+    # (${#topRight} (notice the hash mark to get variable length) should
+    # get me working string length, but doesn't function as expected).
+    (( prompt_x = COLUMNS - $(${topRight} | wc -c) - 1 ))
+    #  save cursor position:
+    tput sc
+    tput cup 0 "${prompt_x}"
+    #  set up the colours:
+    #tput setaf 0 ; tput bold ; tput setab 1
+    echo -en "${_p_clock_hilight}|${_p_clock_colour}"
+    ${topRight}
+    echo -en "${_c_nocolour}"
+    #  restore cursor position:
+    tput rc
+}
+
