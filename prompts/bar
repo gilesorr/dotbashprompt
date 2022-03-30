@@ -9,7 +9,7 @@
 # Colourful bar of information above a simple prompt.
 
 echo "Prompt Title: bar"
-echo "Includes:     battery, user@hostname, short PWD, git status"
+echo "Includes:     battery, user@hostname, short PWD, git status, return value"
 echo "For:          dark or light background"
 echo "Requires:     git"
 
@@ -20,7 +20,14 @@ source "${PROMPTDIR}/directory/_p_colourslashpwd"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
 
-function prompt_command () {
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+
     # This is needed to calculate prompt width to fill the full width of
     # the terminal.
 
@@ -33,7 +40,7 @@ function prompt_command () {
     # pwidth = prompt width
     # "+ 2" for the spaces between content
     pwidth=$(( pwidth + ${#_p_pow} + ${#uath} + ${#PWD} + ${#_p_newgit} + 2 ))
-    fill=""
+    _p_fill=""
     if (( pwidth > COLUMNS ))
     then
         # prompt is too wide, truncate the PWD
@@ -43,27 +50,28 @@ function prompt_command () {
         local  overage=$(( pwidth - COLUMNS + 1 ))
         (( _p_newPWDlen = ${#PWD} - overage ))
     else
-        filllength=$(( COLUMNS - pwidth ))
+        local filllength=$(( COLUMNS - pwidth ))
         (( i = 0 ))
         while (( i < filllength ))
         do
-            fill="${fill} "
+            _p_fill="${_p_fill} "
             i=$(( i + 1 ))
         done
     fi
 }
 export PROMPT_COMMAND="prompt_command"
 
-#PS1="fill is -\${fill}-"
+#PS1="_p_fill is -\${_p_fill}-"
 #PS1="${PS1}${_pc_b_yellow}${_pc_bg_blue}\${_p_pow}"
 PS1="${_pc_b_yellow}${_pc_bg_blue}\${_p_pow}"
 PS1="${PS1} "
 PS1="${PS1}${_pc_b_gray}\u${_pc_b_yellow}@${_pc_b_gray}\h"
 PS1="${PS1}${_pc_b_yellow}:"
 PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red}\${_pc_bg_blue} \${_pc_b_yellow}\${_pc_bg_blue} \${_pc_bg_blue} \${_p_newPWDlen})"
-PS1="${PS1}${_pc_b_gray}\${fill}\${_p_newgit}"
+PS1="${PS1}${_pc_b_gray}\${_p_fill}\${_p_newgit}"
 PS1="${PS1}${_pc_nocolour}\n"
-PS1="${PS1}\$"
+PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
+PS1="${PS1}${_pc_nocolour}\\\$"
 PS1="${PS1}${_pc_nocolour} "
 
 export PS1
