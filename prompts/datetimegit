@@ -21,7 +21,7 @@ source "${PROMPTDIR}/time/_p_yyyy-mm-dd"
 source "${PROMPTDIR}/machine/_p_upseconds"
 source "${PROMPTDIR}/machine/_p_uptime"
 
-function prompt_command () {
+prompt_command () {
     _p_xtermtitle # generates the _p_TITLEBAR variable
     # minimum days of uptime before uptime is shown:
     local minuptime=5
