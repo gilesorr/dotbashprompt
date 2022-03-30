@@ -1,0 +1,75 @@
+#!/bin/bash
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC2154  # "referenced but not assigned"
+
+# 2021-03-21: incomplete (add conditional power) but simple, looks nice.
+
+echo "Prompt Title: cyanoverwhite"
+#echo "Includes:     PWD, git status, newline, battery, user@host"
+echo "Includes:     retval, git, power, tmux/screen detection."
+echo "For:          a dark background" # Mac? works on Linux
+echo "Requires:     git"
+
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_git"
+#source "${PROMPTDIR}/machine/_p_df"
+source "${PROMPTDIR}/machine/_p_df_stoplight"
+
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+    _p_xtermtitle # generates the _p_TITLEBAR variable
+    if [ -w "${PWD}" ]
+    then
+        export _p_wdbg=""
+    else
+        _p_wdbg="$(echo -e "${_pc_bg_blue}")"
+        export _p_wdbg
+    fi
+}
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
+
+PS1=""
+PS1="${PS1}${_p_TITLEBAR}"
+if ${_p_in_tmux}
+then
+    PS1="${PS1}${_pc_b_gray}[${_pc_nocolour}"
+    PS1="${PS1}${_pc_b_cyan}tmux${_pc_nocolour}"
+    PS1="${PS1}${_pc_b_gray}]${_pc_nocolour} "
+fi
+if ${_p_in_screen}
+then
+    PS1="${PS1}${_pc_b_gray}[${_pc_nocolour}"
+    PS1="${PS1}${_pc_b_cyan}screen${_pc_nocolour}"
+    PS1="${PS1}${_pc_b_gray}]${_pc_nocolour} "
+fi
+#PS1="${PS1}\$(_p_df)"
+PS1="${PS1}[\$(_p_df_stoplight)]"
+PS1="${PS1}\${_p_wdbg}"
+PS1="${PS1}${_pc_b_cyan}\w${_pc_nocolour}"
+PS1="${PS1} ${_pc_b_yellow}\$(_p_git)${_pc_nocolour}"
+PS1="${PS1}${_pc_nocolour}\n"
+#
+# Second Line
+#
+if ${_p_has_battery}
+then
+    PS1="${PS1}${_pc_b_cyan}[${_pc_nocolour}"
+    PS1="${PS1}\$(_p_powerconnected)\$(_p_powerpercent)%"
+    PS1="${PS1}${_pc_b_cyan}]${_pc_nocolour}"
+fi
+if ${_p_uid0}
+then
+    PS1="${PS1}${_pc_b_red}\u${_pc_nocolour}"
+else
+    PS1="${PS1}${_pc_b_gray}\u${_pc_nocolour}"
+fi
+PS1="${PS1}${_pc_b_cyan}@${_pc_b_gray}\h${_pc_nocolour}"
+PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
+PS1="${PS1}${_pc_b_cyan}\\\$${_pc_nocolour} "
+

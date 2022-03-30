@@ -1,0 +1,104 @@
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC1117  # "backslash is literal"
+# shellcheck disable=SC2154  # "referenced but not assigned"
+#
+# This mangles the PWD display down to single characters, and in the same
+# vein it mangles the git branch to one character plus status.  If the
+# first character of a dir name is a dot '.', capture/show one further
+# character.
+#
+# TODO:
+# - if current dir is non-writable, make whole directory name
+#   black-on-yellow (currently only the last element gets this treatment).
+#   Should be easy enough if you put the write-detection in the
+#   prompt_command().
+
+echo "Prompt Title: singletons2"
+echo "Includes:     colourized single char PWD, git, battery, return value, ephemeral info"
+echo "For:          a dark background"
+echo "Requires:     git"
+
+# Get the components we need:
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_xtermtitle"
+source "${PROMPTDIR}/directory/_p_git_status_only"
+source "${PROMPTDIR}/directory/_p_git_branch_only"
+source "${PROMPTDIR}/machine/_p_powerconnected"
+source "${PROMPTDIR}/machine/_p_powerpercent"
+source "${PROMPTDIR}/machine/_p_df_sl"
+
+prompt_command () {
+    _p_retval="$?"
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+    _p_xtermtitle # generates the _p_TITLEBAR variable
+    if [[ "${_p_has_battery}" == "true" ]]
+    then
+        _p_displayPower="$(_p_powerconnected)$(_p_powerpercent) "
+    else
+        _p_displayPower=""
+    fi
+    if [ "$(_p_git_branch_only)x" == "x" ]
+    then
+        _p_displayBranch=""
+    else
+        # mangle the git branch name down to a single character:
+        _p_displayBranch="$(_p_git_branch_only | sed -e 's/\(.\).*/\1/')"
+    fi
+    # mangle PWD:
+    #   - first sed replaces ${HOME} with '~'
+    #   - second sed finds every '/' and the word after, then replaces it
+    #     with the slash and the first letter after (or a dot and a letter
+    #     if the first char is a dot)
+    #   - finally, chop off the last dirname, to be added later with
+    #     different colours IF non-writeable
+    #
+    #     regex assistance from William Park and Angelo Berios.
+    #
+    newPWD=$(echo "${PWD/${HOME}/\~}" | sed -E -e 's@(\.?[^/])[^/]*(/)@\1\2@g' -e 's/[^/~]*$//' )
+    export newPWD
+}
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
+
+PS1=""
+PS1="${PS1}${_p_TITLEBAR}"
+# if we have a battery percentage to display, display it:
+PS1="${PS1}\$(
+if [ \"\${_p_displayPower}x\" != \"x\" ]
+then
+    echo -en \"${_pc_b_yellow}\${_p_displayPower}${_pc_nocolour}\"
+fi
+)"
+# colourize slashes in $newPWD red, and echo the var:
+PS1="${PS1}$( echo -e "\${newPWD//\//\\[\\e[1;31m\\]\/\\[\\e[0;0m\\]}" )"
+# if the current directory isn't writable, make the bg colour yellow:
+PS1="${PS1}\$( if ! [ -w \"\${PWD}\" ]; then echo -en \"${_pc_bg_yellow}${_pc_black}\"; fi )"
+# add the last directory name from $PWD if we're not in $HOME:
+PS1="${PS1}\$( if [ \"\${PWD}\" != \"${HOME}\" ]; then echo \"\W\"; fi )"
+# set colour for git:
+PS1="${PS1}${_pc_nocolour}${_pc_b_green}"
+# show git
+PS1="${PS1}\$(_p_git_status_only)\${_p_displayBranch}"
+PS1="${PS1}${_pc_nocolour}"
+# show return value from previous command in bright colours (if non-zero):
+PS1="${PS1}${_pc_bg_gray}${_pc_b_red}"
+PS1="${PS1}\${_p_retval}"
+PS1="${PS1}${_pc_nocolour}"
+PS1="${PS1}\\\$ "
+# Print "ephemeral" info after the prompt
+PS1="${PS1}\[\$(
+    tput sc
+    echo -en \"   ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
+    tput rc
+)\]"
+
+export PS1
+
