@@ -27,7 +27,8 @@ then
 else
     export _p_usercolour="${_pc_b_gray}"
 fi
-function prompt_command () {
+
+prompt_command () {
     _p_retval=$? # capture the return value before you change it w/prompt
     if (( _p_retval == 0 ))
     then
@@ -49,13 +50,13 @@ then
     PS1="${PS1}[s]"
 fi
 PS1="${PS1}${_p_TITLEBAR}"
-PS1="${PS1}${_pc_b_gray}-${_pc_b_blue}-"
-PS1="${PS1}${_pc_b_purple}\$(_p_git)"
-PS1="${PS1}${_pc_b_blue}-${_pc_b_gray}-${_pc_b_blue}-("
-PS1="${PS1}\$(if ! [ -w . ]; then echo \"${_pc_bg_red}\"; fi)"
+PS1="${PS1}${_pc_b_gray}-${_pc_b_blue}-("
+PS1="${PS1}\$(if ! [ -w \"\${PWD}\" ]; then echo \"${_pc_bg_red}\"; fi)"
 PS1="${PS1}${_pc_b_yellow}\$(_p_tildepwd)"
+PS1="${PS1} ${_pc_b_purple}\$(_p_git)"
 PS1="${PS1}${_pc_nocolour}${_pc_b_blue})-${_pc_b_gray}-"
-PS1="${PS1}${_pc_nocolour}\n"                  # newline
+# Newline
+PS1="${PS1}${_pc_nocolour}\n"
 PS1="${PS1}${_pc_b_gray}-${_pc_b_blue}-("
 PS1="${PS1}${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
 PS1="${PS1}${_pc_nocolour} "
