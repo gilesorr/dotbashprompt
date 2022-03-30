@@ -25,14 +25,21 @@ source "${PROMPTDIR}/directory/_p_colourslashpwd"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
 
-function prompt_command () {
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
     # This is needed to calculate prompt width to fill the full width of
     # the terminal.
     _p_pow="$(_p_powerconnected)$(_p_powerpercent)%"
     # we'll use this var in PS1 to avoid calling it twice:
-    export _p_newgit="$(_p_git)"
+    _p_newgit="$(_p_git)"
+    export _p_newgit
     # username @ hostname for length calculation:
-    local uath="${USER}@$(hostname -s)"
+    uath="${USER}@$(hostname -s)"
     # pwidth = prompt width
     # "+ 2" for the spaces between content
     pwidth=$(( ${#_p_pow} + ${#uath} + ${#PWD} + 2 ))
@@ -64,7 +71,8 @@ PS1="${PS1}\$(tput sc; tput cuu1 ; tput cub \${#_p_newgit})"
 PS1="${PS1}${_pc_b_green}\${_p_newgit}${_pc_nocolour}"
 PS1="${PS1}\$(tput rc)"
 PS1="${PS1}${_pc_nocolour}\n"
-PS1="${PS1}\$"
+PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
+PS1="${PS1}\\\$"
 PS1="${PS1}${_pc_nocolour} "
 
 export PS1
