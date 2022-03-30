@@ -32,8 +32,13 @@ PS1="${PS1}${_pc_nocolour}"
 PS1="${PS1}\n"                  # newline
 PS1="${PS1}${_pc_b_gray}-"
 PS1="${PS1}${_pc_b_blue}-("
-PS1="${PS1}${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
-PS1="${PS1}${_pc_nocolour} "
+if [ "${_p_has_battery}" == "true" ]
+then
+    PS1="${PS1}${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
+    PS1="${PS1}${_pc_nocolour} "
+else
+    PS1="${PS1}${_pc_nocolour}"
+fi
 # User @ Hostname:
 PS1="${PS1}${_pc_b_gray}\u${_pc_b_blue}@${_pc_b_gray}\h"
 PS1="${PS1}${_pc_b_blue})-"
