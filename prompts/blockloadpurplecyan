@@ -1,0 +1,2 @@
+# almost a replacement for cyan-purple-2-bgd
+source ${PROMPTDIR}/prompts/raw/blockload ${_pc_b_purple} ${_pc_b_cyan} ${_pc_b_yellow}

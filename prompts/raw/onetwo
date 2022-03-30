@@ -1,0 +1,155 @@
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC1117  # "backslash is literal"
+# shellcheck disable=SC2154  # "referenced but not assigned"
+#
+# A one- or two-line prompt.  The number of lines varies according to how
+# much content is in the prompt.  Adjust "minRemainingWidth" variable to
+# change the behaviour.  Same as "onetwo" prompt but adds power indicator.
+
+# Optional - show clock in top right: (0 - yes, 1 - no)
+# shellcheck disable=SC2034  # "Appears unused" - not true
+_p_show_clock=0
+
+_p_colour_main="${1}"
+_p_colour_highlight="${2}"
+_p_colour_special="${3}" # in this prompt = git
+
+echo "Prompt Title: onetwo"
+echo "Includes:     pwd, git, power, user@host"
+echo "For:          a dark background"
+echo "Requires:     git"
+
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_git"
+source "${PROMPTDIR}/directory/_p_xtermtitle"
+source "${PROMPTDIR}/machine/_p_powerconnected"
+source "${PROMPTDIR}/machine/_p_powerpercent"
+source "${PROMPTDIR}/time/_p_topright_clock"
+
+# If _p_colour_main is red, this doesn't work well ...
+if [ "${_p_uid0}" == "true" ]
+then
+    export _p_usercolour="${_pc_b_red}"
+else
+    export _p_usercolour="${_p_colour_main}"
+fi
+
+_p_screenmux=""
+if [ "${_p_in_tmux}" == "true" ]
+then
+    _p_screenmux="${_p_screenmux}[t]"
+fi
+if [ "${_p_in_screen}" == "true" ]
+then
+    _p_screenmux="${_p_screenmux}[s]"
+fi
+
+(( minRemainingWidth = 50 ))
+
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+    # set some variables to be displayed later
+    _p_displayGit="$(_p_git)"
+    if [[ "${_p_has_battery}" == "true" ]]
+    then
+        _p_displayPower="$(_p_powerconnected)$(_p_powerpercent)%"
+    else
+        _p_displayPower=""
+    fi
+    _p_tilde="~"
+    # on Linux/Bash4 we need "\~", on Mac/Bash3 we need "~" in this
+    # substitution, so we get around it by making it a variable ...:
+    _p_dir="${PWD/${HOME}/${_p_tilde}}"
+}
+
+_p_xtermtitle # generates the _p_TITLEBAR variable
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
+
+PS1=""
+PS1="${PS1}${_p_TITLEBAR}"
+# shellcheck disable=SC2089  # "Quotes/backslashes will be treated
+# literally."  (totally inaccurate ...)
+PS1="${PS1}\$(
+remainingWidth=\$(( COLUMNS - \${#_p_screenmux} - \${#_p_displayPower} - \${#_p_dir} - \${#_p_displayGit} - \$(echo \"\u@\h\" | wc -c) - 3 ))
+
+if (( remainingWidth <= minRemainingWidth )) ; # the two line version
+then
+    fillWidth=\$(( COLUMNS - \${#_p_dir} - \${#_p_displayGit} ))
+    fill=\"\";
+    for (( i=0 ; i<\${fillWidth} ; i=i+1))
+    do
+        fill=\"\${fill} \"
+    done
+
+    if ! [ -w \"\${PWD}\" ]; then echo -en \"${_pc_bg_red}\"; fi
+    echo -en \"${_p_colour_main}\"
+    echo -en \"\${_p_dir}\"
+    echo -en \"${_pc_nocolour}\${fill}\"
+    echo -en \"${_p_colour_special}\${_p_displayGit}${_pc_nocolour}\"
+    echo -en \"\n\"
+    echo -en \"${_p_colour_main}${_p_screenmux}${_pc_nocolour}\"
+    if [ \"\${_p_displayPower}x\" != \"x\" ]
+    then
+        echo -en \"${_p_colour_highlight}(${_pc_nocolour}\"
+        echo -en \"${_p_colour_main}\${_p_displayPower}\"
+        echo -en \"${_p_colour_highlight})${_pc_nocolour}\"
+    fi
+    echo -en \"${_p_usercolour}\u${_pc_nocolour}\"
+    echo -en \"${_p_colour_highlight}@${_pc_nocolour}\"
+    echo -en \"${_p_colour_main}\h${_pc_nocolour}\"
+    echo -en \"${_pc_bg_gray}${_pc_b_red}\${_p_retval}\"
+    echo -en \"${_pc_nocolour}\"
+    echo -en \"\001\"
+    if (( _p_show_clock == 0 ))
+    then
+        _p_topright_clock \"${_c_b_gray}\" \"${_c_b_purple}\"
+    fi
+    echo -en \"\002\"
+    echo -e  \"${_p_colour_highlight}\$${_pc_nocolour} \";
+else   # the one line version
+    echo -en \"\001\"
+    if (( _p_show_clock == 0 ))
+    then
+        _p_topright_clock \"${_c_b_gray}\" \"${_c_b_purple}\"
+    fi
+    echo -en \"\002\"
+    echo -en \"${_p_colour_main}${_p_screenmux}\"
+    if [ \"\${_p_displayPower}x\" != \"x\" ]
+    then
+        echo -en \"${_p_colour_highlight}(${_pc_nocolour}\"
+        echo -en \"${_p_colour_main}\${_p_displayPower}\"
+        echo -en \"${_p_colour_highlight})${_pc_nocolour}\"
+    fi
+    if ! [ -w \"\${PWD}\" ]; then echo -en \"\${_pc_bg_red}\"; fi
+    echo -en \"${_p_colour_main}\${_p_dir}\"
+    echo -en \"${_pc_nocolour}\"
+    if [ \"\${_p_displayGit}x\" != \"x\" ]
+    then
+        echo -en \"${_p_colour_highlight}|\"
+        echo -en \"${_pc_nocolour}\"
+        echo -en \"${_p_colour_special}\${_p_displayGit}\"
+    fi
+    echo -en \"${_pc_nocolour}\"
+    echo -en \"${_p_colour_highlight}|${_pc_nocolour}\"
+    echo -en \"${_p_usercolour}\u${_p_colour_highlight}@${_pc_nocolour}\"
+    echo -en \"${_p_colour_main}\h${_pc_nocolour}\"
+    echo -en \"${_pc_bg_gray}${_pc_b_red}\${_p_retval}\"
+    echo -en \"${_pc_nocolour}\"
+    echo -e  \"${_p_colour_highlight}\$${_pc_nocolour} \";
+fi
+)"
+
+# shellcheck disable=SC2090  # "Quotes/backslashes will be treated
+# literally."  WTF?
+export PS1
+

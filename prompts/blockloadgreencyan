@@ -1,0 +1,2 @@
+source ${PROMPTDIR}/prompts/raw/blockload ${_pc_b_green} ${_pc_cyan} ${_pc_b_yellow}
+
