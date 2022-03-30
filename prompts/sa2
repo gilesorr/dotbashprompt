@@ -21,8 +21,15 @@ source "${PROMPTDIR}/directory/_p_colourslashpwd"
 source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
+source "${PROMPTDIR}/machine/_p_df_sl"
 
-function prompt_command () {
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
     _p_xtermtitle # generates the _p_TITLEBAR variable
 }
 
@@ -46,10 +53,16 @@ PS1="${PS1}${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
 PS1="${PS1}${_pc_nocolour} "
 # User @ Hostname:
 PS1="${PS1}${_pc_b_gray}\u${_pc_b_blue}@${_pc_b_gray}\h"
-PS1="${PS1}${_pc_b_black}\$"
+PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
+PS1="${PS1}${_pc_b_black}\\\$"
 PS1="${PS1}${_pc_b_blue})${_p_line}"
 PS1="${PS1}${_pc_b_gray}${_p_line}"
 PS1="${PS1}${_pc_nocolour} "
+PS1="${PS1}\[\$(
+    tput sc
+    echo -en \"   ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
+    tput rc
+)\]"
 
 export PS1
 
