@@ -1,25 +1,24 @@
 #!/bin/bash
 #
-# Returns current uptime in the form "5h3m" or "7d22h" for both Linux
-# and Mac.
+# Returns current uptime in the form "5h3m", "7d22h", or "43d" for both
+# Linux and Mac.
 
 # an auxiliary function needed by this one that abstracts away the OS
 # differences:
+# shellcheck disable=1090  # Can't follow non-constant source:
 source "${PROMPTDIR}/machine/_p_upseconds"
 
-function _p_uptime () {
-    # http://askubuntu.com/questions/335592/how-to-display-time-elapsed-since-last-system-boot-using-uptime
-    # /proc/uptime provides two numbers, the first is how long the system has
-    # been up in seconds, the second is how much of that time the machine has
-    # spent idle in seconds.
-
-    function seconds2uptime () {
+_p_uptime () {
+    seconds2uptime () {
         # Not currently used - and the linter complains:
         #secs=$((${1}%60))
         mins=$((${1}/60%60))
         hours=$((${1}/3600%24))
         days=$((${1}/86400))
-        if [ "${days}" -ne "0" ]
+        if [ "${days}" -gt "29" ]
+        then
+            echo -n "${days}d"
+        elif [ "${days}" -ne "0" ]
         then
             echo -n "${days}d${hours}h"
         else
@@ -27,6 +26,6 @@ function _p_uptime () {
         fi
     }
 
-    seconds2uptime $(_p_upseconds)
+    seconds2uptime "$(_p_upseconds)"
 }
 
