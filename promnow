@@ -31,6 +31,7 @@ _promnow () {
     local _cur compreply
     _cur="${_pn_dir}/${cur}"
     mapfile compreply < <( compgen -f "${_cur}" )
+    # shellcheck disable=SC2206  # "Quote to prevent word splitting/globbing"
     COMPREPLY=( ${compreply[@]#${_pn_dir}/} )
 }
 complete -F _promnow promnow
@@ -148,7 +149,7 @@ _promnow_setup ; unset _promnow_setup
 # Reload both promnow and the prompt.  ("preload" with one "r" seemed
 # likely to be in use by other programs.)
 prreload () {
-    # shellcheck disable=SC1090  # "non-constant source"
+    # shellcheck disable=SC1091  # "Not following"
     source "${PROMPTDIR}/promnow"
     if [ -n "${_p_NAME}" ]
     then
