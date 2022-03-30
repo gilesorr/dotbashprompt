@@ -26,6 +26,7 @@ source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
 source "${PROMPTDIR}/machine/_p_load"
+source "${PROMPTDIR}/machine/_p_df_sl"
 source "${PROMPTDIR}/directory/_p_colourslashpwd"
 source "${PROMPTDIR}/directory/_p_numvisfiles"
 source "${PROMPTDIR}/directory/_p_numhiddenfiles"
@@ -44,7 +45,7 @@ else
     _p_usercolour="${_pc_b_gray}"
 fi
 
-function prompt_command () {
+prompt_command () {
     _p_retval=$? # capture the return value before you change it w/prompt
     if (( _p_retval == 0 ))
     then
@@ -80,7 +81,7 @@ else
     _p_link_colour="${_pc_b_cyan}"
 fi
 
-function _p_showobj () {
+_p_showobj () {
     # takes two params (whole numbers, no negatives), outputs "x.y":
     #   - initially this was number of visible and hidden files
     #   - x and y value are only echoed if they're non-zero
@@ -145,6 +146,11 @@ PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
 PS1="${PS1}${_pc_nocolour}"
 PS1="${PS1}${_pc_b_gray}\$"
 PS1="${PS1}${_pc_nocolour} "
+PS1="${PS1}\[\$(
+    tput sc
+    echo -en \"   ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
+    tput rc
+)\]"
 
 export PS1
 
