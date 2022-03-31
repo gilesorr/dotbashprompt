@@ -98,7 +98,7 @@ PS1="${PS1}${_pc_nocolour}"
 PS1="${PS1} ${_pc_b_yellow}\\\$"
 PS1="${PS1}${_pc_nocolour} "
 
-# EPHEMERAL - 
+# EPHEMERAL -
 
 PS1="${PS1}\[\$(
     tput sc

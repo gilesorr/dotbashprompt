@@ -146,17 +146,6 @@ _promnow_setup () {
 # bit):
 _promnow_setup ; unset _promnow_setup
 
-# Reload both promnow and the prompt.  ("preload" with one "r" seemed
-# likely to be in use by other programs.)
-prreload () {
-    # shellcheck disable=SC1091  # "Not following"
-    source "${PROMPTDIR}/promnow"
-    if [ -n "${_p_NAME}" ]
-    then
-        promnow "${_p_NAME}"
-    fi
-}
-
 promnow () {
     if (( $# == 1 ))
     then

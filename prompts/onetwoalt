@@ -1,2 +1,3 @@
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source ${PROMPTDIR}/prompts/raw/onetwoalt ${_pc_b_green} ${_pc_b_gray} ${_pc_b_yellow}
 

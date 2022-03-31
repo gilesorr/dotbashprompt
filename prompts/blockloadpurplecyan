@@ -1,2 +1,3 @@
 # almost a replacement for cyan-purple-2-bgd
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source ${PROMPTDIR}/prompts/raw/blockload ${_pc_b_purple} ${_pc_b_cyan} ${_pc_b_yellow}

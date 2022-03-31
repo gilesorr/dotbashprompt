@@ -1,1 +1,2 @@
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source ${PROMPTDIR}/prompts/raw/onetwo ${_pc_b_gray} ${_pc_b_purple} ${_pc_b_yellow}
