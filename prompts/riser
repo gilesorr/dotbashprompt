@@ -39,7 +39,7 @@ prompt_command () {
     _p_newgit="$(_p_git)"
     export _p_newgit
     # username @ hostname for length calculation:
-    uath="${USER}@$(hostname -s)"
+    uath="$(whoami)@$(hostname -s)"
     # pwidth = prompt width
     # "+ 2" for the spaces between content
     pwidth=$(( ${#_p_pow} + ${#uath} + ${#PWD} + 2 ))

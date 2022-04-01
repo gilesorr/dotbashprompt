@@ -36,7 +36,8 @@ prompt_command () {
     # we'll use this var in PS1 to avoid calling it twice:
     _p_newgit="$(_p_git)"
     # username @ hostname for length calculation:
-    local uath="${USER}@$(hostname -s)"
+    # was using ${USER} but it's less reliable than $(whoami)
+    local uath="$(whoami)@$(hostname -s)"
     # pwidth = prompt width
     # "+ 2" for the spaces between content
     pwidth=$(( pwidth + ${#_p_pow} + ${#uath} + ${#PWD} + ${#_p_newgit} + 2 ))
