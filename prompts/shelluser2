@@ -2,6 +2,7 @@
 # shebang is unnecessary, but helps vim identify the filetype
 #
 # shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "was not specified as input"
 # shellcheck disable=SC2154  # "referenced but not assigned"
 #
 # Modified "shelluser" prompt with modern updates.
@@ -26,6 +27,8 @@ echo "Requires:     git"
 source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/machine/_p_df_sl"
+source "${PROMPTDIR}/machine/_p_powerconnected"
+source "${PROMPTDIR}/machine/_p_powerpercent"
 
 if ${wants_allred}
 then
@@ -129,6 +132,8 @@ shelluser_prompt () {
     PS1="${PS1}${_p_dir_colour}\w"
     PS1="${PS1}${_pc_b_red})${_pc_red}-${_pc_gray}-"
     # show git status in a wrapper, if we're in a git dir
+    # shellcheck disable=SC2025  # "Make sure all escape sequences are
+    # enclosed in \[..\] to prevent line wrapping issues"
     PS1="${PS1}\$(
         if \${_p_in_git}
         then
@@ -146,6 +151,14 @@ shelluser_prompt () {
     PS1="${PS1}\n"
     PS1="${PS1}${_pc_gray}-${_pc_red}-"
     PS1="${PS1}${_pc_b_red}("
+    PS1="${PS1}${_pc_gray}"
+    if [[ "${_p_has_battery}" == "true" ]]
+    then
+        _p_displayPower="$(_p_powerconnected)$(_p_powerpercent)%"
+        PS1="${PS1}${_p_displayPower}${_pc_b_red}|"
+    else
+        _p_displayPower=""
+    fi
     PS1="${PS1}${_pc_gray}\!"
     PS1="${PS1}${_pc_red}:"
     PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
