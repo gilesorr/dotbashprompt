@@ -18,8 +18,16 @@ source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/directory/_p_git"
 
+_p_xtermtitle # generates the _p_TITLEBAR variable
+
 prompt_command () {
-    _p_xtermtitle # generates the _p_TITLEBAR variable
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+
     local tmp
     tmp=$(_p_git)
     if [ "${tmp}x" == "x" ]
@@ -43,11 +51,18 @@ PS1="${PS1}${_pc_b_yellow}\${_p_git_output}"
 PS1="${PS1}${_pc_b_blue})-${_pc_b_yellow}-"
 PS1="${PS1}\n" # ------------------------------------------
 PS1="${PS1}${_pc_b_yellow}-${_pc_b_blue}-("
+if [[ "${_p_has_battery}" == "true" ]]
+then
+    PS1="${PS1}${_pc_b_yellow}$(_p_powerconnected)$(_p_powerpercent)%"
+    PS1="${PS1}${_pc_b_blue}:"
+fi
 PS1="${PS1}${_pc_b_yellow}\D{%H%M}"
 PS1="${PS1}${_pc_b_blue}:"
 PS1="${PS1}${_pc_b_yellow}\D{%a %m-%d}"
 PS1="${PS1}${_pc_b_blue}:"
-PS1="${PS1}${_pc_b_gray}\$ ${_pc_b_blue})-${_pc_b_yellow}-"
+PS1="${PS1}${_pc_b_gray}"
+PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
+PS1="${PS1}${_pc_b_gray}\\\$ ${_pc_b_blue})-${_pc_b_yellow}-"
 PS1="${PS1}${_pc_nocolour} "
 
 export PS1
