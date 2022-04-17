@@ -23,8 +23,22 @@ source "${PROMPTDIR}/directory/_p_tildepwd"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
 
+_p_xtermtitle # generates the _p_TITLEBAR variable
+
 prompt_command () {
-    _p_xtermtitle # generates the _p_TITLEBAR variable
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+    if command git status >/dev/null 2>&1
+    then
+        # we're in a git repo:
+        git_out="($(_p_git))"
+    else
+        git_out=""
+    fi
 }
 
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
@@ -36,7 +50,8 @@ PS1="${PS1}${_p_nocolour} "
 PS1="${PS1}${_pc_b_green}\u@\h"
 PS1="${PS1}${_p_nocolour}:"
 PS1="${PS1}${_pc_b_blue}\$(_p_tildepwd)"
-PS1="${PS1}${_pc_nocolour}(\$(_p_git))"
+PS1="${PS1}${_pc_nocolour}\${git_out}"
+PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
 PS1="${PS1}\$ "
 
 export PS1

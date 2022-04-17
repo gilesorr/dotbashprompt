@@ -31,9 +31,17 @@ source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/machine/_p_uptime"
 source "${PROMPTDIR}/machine/_p_upseconds"
 
+# shellcheck disable=SC2034  # appears unused ...
 minRemainingWidth=50
 
 prompt_command () {
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+
     _p_displayGit="$(_p_git)"
     _p_tilde="~"
     # on Linux/Bash4 we need "\~", on Mac/Bash3 we need "~" in this
@@ -45,6 +53,7 @@ prompt_command () {
     then
         p_show_up=0
     else
+        # shellcheck disable=SC2034  # appears unused ...
         p_show_up=1
     fi
     _p_xtermtitle # generates the _p_TITLEBAR variable
@@ -54,6 +63,7 @@ PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
 PS1="${PS1}${_p_TITLEBAR}"
+# shellcheck disable=SC1001  # "This \u will be a regular 'u' in this context"
 PS1="${PS1}\$(
 if (( p_show_up == 0 ))
 then
@@ -101,6 +111,8 @@ else   # the one line version
     fi
     echo -en \"${_pc_darkgray}|${_pc_nocolour}\"
     echo -en \"${_pc_red}\u${_pc_darkgray}@${_pc_red}\h\"
+    echo -en \"${_pc_bg_gray}${_pc_b_red}\${_p_retval}\"
+    echo -en \"${_pc_nocolour}\"
     echo -en \"${_pc_darkgray}\$\"
     echo -en \"${_pc_b_red})-${_pc_red}-${_pc_darkgray}-\"
     echo -e  \"${_pc_nocolour} \";
