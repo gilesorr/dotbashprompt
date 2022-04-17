@@ -15,7 +15,7 @@
 # no real files - ie. /dev/ where it's all devices and links.
 
 echo "Prompt Title: overload"
-echo "Includes:     git, load, file data, colourslash PWD, newline, battery, user@host"
+echo "Includes:     git, load, file data, colourslash PWD, newline, battery, user@host, ephemeral dfsl and date-time"
 echo "For:          a dark background" # Mac? works on Linux
 echo "Requires:     git"
 echo "Warning:      very processor intensive: switch prompts if it's slow!"

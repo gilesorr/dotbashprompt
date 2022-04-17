@@ -9,7 +9,7 @@
 # Named for its bright colours.
 
 echo "Prompt Title: hl-hostname2"
-echo "Includes:     battery-dir-git, newline, user@hostname retval dfsl"
+echo "Includes:     battery-dir-git, newline, user@host, retval, ephemeral load and df"
 echo "For:          a dark background"
 echo "Requires:     git"
 
