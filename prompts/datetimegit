@@ -21,8 +21,15 @@ source "${PROMPTDIR}/time/_p_yyyy-mm-dd"
 source "${PROMPTDIR}/machine/_p_upseconds"
 source "${PROMPTDIR}/machine/_p_uptime"
 
+_p_xtermtitle # generates the _p_TITLEBAR variable
+
 prompt_command () {
-    _p_xtermtitle # generates the _p_TITLEBAR variable
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
     # minimum days of uptime before uptime is shown:
     local minuptime=5
     if (( $(_p_upseconds) >= ( minuptime * 24 * 60 * 60 ) ))
@@ -48,6 +55,7 @@ PS1="${PS1}\${_p_up}"                # uptime (if greater than some value)
 PS1="${PS1}${_pc_nocolour}"          # colours off
 PS1="${PS1}:"                        # colon
 PS1="${PS1}\u@\h"                    # user @ hostname
+PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}" # return value
 PS1="${PS1}${_pc_b_yellow}"          # bright yellow
 PS1="${PS1}\$"                       # $ or # depending on user
 PS1="${PS1}${_pc_nocolour} "
