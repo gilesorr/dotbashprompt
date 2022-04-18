@@ -30,6 +30,7 @@ prompt_command () {
         # disappear the return value if it's zero
         _p_retval=""
     fi
+
     # minimum days of uptime before uptime is shown:
     local minuptime=5
     if (( $(_p_upseconds) >= ( minuptime * 24 * 60 * 60 ) ))
@@ -37,6 +38,14 @@ prompt_command () {
         _p_up="$(_p_uptime)"
     else
         _p_up=""
+    fi
+
+    if command git status >/dev/null 2>&1
+    then
+        # set some variables to be displayed later
+        _p_displayGit="($(_p_git))"
+    else
+        _p_displayGit=""
     fi
 }
 
@@ -47,7 +56,7 @@ PS1="${PS1}${_p_TITLEBAR}"
 PS1="${PS1}\$(_p_yyyy-mm-dd)" # date in yyyy-mm-dd format
 PS1="${PS1}:"           # add a colon
 PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour} )" # add PWD with off-colour slashes
-PS1="${PS1}${_pc_b_green}(\$(_p_git))" # add git status in green
+PS1="${PS1}${_pc_b_green}\${_p_displayGit}" # add git status in green
 PS1="${PS1}${_pc_nocolour}"          # colours off
 PS1="${PS1}\n"                       # newline
 PS1="${PS1}${_pc_b_red}"             # bright red
