@@ -25,12 +25,12 @@ case ${TERM} in
         # the first "\u@\h" is the Icon Title
         # the second "\u@\h:\w" is goes into the XTerm Title Bar
         # shellcheck disable=SC1117 #  Backslash is literal in ...
-        export _p_TITLEBAR="\033]1;\u@\h\007\033]2;\u@\h:\w\007"
+        export _p_TITLEBAR="\[\033]1;\u@\h\007\033]2;\u@\h:\w\007\]"
         if [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
         then
             # Macs don't understand the "Icon Title":
             # shellcheck disable=SC1117 #  Backslash is literal in ...
-            export _p_TITLEBAR="\033]0;\u@\h:\w\007"
+            export _p_TITLEBAR="\[\033]0;\u@\h:\w\007\]"
         fi
         ;;
     *)
@@ -45,7 +45,6 @@ prompt_command () {
         # disappear the return value if it's zero
         _p_retval=""
     fi
-    echo -en "${_p_TITLEBAR}"
 }
 
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
