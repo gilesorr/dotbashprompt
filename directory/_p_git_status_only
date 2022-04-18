@@ -37,7 +37,7 @@ _p_git_status_only () {
     _p_git_untrack=$( echo "${status}"   | command grep "ntrack"          -q ; echo $?)
     _p_git_staged=$(  echo "${status}"   | command grep "to be committed" -q ; echo $?)
     _p_git_stashed=1
-    if [ $(git stash list | wc -l) -ne 0 ]
+    if command git status >/dev/null 2>&1 && [ $(git stash list | wc -l) -ne 0 ]
     then
         _p_git_stashed=0
     fi
