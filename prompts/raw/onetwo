@@ -115,7 +115,7 @@ then
         _p_topright_clock \"${_c_b_gray}\" \"${_c_b_purple}\"
     fi
     echo -en \"\002\"
-    echo -e  \"${_p_colour_highlight}\$${_pc_nocolour} \";
+    echo -e  \"${_p_colour_highlight}\\\$${_pc_nocolour} \";
 else   # the one line version
     echo -en \"\001\"
     if (( _p_show_clock == 0 ))
@@ -145,7 +145,7 @@ else   # the one line version
     echo -en \"${_p_colour_main}\h${_pc_nocolour}\"
     echo -en \"${_pc_bg_gray}${_pc_b_red}\${_p_retval}\"
     echo -en \"${_pc_nocolour}\"
-    echo -e  \"${_p_colour_highlight}\$${_pc_nocolour} \";
+    echo -e  \"${_p_colour_highlight}\\\$${_pc_nocolour} \";
 fi
 )"
 
