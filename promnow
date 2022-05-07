@@ -90,18 +90,18 @@ _promnow_setup () {
         export _p_os="?"
     fi
     ####################### tmux check ########################################
+    export _p_in_tmux=false
     # on one Linux machine 'which tmux' error was stdout, on another stderr!:
-    if (( $(command -v tmux > /dev/null 2>&1 ; echo $?) == 0 ))
+    if command -v tmux > /dev/null 2>&1
     then # tmux is installed
         if [[ "${TMUX}" =~ "tmux" ]]
         then
             export _p_in_tmux=true
-        else
-            export _p_in_tmux=false
         fi
     fi
     ####################### screen check ######################################
-    if (( $(command -v screen > /dev/null 2>&1 ; echo $?) == 0 ))
+    export _p_in_screen=false
+    if command -v screen > /dev/null 2>&1
     then # screen is installed
         # screen sometime (Mac?) sets TERM, sometimes (Fedora) sets TERMCAP
         # ... but tmux will sometimes set TERM to "screen" so we have to do
@@ -109,20 +109,15 @@ _promnow_setup () {
         if [[ "${TERM}" =~ "screen" ]] || [[ "${TERMCAP}" =~ "screen" ]] && [[ "${TMUX}x" == "x" ]]
         then
             export _p_in_screen=true
-        else
-            export _p_in_screen=false
         fi
-    else
-        export _p_in_screen=false
     fi
     ####################### typescript check ###################################
-    if (( $(command -v script > /dev/null 2>&1 ; echo $?) == 0 ))
+    export _p_in_typescript=false
+    if command -v script > /dev/null 2>&1
     then # script is installed
         if [[ "${SCRIPT}" =~ "script" ]]
         then
             export _p_in_typescript=true
-        else
-            export _p_in_typescript=false
         fi
     fi
     ####################### ssh check #########################################
@@ -154,6 +149,10 @@ promnow () {
         then
             # replace any occurrences of 'prompt_command' with a no-op:
             PROMPT_COMMAND="${PROMPT_COMMAND//prompt_command/:}"
+            # clean up further by getting rid of extra ": ;" sets:
+            tmp="$( echo "${PROMPT_COMMAND}" | sed -e 's/;[[:space:]]*:[[:space:]]*//g' )"
+            PROMPT_COMMAND="${tmp}"
+            unset tmp
             # shellcheck disable=SC1090  # "non-constant source"
             source "${promfullname}"
             export _p_NAME="${1}"
