@@ -35,36 +35,36 @@ prompt_command () {
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
-PS1="${PS1}${_p_TITLEBAR}"
+PS1+="${_p_TITLEBAR}"
 if [ "${_p_in_tmux}" == "true" ]
 then
-    PS1="${PS1}[t]"
+    PS1+="[t]"
 fi
 if [ "${_p_in_screen}" == "true" ]
 then
-    PS1="${PS1}[s]"
+    PS1+="[s]"
 fi
-PS1="${PS1}${_pc_b_black}-${_pc_green}-${_pc_b_green}("
+PS1+="${_pc_b_black}-${_pc_green}-${_pc_b_green}("
 # User @ Hostname:
-PS1="${PS1}${_pc_nocolour}${_pc_green}\u${_pc_b_black}@${_pc_nocolour}${_pc_green}\h"
-PS1="${PS1}${_pc_b_green})${_pc_nocolour}${_pc_green}-${_pc_b_green}("
-PS1="${PS1}${_pc_nocolour}${_pc_green}\!"
-PS1="${PS1}${_pc_b_green})${_pc_nocolour}${_pc_green}-${_pc_b_green}("
-PS1="${PS1}${_pc_b_gray}\$(_p_shorttty)"
-PS1="${PS1}${_pc_b_black}:"
-PS1="${PS1}${_pc_nocolour}${_pc_green}\$(_p_tildepwd)"
-PS1="${PS1} ${_pc_italics}\$(_p_git)${_pc_nocolour}"
-PS1="${PS1}${_pc_b_green})${_pc_nocolour}${_pc_green}-${_pc_b_black}"
-PS1="${PS1}\n" # ------------------------------------------
-PS1="${PS1}${_pc_b_black}-${_pc_green}-${_pc_b_green}("
-PS1="${PS1}${_pc_b_green}\D{%H%M}"
-PS1="${PS1}${_pc_nocolour}${_pc_green}:"
-PS1="${PS1}${_pc_b_gray}\\\$"
-PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
-PS1="${PS1}${_pc_nocolour}"
-PS1="${PS1}${_pc_b_green})${_pc_nocolour}${_pc_green}-${_pc_b_black}"
-PS1="${PS1}${_pc_nocolour} "
-PS1="${PS1}\[\$(
+PS1+="${_pc_nocolour}${_pc_green}\u${_pc_b_black}@${_pc_nocolour}${_pc_green}\h"
+PS1+="${_pc_b_green})${_pc_nocolour}${_pc_green}-${_pc_b_green}("
+PS1+="${_pc_nocolour}${_pc_green}\!"
+PS1+="${_pc_b_green})${_pc_nocolour}${_pc_green}-${_pc_b_green}("
+PS1+="${_pc_b_gray}\$(_p_shorttty)"
+PS1+="${_pc_b_black}:"
+PS1+="${_pc_nocolour}${_pc_green}\$(_p_tildepwd)"
+PS1+=" ${_pc_italics}\$(_p_git)${_pc_nocolour}"
+PS1+="${_pc_b_green})${_pc_nocolour}${_pc_green}-${_pc_b_black}"
+PS1+="\n" # ------------------------------------------
+PS1+="${_pc_b_black}-${_pc_green}-${_pc_b_green}("
+PS1+="${_pc_b_green}\D{%H%M}"
+PS1+="${_pc_nocolour}${_pc_green}:"
+PS1+="${_pc_b_gray}\\\$"
+PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
+PS1+="${_pc_nocolour}"
+PS1+="${_pc_b_green})${_pc_nocolour}${_pc_green}-${_pc_b_black}"
+PS1+="${_pc_nocolour} "
+PS1+="\[\$(
     tput sc
     echo -en \"   ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
     tput rc

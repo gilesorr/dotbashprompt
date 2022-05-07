@@ -57,6 +57,7 @@ prompt_command () {
         # disappear the return value if it's zero
         _p_retval=""
     fi
+
     # set some variables to be displayed later
     _p_displayGit="$(_p_git)"
     if [[ "${_p_has_battery}" == "true" ]]
@@ -76,10 +77,10 @@ _p_xtermtitle # generates the _p_TITLEBAR variable
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
-PS1="${PS1}${_p_TITLEBAR}"
+PS1+="${_p_TITLEBAR}"
 # shellcheck disable=SC2089  # "Quotes/backslashes will be treated
 # literally."  (totally inaccurate ...)
-PS1="${PS1}\$(
+PS1+="\$(
 remainingWidth=\$(( COLUMNS - \${#_p_screenmux} - \${#_p_displayPower} - \${#_p_dir} - \${#_p_displayGit} - \$(echo \"\u@\h\" | wc -c) - 3 ))
 
 if (( remainingWidth <= minRemainingWidth )) ; # the two line version

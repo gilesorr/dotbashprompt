@@ -31,6 +31,7 @@ prompt_command () {
         # disappear the return value if it's zero
         _p_retval=""
     fi
+
     # set some variables to be displayed later
     _p_displayGit="$(_p_git)"
     _p_displayPower="($(_p_powerconnected)$(_p_powerpercent)%)"
@@ -43,9 +44,8 @@ prompt_command () {
 
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
-PS1=""
-PS1="${PS1}${_p_TITLEBAR}"
-PS1="${PS1}\$(
+PS1="${_p_TITLEBAR}"
+PS1+="\$(
 remainingWidth=\$(( COLUMNS - \${#_p_displayPower} - \${#_p_dir} - \${#_p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
 
 if (( remainingWidth <= minRemainingWidth )) ; # the two line version
@@ -76,7 +76,7 @@ else   # the one line version
     echo -en \"${_pc_b_yellow}\u${_pc_b_purple}@${_pc_b_yellow}\h\"
     echo -en \"${_pc_bg_gray}${_pc_b_red}\${_p_retval}\"
     echo -en \"${_pc_nocolour}\"
-    echo -e  \"${_pc_b_purple}\$${_pc_nocolour} \";
+    echo -e  \"${_pc_b_purple}\\\$${_pc_nocolour} \";
 fi
 )"
 

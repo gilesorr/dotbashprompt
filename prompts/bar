@@ -17,6 +17,7 @@ echo "Requires:     git"
 source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/directory/_p_colourslashpwd"
+source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
 
@@ -60,20 +61,23 @@ prompt_command () {
         done
     fi
 }
+
+_p_xtermtitle # generates the _p_TITLEBAR variable
+
 export PROMPT_COMMAND="prompt_command"
 
-#PS1="_p_fill is -\${_p_fill}-"
-#PS1="${PS1}${_pc_b_yellow}${_pc_bg_blue}\${_p_pow}"
-PS1="${_pc_b_yellow}${_pc_bg_blue}\${_p_pow}"
-PS1="${PS1} "
-PS1="${PS1}${_pc_b_gray}\u${_pc_b_yellow}@${_pc_b_gray}\h"
-PS1="${PS1}${_pc_b_yellow}:"
-PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red}\${_pc_bg_blue} \${_pc_b_yellow}\${_pc_bg_blue} \${_pc_bg_blue} \${_p_newPWDlen})"
-PS1="${PS1}${_pc_b_gray}\${_p_fill}\${_p_newgit}"
-PS1="${PS1}${_pc_nocolour}\n"
-PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
-PS1="${PS1}${_pc_nocolour}\\\$"
-PS1="${PS1}${_pc_nocolour} "
+PS1=""
+PS1+="${_p_TITLEBAR}"
+PS1+="${_pc_b_yellow}${_pc_bg_blue}\${_p_pow}"
+PS1+=" "
+PS1+="${_pc_b_gray}\u${_pc_b_yellow}@${_pc_b_gray}\h"
+PS1+="${_pc_b_yellow}:"
+PS1+="\$(_p_colourslashpwd \${_pc_b_red}\${_pc_bg_blue} \${_pc_b_yellow}\${_pc_bg_blue} \${_pc_bg_blue} \${_p_newPWDlen})"
+PS1+="${_pc_b_gray}\${_p_fill}\${_p_newgit}"
+PS1+="${_pc_nocolour}\n"
+PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
+PS1+="${_pc_nocolour}\\\$"
+PS1+="${_pc_nocolour} "
 
 export PS1
 

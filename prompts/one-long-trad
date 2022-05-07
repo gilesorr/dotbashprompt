@@ -44,15 +44,15 @@ prompt_command () {
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
-PS1="${PS1}${_p_TITLEBAR}"
-PS1="${PS1}${_pc_nocolour}\$(_p_powerconnected)\$(_p_powerpercent)%"
-PS1="${PS1}${_p_nocolour} "
-PS1="${PS1}${_pc_b_green}\u@\h"
-PS1="${PS1}${_p_nocolour}:"
-PS1="${PS1}${_pc_b_blue}\$(_p_tildepwd)"
-PS1="${PS1}${_pc_nocolour}\${git_out}"
-PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
-PS1="${PS1}\$ "
+PS1+="${_p_TITLEBAR}"
+PS1+="${_pc_nocolour}\$(_p_powerconnected)\$(_p_powerpercent)%"
+PS1+="${_p_nocolour} "
+PS1+="${_pc_b_green}\u@\h"
+PS1+="${_p_nocolour}:"
+PS1+="${_pc_b_blue}\$(_p_tildepwd)"
+PS1+="${_pc_nocolour}\${git_out}"
+PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
+PS1+="\$ "
 
 export PS1
 

@@ -63,9 +63,9 @@ prompt_command () {
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
-PS1="${PS1}${_p_TITLEBAR}"
+PS1+="${_p_TITLEBAR}"
 # shellcheck disable=SC1001  # "This \u will be a regular 'u' in this context"
-PS1="${PS1}\$(
+PS1+="\$(
 if (( _p_show_up == 0 ))
 then
     remainingWidth=\$(( COLUMNS - \${#_p_up} - 3 - \${#_p_dir} - \${#_p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))

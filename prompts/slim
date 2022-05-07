@@ -20,8 +20,15 @@ source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/directory/_p_tildepwd"
 
+_p_xtermtitle # generates the _p_TITLEBAR variable
+
 prompt_command () {
-    _p_xtermtitle # generates the _p_TITLEBAR variable
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
 }
 
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
@@ -29,44 +36,46 @@ PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 PS1=""
 if [ "${_p_in_tmux}" == "true" ]
 then
-    PS1="${PS1}[t]"
+    PS1+="[t]"
 fi
 if [ "${_p_in_screen}" == "true" ]
 then
-    PS1="${PS1}[s]"
+    PS1+="[s]"
 fi
-PS1="${PS1}${_p_TITLEBAR}"
-PS1="${PS1}${_pc_b_cyan}"
-PS1="${PS1}["
-PS1="${PS1}${_pc_b_yellow}"
-PS1="${PS1}\$(_p_tildepwd)"
-PS1="${PS1}${_pc_b_cyan}"
-PS1="${PS1}]"
-PS1="${PS1}${_pc_nocolour}"
-PS1="${PS1} "
-PS1="${PS1}${_pc_b_yellow}"
-PS1="${PS1}\$(_p_git)"
-PS1="${PS1}${_pc_nocolour}"
-PS1="${PS1}\n"                           # newline
-PS1="${PS1}${_pc_b_cyan}"
-PS1="${PS1}["
-PS1="${PS1}${_pc_b_purple}"
-PS1="${PS1}\$(_p_powerconnected)"
-PS1="${PS1}\$(_p_powerpercent)"
-PS1="${PS1}%"
-PS1="${PS1}${_pc_b_cyan}"
-PS1="${PS1}]"
-PS1="${PS1}${_pc_nocolour}"
-PS1="${PS1} "
-PS1="${PS1}${_pc_b_purple}"
-PS1="${PS1}\u"
-PS1="${PS1}${_pc_b_cyan}"
-PS1="${PS1}@"
-PS1="${PS1}${_pc_b_purple}"
-PS1="${PS1}\h"
-PS1="${PS1}${_pc_b_gray}"
-PS1="${PS1}\$"
-PS1="${PS1}${_pc_nocolour} "
+PS1+="${_p_TITLEBAR}"
+PS1+="${_pc_b_cyan}"
+PS1+="["
+PS1+="${_pc_b_yellow}"
+PS1+="\$(_p_tildepwd)"
+PS1+="${_pc_b_cyan}"
+PS1+="]"
+PS1+="${_pc_nocolour}"
+PS1+=" "
+PS1+="${_pc_b_yellow}"
+PS1+="\$(_p_git)"
+PS1+="${_pc_nocolour}"
+PS1+="\n"                           # newline
+PS1+="${_pc_b_cyan}"
+PS1+="["
+PS1+="${_pc_b_purple}"
+PS1+="\$(_p_powerconnected)"
+PS1+="\$(_p_powerpercent)"
+PS1+="%"
+PS1+="${_pc_b_cyan}"
+PS1+="]"
+PS1+="${_pc_nocolour}"
+PS1+=" "
+PS1+="${_pc_b_purple}"
+PS1+="\u"
+PS1+="${_pc_b_cyan}"
+PS1+="@"
+PS1+="${_pc_b_purple}"
+PS1+="\h"
+PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
+PS1+="${_pc_nocolour}"
+PS1+="${_pc_b_gray}"
+PS1+="\\\$"
+PS1+="${_pc_nocolour} "
 
 export PS1
 

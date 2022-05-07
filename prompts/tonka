@@ -22,21 +22,21 @@ _p_xtermtitle # generates the _p_TITLEBAR variable
 
 PS1="${_pc_b_red}-${_pc_b_blue}-("
 # User @ Hostname:
-PS1="${PS1}${_pc_b_yellow}\u${_pc_b_red}@${_pc_b_yellow}\h"
-PS1="${PS1}${_pc_b_blue})-("
-PS1="${PS1}${_pc_b_yellow}\!"
-PS1="${PS1}${_pc_b_blue})-("
-PS1="${PS1}${_pc_b_yellow}\D{%H%M}"
-PS1="${PS1}${_pc_b_red}/"
-PS1="${PS1}${_pc_b_yellow}\D{%d-%b-%y}"
-PS1="${PS1}${_pc_b_blue})-${_pc_b_red}-"
-PS1="${PS1}\n" # ------------------------------------------
-PS1="${PS1}${_pc_b_red}-${_pc_b_blue}-("
-PS1="${PS1}${_pc_b_yellow}\$"
-PS1="${PS1}${_pc_b_red}:"
-PS1="${PS1}${_pc_b_yellow}\$(_p_tildepwd)"
-PS1="${PS1}${_pc_b_blue})-${_pc_b_red}-"
-PS1="${PS1}${_pc_nocolour} "
+PS1+="${_pc_b_yellow}\u${_pc_b_red}@${_pc_b_yellow}\h"
+PS1+="${_pc_b_blue})-("
+PS1+="${_pc_b_yellow}\!"
+PS1+="${_pc_b_blue})-("
+PS1+="${_pc_b_yellow}\D{%H%M}"
+PS1+="${_pc_b_red}/"
+PS1+="${_pc_b_yellow}\D{%d-%b-%y}"
+PS1+="${_pc_b_blue})-${_pc_b_red}-"
+PS1+="\n" # ------------------------------------------
+PS1+="${_pc_b_red}-${_pc_b_blue}-("
+PS1+="${_pc_b_yellow}\$"
+PS1+="${_pc_b_red}:"
+PS1+="${_pc_b_yellow}\$(_p_tildepwd)"
+PS1+="${_pc_b_blue})-${_pc_b_red}-"
+PS1+="${_pc_nocolour} "
 
 export PS1
 

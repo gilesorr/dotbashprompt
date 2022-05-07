@@ -6,7 +6,7 @@
 # shellcheck disable=SC1117  # "backslash is literal"
 # shellcheck disable=SC2154  # "referenced but not assigned"
 
-echo "Prompt Title: datetimegit"
+echo "Prompt Title: dateuptime"
 echo "Includes:     date, colourslash pwd, git, uptime, user@host"
 echo "For:          a dark background"
 echo "Requires:     git"
@@ -52,22 +52,22 @@ prompt_command () {
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
-PS1="${PS1}${_p_TITLEBAR}"
-PS1="${PS1}\$(_p_yyyy-mm-dd)" # date in yyyy-mm-dd format
-PS1="${PS1}:"           # add a colon
-PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour} )" # add PWD with off-colour slashes
-PS1="${PS1}${_pc_b_green}\${_p_displayGit}" # add git status in green
-PS1="${PS1}${_pc_nocolour}"          # colours off
-PS1="${PS1}\n"                       # newline
-PS1="${PS1}${_pc_b_red}"             # bright red
-PS1="${PS1}\${_p_up}"                # uptime (if greater than some value)
-PS1="${PS1}${_pc_nocolour}"          # colours off
-PS1="${PS1}:"                        # colon
-PS1="${PS1}\u@\h"                    # user @ hostname
-PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}" # return value
-PS1="${PS1}${_pc_b_yellow}"          # bright yellow
-PS1="${PS1}\$"                       # $ or # depending on user
-PS1="${PS1}${_pc_nocolour} "
+PS1+="${_p_TITLEBAR}"
+PS1+="\$(_p_yyyy-mm-dd)" # date in yyyy-mm-dd format
+PS1+=":"           # add a colon
+PS1+="\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour} )" # add PWD with off-colour slashes
+PS1+="${_pc_b_green}\${_p_displayGit}" # add git status in green
+PS1+="${_pc_nocolour}"          # colours off
+PS1+="\n"                       # newline
+PS1+="${_pc_b_red}"             # bright red
+PS1+="\${_p_up}"                # uptime (if greater than some value)
+PS1+="${_pc_nocolour}"          # colours off
+PS1+=":"                        # colon
+PS1+="\u@\h"                    # user @ hostname
+PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}" # return value
+PS1+="${_pc_b_yellow}"          # bright yellow
+PS1+="\$"                       # $ or # depending on user
+PS1+="${_pc_nocolour} "
 
 export PS1
 

@@ -22,13 +22,13 @@ source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
 
 PS1="${_pc_nocolour}\$(_p_powerconnected)\$(_p_powerpercent)%"
-PS1="${PS1}${_p_nocolour} "
-PS1="${PS1}${_pc_black}\u${_pc_b_blue}@${_pc_black}\h"
-PS1="${PS1}${_p_nocolour}:"
-PS1="${PS1}${_pc_nocolour}\$(_p_shortpwd 15)"
-PS1="${PS1}${_pc_black}\$(_p_git)"
-PS1="${PS1}${_pc_blue}\$"
-PS1="${PS1}${_pc_nocolour} "
+PS1+="${_p_nocolour} "
+PS1+="${_pc_black}\u${_pc_b_blue}@${_pc_black}\h"
+PS1+="${_p_nocolour}:"
+PS1+="${_pc_nocolour}\$(_p_shortpwd 15)"
+PS1+="${_pc_black}\$(_p_git)"
+PS1+="${_pc_blue}\$"
+PS1+="${_pc_nocolour} "
 
 export PS1
 

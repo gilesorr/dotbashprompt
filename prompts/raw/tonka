@@ -51,32 +51,32 @@ prompt_command () {
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
-PS1="${PS1}${_p_TITLEBAR}"
-PS1="${PS1}${_p_colour_main}-${_pc_nocolour}"
-PS1="${PS1}${_p_colour_highlight}-(${_pc_nocolour}"
+PS1+="${_p_TITLEBAR}"
+PS1+="${_p_colour_main}-${_pc_nocolour}"
+PS1+="${_p_colour_highlight}-(${_pc_nocolour}"
 # User @ Hostname:
-PS1="${PS1}${_p_usercolour}\u${_pc_nocolour}"
-PS1="${PS1}${_p_colour_highlight}@${_pc_nocolour}"
-PS1="${PS1}${_p_colour_main}\h${_pc_nocolour}"
-PS1="${PS1}${_p_colour_highlight})-(${_pc_nocolour}"
-PS1="${PS1}${_p_colour_main}\${PWD}${_pc_nocolour}"
-PS1="${PS1}${_p_colour_special}\${_p_git_output}${_pc_nocolour}"
-PS1="${PS1}${_p_colour_highlight})-"
-PS1="${PS1}${_p_colour_main}-${_pc_nocolour}"
-PS1="${PS1}\n" # ------------------------------------------
-PS1="${PS1}${_p_colour_main}-${_pc_nocolour}"
-PS1="${PS1}${_p_colour_highlight}-(${_pc_nocolour}"
-PS1="${PS1}${_p_colour_main}\D{%H%M}${_pc_nocolour}"
-PS1="${PS1}${_p_colour_highlight}:${_pc_nocolour}"
+PS1+="${_p_usercolour}\u${_pc_nocolour}"
+PS1+="${_p_colour_highlight}@${_pc_nocolour}"
+PS1+="${_p_colour_main}\h${_pc_nocolour}"
+PS1+="${_p_colour_highlight})-(${_pc_nocolour}"
+PS1+="${_p_colour_main}\${PWD}${_pc_nocolour}"
+PS1+="${_p_colour_special}\${_p_git_output}${_pc_nocolour}"
+PS1+="${_p_colour_highlight})-"
+PS1+="${_p_colour_main}-${_pc_nocolour}"
+PS1+="\n" # ------------------------------------------
+PS1+="${_p_colour_main}-${_pc_nocolour}"
+PS1+="${_p_colour_highlight}-(${_pc_nocolour}"
+PS1+="${_p_colour_main}\D{%H%M}${_pc_nocolour}"
+PS1+="${_p_colour_highlight}:${_pc_nocolour}"
 if [[ "${_p_has_battery}" == "true" ]]
 then
-    PS1="${PS1}${_p_colour_main}\$(_p_powerconnected)\$(_p_powerpercent)%${_pc_nocolour}"
-    PS1="${PS1}${_p_colour_highlight}:${_pc_nocolour}"
+    PS1+="${_p_colour_main}\$(_p_powerconnected)\$(_p_powerpercent)%${_pc_nocolour}"
+    PS1+="${_p_colour_highlight}:${_pc_nocolour}"
 fi
-PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
-PS1="${PS1}${_pc_b_gray}\\\$ "
-PS1="${PS1}${_p_colour_highlight})-${_pc_nocolour}"
-PS1="${PS1}${_p_colour_main}-${_pc_nocolour} "
+PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
+PS1+="${_pc_b_gray}\\\$ "
+PS1+="${_p_colour_highlight})-${_pc_nocolour}"
+PS1+="${_p_colour_main}-${_pc_nocolour} "
 
 export PS1
 

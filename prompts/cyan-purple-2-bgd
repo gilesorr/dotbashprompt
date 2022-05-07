@@ -50,17 +50,17 @@ prompt_command () {
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
-PS1="${PS1}${_p_TITLEBAR}"
-PS1="${PS1}${_pc_b_cyan}["
-PS1="${PS1}${_pc_purple}\$(_p_powerconnected)${_pc_b_purple}\$(_p_powerpercent)%"
-PS1="${PS1}${_pc_b_cyan}]["
-PS1="${PS1}\${_p_dircolour}\$(_p_tildepwd)"
-PS1="${PS1}${_pc_nocolour}${_pc_b_cyan}]"
-PS1="${PS1}${_pc_nocolour} \$(_p_git)"
-PS1="${PS1}\n"                                                # newline
+PS1+="${_p_TITLEBAR}"
+PS1+="${_pc_b_cyan}["
+PS1+="${_pc_purple}\$(_p_powerconnected)${_pc_b_purple}\$(_p_powerpercent)%"
+PS1+="${_pc_b_cyan}]["
+PS1+="\${_p_dircolour}\$(_p_tildepwd)"
+PS1+="${_pc_nocolour}${_pc_b_cyan}]"
+PS1+="${_pc_nocolour} \$(_p_git)"
+PS1+="\n"                                                # newline
 # _p_usercolour is only needed once per session (ie. not escaped):
-PS1="${PS1}${_p_usercolour}\u${_pc_b_cyan}@${_pc_b_purple}\h"
-PS1="${PS1}${_pc_b_gray}\$${_pc_nocolour} "
+PS1+="${_p_usercolour}\u${_pc_b_cyan}@${_pc_b_purple}\h"
+PS1+="${_pc_b_gray}\$${_pc_nocolour} "
 
 export PS1
 

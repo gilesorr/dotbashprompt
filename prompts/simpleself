@@ -50,24 +50,24 @@ prompt_command () {
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
-PS1="${PS1}${_p_TITLEBAR}"
+PS1+="${_p_TITLEBAR}"
 num_batteries=$(command ls -1d /sys/class/power_supply/BAT* 2>/dev/null | command wc -l)
 if (( num_batteries > 0 ))
 then
-    PS1="${PS1}${red}{"
-    PS1="${PS1}${nocolour}\$(cat /sys/class/power_supply/BAT?/capacity)%"
-    PS1="${PS1}${red}}"
+    PS1+="${red}{"
+    PS1+="${nocolour}\$(cat /sys/class/power_supply/BAT?/capacity)%"
+    PS1+="${red}}"
 fi
 # shellcheck disable=SC1117 #  Backslash is literal in ...
-PS1="${PS1}${nocolour}\u@\h"
-PS1="${PS1}${red}{"
-PS1="${PS1}${green}\$(if command git status >/dev/null 2>&1; then echo 'git '; fi)"
-PS1="${PS1}${green}\$(if command svn info   >/dev/null 2>&1; then echo 'svn '; fi)"
+PS1+="${nocolour}\u@\h"
+PS1+="${red}{"
+PS1+="${green}\$(if command git status >/dev/null 2>&1; then echo 'git '; fi)"
+PS1+="${green}\$(if command svn info   >/dev/null 2>&1; then echo 'svn '; fi)"
 # shellcheck disable=SC1117 #  Backslash is literal in ...
-PS1="${PS1}${nocolour}\w"
-PS1="${PS1}${red}}"
-PS1="${PS1}${bg_gray}${red}\${_p_retval}"
-PS1="${PS1}${nocolour}"
-PS1="${PS1}${yellow}\\\$ "
-PS1="${PS1}${nocolour}"
+PS1+="${nocolour}\w"
+PS1+="${red}}"
+PS1+="${bg_gray}${red}\${_p_retval}"
+PS1+="${nocolour}"
+PS1+="${yellow}\\\$ "
+PS1+="${nocolour}"
 

@@ -69,32 +69,32 @@ prompt_command () {
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
-PS1="${PS1}${_p_TITLEBAR}"
+PS1+="${_p_TITLEBAR}"
 # if we have a battery percentage to display, display it:
-PS1="${PS1}\$(
+PS1+="\$(
 if [ \"\${_p_displayPower}x\" != \"x\" ]
 then
     echo -en \"${_pc_b_yellow}\${_p_displayPower}${_pc_nocolour}\"
 fi
 )"
 # colourize slashes in $newPWD red, and echo the var:
-PS1="${PS1}$( echo -e "\${newPWD//\//\\[\\e[1;31m\\]\/\\[\\e[0;0m\\]}" )"
+PS1+="$( echo -e "\${newPWD//\//\\[\\e[1;31m\\]\/\\[\\e[0;0m\\]}" )"
 # if the current directory isn't writable, make the bg colour yellow:
-PS1="${PS1}\$( if ! [ -w \"\${PWD}\" ]; then echo -en \"${_pc_bg_yellow}${_pc_black}\"; fi )"
+PS1+="\$( if ! [ -w \"\${PWD}\" ]; then echo -en \"${_pc_bg_yellow}${_pc_black}\"; fi )"
 # add the last directory name from $PWD if we're not in $HOME:
-PS1="${PS1}\$( if [ \"\${PWD}\" != \"${HOME}\" ]; then echo \"\W\"; fi )"
+PS1+="\$( if [ \"\${PWD}\" != \"${HOME}\" ]; then echo \"\W\"; fi )"
 # set colour for git:
-PS1="${PS1}${_pc_nocolour}${_pc_b_green}"
+PS1+="${_pc_nocolour}${_pc_b_green}"
 # show git
-PS1="${PS1}\$(_p_git_status_only)\${_p_displayBranch}"
-PS1="${PS1}${_pc_nocolour}"
+PS1+="\$(_p_git_status_only)\${_p_displayBranch}"
+PS1+="${_pc_nocolour}"
 # show return value from previous command in bright colours (if non-zero):
-PS1="${PS1}${_pc_bg_gray}${_pc_b_red}"
-PS1="${PS1}\${_p_retval}"
-PS1="${PS1}${_pc_nocolour}"
-PS1="${PS1}\\\$ "
+PS1+="${_pc_bg_gray}${_pc_b_red}"
+PS1+="\${_p_retval}"
+PS1+="${_pc_nocolour}"
+PS1+="\\\$ "
 # Print "ephemeral" info after the prompt
-PS1="${PS1}\[\$(
+PS1+="\[\$(
     tput sc
     echo -en \"   ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
     tput rc

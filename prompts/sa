@@ -7,7 +7,7 @@
 # shellcheck disable=SC2154  # "referenced but not assigned"
 
 echo "Prompt Title: sa"
-echo "Includes:     git status, colour PWD, newline, battery, user@host"
+echo "Includes:     return value, git status, colour PWD, newline, battery, user@host"
 echo "For:          a dark background"
 echo "Requires:     git"
 
@@ -18,33 +18,41 @@ source "${PROMPTDIR}/directory/_p_colourslashpwd"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
 
-PS1="${_pc_b_gray}-"
-PS1="${PS1}${_pc_b_blue}-"
-PS1="${PS1}${_pc_b_purple}\$(_p_git)"
-PS1="${PS1}${_pc_b_blue}-"
-PS1="${PS1}${_pc_b_gray}-"
-PS1="${PS1}-"
-PS1="${PS1}${_pc_b_blue}-("
-PS1="${PS1}\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour})"
-PS1="${PS1}${_pc_b_blue})-"
-PS1="${PS1}${_pc_b_gray}-"
-PS1="${PS1}${_pc_nocolour}"
-PS1="${PS1}\n"                  # newline
-PS1="${PS1}${_pc_b_gray}-"
-PS1="${PS1}${_pc_b_blue}-("
+# If PROMPT_COMMAND or prompt_command is ever added to this prompt,
+# capturing the return value (_p_retval below) needs to move into that.
+
+PS1=""
+PS1+="${_pc_bg_gray}${_pc_b_red}"
+PS1+="\$( _p_retval=\$? ; if [ \${_p_retval} -gt 0 ]; then echo \"\${_p_retval}\"; fi )"
+PS1+="${_pc_nocolour}"
+PS1+="${_p_TITLEBAR}"
+PS1+="${_pc_b_gray}-"
+PS1+="${_pc_b_blue}-"
+PS1+="${_pc_b_purple}\$(_p_git)"
+PS1+="${_pc_b_blue}-"
+PS1+="${_pc_b_gray}-"
+PS1+="-"
+PS1+="${_pc_b_blue}-("
+PS1+="\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour})"
+PS1+="${_pc_b_blue})-"
+PS1+="${_pc_b_gray}-"
+PS1+="${_pc_nocolour}"
+PS1+="\n"                  # newline
+PS1+="${_pc_b_gray}-"
+PS1+="${_pc_b_blue}-("
 if [ "${_p_has_battery}" == "true" ]
 then
-    PS1="${PS1}${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
-    PS1="${PS1}${_pc_nocolour} "
+    PS1+="${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
+    PS1+="${_pc_nocolour} "
 else
-    PS1="${PS1}${_pc_nocolour}"
+    PS1+="${_pc_nocolour}"
 fi
 # User @ Hostname:
-PS1="${PS1}${_pc_b_gray}\u${_pc_b_blue}@${_pc_b_gray}\h"
-PS1="${PS1}${_pc_b_blue})-"
-PS1="${PS1}${_pc_b_gray}-"
-PS1="${PS1}\$"
-PS1="${PS1}${_pc_nocolour} "
+PS1+="${_pc_b_gray}\u${_pc_b_blue}@${_pc_b_gray}\h"
+PS1+="${_pc_b_blue})-"
+PS1+="${_pc_b_gray}-"
+PS1+="\\\$"
+PS1+="${_pc_nocolour} "
 
 export PS1
 

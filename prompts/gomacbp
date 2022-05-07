@@ -43,30 +43,30 @@ PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 PS1=""
 if [ "${_p_in_tmux}" == "true" ]
 then
-    PS1="${PS1}[t]"
+    PS1+="[t]"
 fi
 if [ "${_p_in_screen}" == "true" ]
 then
-    PS1="${PS1}[s]"
+    PS1+="[s]"
 fi
-PS1="${PS1}${_p_TITLEBAR}"
-PS1="${PS1}${_pc_b_gray}-${_pc_b_blue}-("
-PS1="${PS1}\$(if ! [ -w \"\${PWD}\" ]; then echo \"${_pc_bg_red}\"; fi)"
-PS1="${PS1}${_pc_b_yellow}\$(_p_tildepwd)"
-PS1="${PS1} ${_pc_b_purple}\$(_p_git)"
-PS1="${PS1}${_pc_nocolour}${_pc_b_blue})-${_pc_b_gray}-"
+PS1+="${_p_TITLEBAR}"
+PS1+="${_pc_b_gray}-${_pc_b_blue}-("
+PS1+="\$(if ! [ -w \"\${PWD}\" ]; then echo \"${_pc_bg_red}\"; fi)"
+PS1+="${_pc_b_yellow}\$(_p_tildepwd)"
+PS1+=" ${_pc_b_purple}\$(_p_git)"
+PS1+="${_pc_nocolour}${_pc_b_blue})-${_pc_b_gray}-"
 # Newline
-PS1="${PS1}${_pc_nocolour}\n"
-PS1="${PS1}${_pc_b_gray}-${_pc_b_blue}-("
-PS1="${PS1}${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
-PS1="${PS1}${_pc_nocolour} "
+PS1+="${_pc_nocolour}\n"
+PS1+="${_pc_b_gray}-${_pc_b_blue}-("
+PS1+="${_pc_b_purple}\$(_p_powerconnected)\$(_p_powerpercent)%"
+PS1+="${_pc_nocolour} "
 # User @ Hostname:
-PS1="${PS1}${_p_usercolour}\u${_pc_b_blue}@${_pc_b_gray}\h"
-PS1="${PS1}${_pc_b_blue})-${_pc_b_gray}-"
-PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
-PS1="${PS1}${_pc_nocolour}"
-PS1="${PS1}${_pc_b_gray}\$"
-PS1="${PS1}${_pc_nocolour} "
+PS1+="${_p_usercolour}\u${_pc_b_blue}@${_pc_b_gray}\h"
+PS1+="${_pc_b_blue})-${_pc_b_gray}-"
+PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
+PS1+="${_pc_nocolour}"
+PS1+="${_pc_b_gray}\$"
+PS1+="${_pc_nocolour} "
 
 export PS1
 

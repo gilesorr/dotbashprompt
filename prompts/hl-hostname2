@@ -52,17 +52,17 @@ PS1="${_pc_nocolour}${_p_TITLEBAR}"
 # shellcheck disable=SC2089  # Quotes/backslashes will be treated literally
 if [[ "${_p_has_battery}" == "true" ]]
 then
-    PS1="${PS1}${_pc_b_gray}$(_p_powerconnected)$(_p_powerpercent)% "
+    PS1+="${_pc_b_gray}$(_p_powerconnected)$(_p_powerpercent)% "
 fi
 
 # DIRECTORY
 
-PS1="${PS1}${_pc_b_yellow}\$(_p_tildepwd)"
+PS1+="${_pc_b_yellow}\$(_p_tildepwd)"
 
 # GIT
 
 # shellcheck disable=SC2089  # Quotes/backslashes will be treated literally
-PS1="${PS1}\$(
+PS1+="\$(
 if [ \"\${_p_displayGit}x\" != \"x\" ]
 then
     echo -en \" ${_pc_green}\$(_p_git)\"
@@ -71,26 +71,26 @@ fi
 
 # NEWLINE
 
-PS1="${PS1}\n"
+PS1+="\n"
 
 # USER-HOST
 
-PS1="${PS1}${_pc_nocolour}\u@"
-PS1="${PS1}${HOSTCOLOUR}\h${_pc_nocolour}"
+PS1+="${_pc_nocolour}\u@"
+PS1+="${HOSTCOLOUR}\h${_pc_nocolour}"
 
 # RETURN VALUE
 
-PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
-PS1="${PS1}${_pc_nocolour}"
+PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
+PS1+="${_pc_nocolour}"
 
 # HASH OR DOLLAR PROMPT
 
-PS1="${PS1} ${_pc_b_yellow}\\\$"
-PS1="${PS1}${_pc_nocolour} "
+PS1+=" ${_pc_b_yellow}\\\$"
+PS1+="${_pc_nocolour} "
 
 # EPHEMERAL -
 
-PS1="${PS1}\[\$(
+PS1+="\[\$(
     tput sc
     echo -en \"        ${_c_darkgray}[\$(_p_threadcount)] \$(_p_load) \$(_p_df_percent)\"
     tput rc

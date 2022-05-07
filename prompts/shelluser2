@@ -116,25 +116,25 @@ shelluser_prompt () {
     esac
 
     PS1="${TITLEBAR}"
-    PS1="${PS1}${_pc_gray}-${_pc_red}-${_pc_b_red}("
-    PS1="${PS1}${_pc_red}\u${_pc_gray}@${_pc_red}\h$SCR"
-    PS1="${PS1}${_pc_b_red})${_pc_red}-"
+    PS1+="${_pc_gray}-${_pc_red}-${_pc_b_red}("
+    PS1+="${_pc_red}\u${_pc_gray}@${_pc_red}\h$SCR"
+    PS1+="${_pc_b_red})${_pc_red}-"
     if ${wants_datetime}
     then
-        PS1="${PS1}${_pc_b_red}("
-        PS1="${PS1}${_pc_red}\D{%Y}${_pc_gray}-"
-        PS1="${PS1}${_pc_red}\D{%m}${_pc_gray}-"
-        PS1="${PS1}${_pc_red}\D{%d}${_pc_gray}:"
-        PS1="${PS1}${_pc_red}\D{%H%M}"
-        PS1="${PS1}${_pc_b_red})${_pc_red}-"
+        PS1+="${_pc_b_red}("
+        PS1+="${_pc_red}\D{%Y}${_pc_gray}-"
+        PS1+="${_pc_red}\D{%m}${_pc_gray}-"
+        PS1+="${_pc_red}\D{%d}${_pc_gray}:"
+        PS1+="${_pc_red}\D{%H%M}"
+        PS1+="${_pc_b_red})${_pc_red}-"
     fi
-    PS1="${PS1}${_pc_b_red}("
-    PS1="${PS1}${_p_dir_colour}\w"
-    PS1="${PS1}${_pc_b_red})${_pc_red}-${_pc_gray}-"
+    PS1+="${_pc_b_red}("
+    PS1+="${_p_dir_colour}\w"
+    PS1+="${_pc_b_red})${_pc_red}-${_pc_gray}-"
     # show git status in a wrapper, if we're in a git dir
     # shellcheck disable=SC2025  # "Make sure all escape sequences are
     # enclosed in \[..\] to prevent line wrapping issues"
-    PS1="${PS1}\$(
+    PS1+="\$(
         if \${_p_in_git}
         then
             kols=\$(tput cols)
@@ -148,24 +148,24 @@ shelluser_prompt () {
         fi
     )"
     # newline
-    PS1="${PS1}\n"
-    PS1="${PS1}${_pc_gray}-${_pc_red}-"
-    PS1="${PS1}${_pc_b_red}("
-    PS1="${PS1}${_pc_gray}"
+    PS1+="\n"
+    PS1+="${_pc_gray}-${_pc_red}-"
+    PS1+="${_pc_b_red}("
+    PS1+="${_pc_gray}"
     if [[ "${_p_has_battery}" == "true" ]]
     then
         _p_displayPower="$(_p_powerconnected)$(_p_powerpercent)%"
-        PS1="${PS1}${_p_displayPower}${_pc_b_red}|"
+        PS1+="${_p_displayPower}${_pc_b_red}|"
     else
         _p_displayPower=""
     fi
-    PS1="${PS1}${_pc_gray}\!"
-    PS1="${PS1}${_pc_red}:"
-    PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
-    PS1="${PS1}${_pc_nocolour}${_pc_gray}\\\$"
-    PS1="${PS1}${_pc_b_red})${_pc_red}-${_pc_gray}-${_pc_nocolour} "
+    PS1+="${_pc_gray}\!"
+    PS1+="${_pc_red}:"
+    PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
+    PS1+="${_pc_nocolour}${_pc_gray}\\\$"
+    PS1+="${_pc_b_red})${_pc_red}-${_pc_gray}-${_pc_nocolour} "
     # This prints the date and time in FRONT of the prompt.
-    PS1="${PS1}\[\$(
+    PS1+="\[\$(
         tput sc
         echo -en \"        ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
         tput rc

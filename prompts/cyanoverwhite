@@ -1,5 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "<file> not specified as input"
 # shellcheck disable=SC2154  # "referenced but not assigned"
 
 # 2021-03-21: incomplete (add conditional power) but simple, looks nice.
@@ -35,41 +35,41 @@ prompt_command () {
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1=""
-PS1="${PS1}${_p_TITLEBAR}"
+PS1+="${_p_TITLEBAR}"
 if ${_p_in_tmux}
 then
-    PS1="${PS1}${_pc_b_gray}[${_pc_nocolour}"
-    PS1="${PS1}${_pc_b_cyan}tmux${_pc_nocolour}"
-    PS1="${PS1}${_pc_b_gray}]${_pc_nocolour} "
+    PS1+="${_pc_b_gray}[${_pc_nocolour}"
+    PS1+="${_pc_b_cyan}tmux${_pc_nocolour}"
+    PS1+="${_pc_b_gray}]${_pc_nocolour} "
 fi
 if ${_p_in_screen}
 then
-    PS1="${PS1}${_pc_b_gray}[${_pc_nocolour}"
-    PS1="${PS1}${_pc_b_cyan}screen${_pc_nocolour}"
-    PS1="${PS1}${_pc_b_gray}]${_pc_nocolour} "
+    PS1+="${_pc_b_gray}[${_pc_nocolour}"
+    PS1+="${_pc_b_cyan}screen${_pc_nocolour}"
+    PS1+="${_pc_b_gray}]${_pc_nocolour} "
 fi
-#PS1="${PS1}\$(_p_df)"
-PS1="${PS1}[\$(_p_df_stoplight)]"
-PS1="${PS1}\${_p_wdbg}"
-PS1="${PS1}${_pc_b_cyan}\w${_pc_nocolour}"
-PS1="${PS1} ${_pc_b_yellow}\$(_p_git)${_pc_nocolour}"
-PS1="${PS1}${_pc_nocolour}\n"
+#PS1+="\$(_p_df)"
+PS1+="[\$(_p_df_stoplight)]"
+PS1+="\${_p_wdbg}"
+PS1+="${_pc_b_cyan}\w${_pc_nocolour}"
+PS1+=" ${_pc_b_yellow}\$(_p_git)${_pc_nocolour}"
+PS1+="${_pc_nocolour}\n"
 #
 # Second Line
 #
 if ${_p_has_battery}
 then
-    PS1="${PS1}${_pc_b_cyan}[${_pc_nocolour}"
-    PS1="${PS1}\$(_p_powerconnected)\$(_p_powerpercent)%"
-    PS1="${PS1}${_pc_b_cyan}]${_pc_nocolour}"
+    PS1+="${_pc_b_cyan}[${_pc_nocolour}"
+    PS1+="\$(_p_powerconnected)\$(_p_powerpercent)%"
+    PS1+="${_pc_b_cyan}]${_pc_nocolour}"
 fi
 if ${_p_uid0}
 then
-    PS1="${PS1}${_pc_b_red}\u${_pc_nocolour}"
+    PS1+="${_pc_b_red}\u${_pc_nocolour}"
 else
-    PS1="${PS1}${_pc_b_gray}\u${_pc_nocolour}"
+    PS1+="${_pc_b_gray}\u${_pc_nocolour}"
 fi
-PS1="${PS1}${_pc_b_cyan}@${_pc_b_gray}\h${_pc_nocolour}"
-PS1="${PS1}${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
-PS1="${PS1}${_pc_b_cyan}\\\$${_pc_nocolour} "
+PS1+="${_pc_b_cyan}@${_pc_b_gray}\h${_pc_nocolour}"
+PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
+PS1+="${_pc_b_cyan}\\\$${_pc_nocolour} "
 
