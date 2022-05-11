@@ -31,7 +31,7 @@ source "${PROMPTDIR}/machine/_p_powerpercent"
 source "${PROMPTDIR}/time/_p_topright_clock"
 
 # If _p_colour_main is red, this doesn't work well ...
-if [ "${_p_uid0}" == "true" ]
+if ${_p_uid0}
 then
     export _p_usercolour="${_pc_b_red}"
 else
@@ -39,11 +39,11 @@ else
 fi
 
 _p_screenmux=""
-if [ "${_p_in_tmux}" == "true" ]
+if ${_p_in_tmux}
 then
     _p_screenmux="${_p_screenmux}[t]"
 fi
-if [ "${_p_in_screen}" == "true" ]
+if ${_p_in_screen}
 then
     _p_screenmux="${_p_screenmux}[s]"
 fi
@@ -60,7 +60,7 @@ prompt_command () {
 
     # set some variables to be displayed later
     _p_displayGit="$(_p_git)"
-    if [[ "${_p_has_battery}" == "true" ]]
+    if ${_p_has_battery}
     then
         _p_displayPower="$(_p_powerconnected)$(_p_powerpercent)%"
     else
@@ -150,7 +150,6 @@ else   # the one line version
 fi
 )"
 
-# shellcheck disable=SC2090  # "Quotes/backslashes will be treated
-# literally."  WTF?
+# shellcheck disable=SC2090  # "Quotes/backslashes will be treated literally."  WTF?
 export PS1
 

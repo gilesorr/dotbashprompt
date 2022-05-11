@@ -34,7 +34,12 @@ prompt_command () {
     fi
     # This is needed to calculate prompt width to fill the full width of
     # the terminal.
-    _p_pow="$(_p_powerconnected)$(_p_powerpercent)%"
+    if ${_p_has_battery}
+    then
+        _p_pow="$(_p_powerconnected)$(_p_powerpercent)%"
+    else
+        _p_pow=""
+    fi
     # we'll use this var in PS1 to avoid calling it twice:
     _p_newgit="$(_p_git)"
     export _p_newgit
@@ -62,8 +67,11 @@ prompt_command () {
 export PROMPT_COMMAND="prompt_command"
 
 PS1=""
-PS1+="${_pc_b_yellow}\${_p_pow}"
-PS1+=" "
+if ${_p_has_battery}
+then
+    PS1+="${_pc_b_yellow}\${_p_pow}"
+    PS1+=" "
+fi
 PS1+="${_pc_b_yellow}\u${_pc_b_red}@${_pc_b_yellow}\h"
 PS1+="${_pc_nocolour}\${fill}"
 PS1+="\$(_p_colourslashpwd \${_pc_b_red} \${_pc_b_yellow} \${_pc_nocolour} \${_p_newPWDlen})"
