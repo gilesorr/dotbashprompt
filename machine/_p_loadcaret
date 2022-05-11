@@ -1,0 +1,34 @@
+#!/bin/bash
+# Prints a single caret colourized based on load.
+#
+# We do some math to figure this out.  $_p_numthreads is set in 'promnow'
+# and provides the number of threads available on the current machine.  How
+# much load is acceptable is determined by multiplying the current load by
+# 100, dividing by the number of threads, and changing the caret appearance
+# at MEDIUMLOAD (default 50) and HIGHLOAD (default 100).  No caret below
+# MEDIUMLOAD, yellow BG above MEDIUMLOAD but below HIGHLOAD, red BG above
+# HIGHLOAD.
+#
+
+MEDIUMLOAD=50
+HIGHLOAD=100
+
+_p_loadcaret () {
+    load="$(command uptime | command awk '{print $(NF-2)}' | command tr -d ",")"
+    percentload="$(command echo -e "scale=0 ; ${load}*100/${_p_numthreads}" | command bc)"
+    if (( percentload > HIGHLOAD ))
+    then
+        _p_loadcaret_color="${_pc_bg_red}"
+    elif (( percentload > MEDIUMLOAD ))
+    then
+        _p_loadcaret_color="${_pc_bg_yellow}"
+    else
+        _p_loadcaret_color=""
+    fi
+
+    if ! [ -z "${_p_loadcaret_color}" ]
+    then
+        echo -e "${_p_loadcaret_color}^${_pc_nocolour}"
+    fi
+}
+
