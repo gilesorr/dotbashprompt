@@ -1,0 +1,90 @@
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+
+# PLAN: u@h colourdiamond singleton pwd diamond-if-git git
+#       <optional-notices>$
+
+# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC2154  # "referenced but not assigned"
+
+echo "Prompt Title: diamonds"
+echo "Includes:     user@host, dir, git, newline, screen/tmux indicator, battery, return value, load indicator"
+echo "For:          a dark background"
+echo "Requires:     git"
+
+# Get the components we need:
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_git"
+source "${PROMPTDIR}/machine/_p_powerconnected"
+source "${PROMPTDIR}/machine/_p_powerpercent"
+source "${PROMPTDIR}/machine/_p_loadcaret"
+source "${PROMPTDIR}/directory/_p_tildepwd"
+source "${PROMPTDIR}/directory/_p_xtermtitle"
+
+if (( UID == 0 ))
+then
+    _p_usercolour="${_pc_b_red}"
+else
+    _p_usercolour=""
+fi
+
+_p_xtermtitle # generates the _p_TITLEBAR variable
+
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it w/prompt
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+    newPWD=$(echo "${PWD/${HOME}/\~}" | sed -E -e 's@(\.?[^/])[^/]*(/)@\1\2@g' -e 's/[^/~]*$//' )
+    export newPWD
+}
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
+
+# add the titlebar:
+PS1="${_p_TITLEBAR}"
+# add user @ hostname:
+PS1+="${_p_usercolour}\u@\h "
+
+# add blue/yellow diamond
+PS1+="\[\033[43m\033[34m\]◀\[\033[44m\033[33m\]▶\[\033[0;0m\] "
+
+# add the current directory:
+# colourize slashes in $newPWD red, and echo the var:
+#PS1+="$( echo -e "\${newPWD//\//\\[\\e[1;31m\\]\/\\[\\e[0;0m\\]}" )"
+PS1+="\${newPWD}"
+# add the last directory name from $PWD if we're not in $HOME:
+PS1+="\$( if [ \"\${PWD}\" != \"${HOME}\" ]; then echo \"\W\"; fi )"
+# if the current directory isn't writeable, tag it:
+PS1+="\$(if ! [ -w \"\${PWD}\" ]; then echo \"[ro]\"; fi) "
+
+# add blue/yellow diamond
+PS1+="\[\033[43m\033[34m\]◀\[\033[44m\033[33m\]▶\[\033[0;0m\] "
+
+# add git branch and status:
+PS1+=" \$(_p_git)"
+# second line:
+PS1+="\n"
+# add indicators if in tmux or screen:
+if ${_p_in_tmux}
+then
+    PS1+="[t]"
+fi
+if ${_p_in_screen}
+then
+    PS1+="[s]"
+fi
+# add battery indicator (if we have one):
+if ${_p_has_battery}
+then
+    PS1+="$(_p_powerconnected)$(_p_powerpercent)% "
+fi
+PS1+="${_pc_nocolour}"
+PS1+="\$(_p_loadcaret)"
+# add the return value of the previous command if non-zero:
+PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
+PS1+="${_pc_nocolour}"
+PS1+="${_p_gray}\\\$ ${_pc_nocolour}"
+
