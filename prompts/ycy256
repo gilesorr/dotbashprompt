@@ -8,10 +8,8 @@ echo "Prompt Title: ycy256 - yellow-cyan-256-colours"
 echo "Includes:     user@host, dir, git, newline, screen/tmux indicator, battery, return value, load indicator"
 echo "For:          a dark background"
 echo "Requires:     git, 256 colour terminal"
-if ! [[ "${TERM}" =~ 256color ]]
-then
-    echo -e "\033[1;31mWARNING\033[0m:      This doesn't appear to be a 256 colour \$TERM."
-fi
+source "${PROMPTDIR}/session/_p_256warning"
+_p_256warning
 
 # Get the components we need:
 source "${PROMPTDIR}/_p_colours" # get colours into the environment
