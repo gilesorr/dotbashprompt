@@ -20,6 +20,7 @@ echo "Requires:     git"
 source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/directory/_p_xtermtitle"
+source "${PROMPTDIR}/machine/_p_loadcaret"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
 
@@ -65,6 +66,7 @@ else   # the one line version
     echo -en \"${_pc_b_gray}|\"
 fi
 echo -en \"${_pc_nocolour}\u${_pc_b_yellow}@${_pc_nocolour}\h\"
+echo -en \"\$(_p_loadcaret)\"
 echo -en \"${_pc_bg_gray}${_pc_b_red}\${_p_retval}\"
 echo -en \"${_pc_nocolour}\"
 echo -e  \"${_pc_b_yellow}\\\$${_pc_nocolour} \";
