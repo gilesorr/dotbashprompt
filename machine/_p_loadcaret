@@ -1,6 +1,8 @@
 #!/bin/bash
 # Prints a single caret colourized based on load.
 #
+# shellcheck disable=SC2154  # "referenced but not assigned"
+#
 # We do some math to figure this out.  $_p_numthreads is set in 'promnow'
 # and provides the number of threads available on the current machine.  How
 # much load is acceptable is determined by multiplying the current load by
@@ -26,7 +28,7 @@ _p_loadcaret () {
         _p_loadcaret_color=""
     fi
 
-    if ! [ -z "${_p_loadcaret_color}" ]
+    if [ -n "${_p_loadcaret_color}" ]
     then
         echo -e "${_p_loadcaret_color}^${_pc_nocolour}"
     fi
