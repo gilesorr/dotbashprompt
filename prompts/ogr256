@@ -1,7 +1,7 @@
 #!/bin/bash
 # shebang is unnecessary, but helps vim identify the filetype
 
-# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC1090  # "Can't follow non-constant source."
 # shellcheck disable=SC2154  # "referenced but not assigned"
 
 echo "Prompt Title: ogr256 - orange-gray-256-colours"
