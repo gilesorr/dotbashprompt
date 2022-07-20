@@ -18,7 +18,12 @@
 #   _p_in_ssh - true or false, is this shell in a ssh session?
 #   _p_in_typescript - true or false, is this shell in a typescript session
 
+# This is a problematic hard-coded value: change it if you install the
+# project anywhere other than the suggested location.
 export PROMPTDIR="${HOME}/.bashprompt"
+# we can't use $(dirname ${0}) to get this directory because this isn't run
+# as a script, it's sourced.
+
 # http://www.thegeekstuff.com/2013/12/bash-completion-complete/
 # If you add a new prompt, it won't be visible in bash completion until you
 # run the following command again.
@@ -150,6 +155,7 @@ promnow () {
             # replace any occurrences of 'prompt_command' with a no-op:
             PROMPT_COMMAND="${PROMPT_COMMAND//prompt_command/:}"
             # clean up further by getting rid of extra ": ;" sets:
+            # shellcheck disable=SC2001  # See if you can use ${variable//...
             tmp="$( echo "${PROMPT_COMMAND}" | sed -e 's/;[[:space:]]*:[[:space:]]*//g' )"
             PROMPT_COMMAND="${tmp}"
             unset tmp
