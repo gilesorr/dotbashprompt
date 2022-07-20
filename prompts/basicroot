@@ -4,8 +4,7 @@
 # This prompt is a standalone: it doesn't require any secondary files.
 # Just 'source <filename>' and you have your new prompt.  Because it's a
 # standalone, the git detail is very limited (only whether or not you're in
-# a git folder, not whether/how much it's modified.)  TODO: add a load
-# indicator.
+# a git folder, not whether/how much it's modified.)
 #
 # It was also designed to have a particularly distinctive marker, as a
 # reminder that you're running as root.
@@ -13,17 +12,45 @@
 # shellcheck disable=SC1090  # "Can't follow non-constant source."
 # shellcheck disable=SC2154  # "referenced but not assigned"
 
-echo "Prompt Title: basicroot - relatively simple prompt with colour block, intended as stand-alone prompt for root"
-echo "Includes:     user@host:dir, git (basic), newline, battery, return value"
+# set the following to "true" or "false" to display ephemeral data after
+# the prompt:
+wantsEphemera="true"
+# load points (percentage) at which the load caret indicator appears, and
+# then changes colour:
+MEDIUMLOAD=50
+HIGHLOAD=100
+
+echo "Prompt Title: basicroot - prompt with colour block, intended as stand-alone prompt for root"
+echo "Includes:     user@host:dir, git (basic), newline, battery, return value, ephemeral: CPU count, load, du"
 #, load indicator"
 echo "For:          a dark background (should work with light)"
 echo "Requires:     git"
 
 export bgred='\[\033[41m\]'
+export bgyellow='\[\033[43m\]'
 export black='\[\033[0;30m\]'
 export red='\001\033[31m\002'
 export bg_gray='\001\033[47m\002'
 export nocolour='\001\033[0;0m\002'
+
+_p_loadcaret () {
+    load="$(command uptime | command awk '{print $(NF-2)}' | command tr -d ",")"
+    percentload="$(command echo -e "scale=0 ; ${load}*100/${_p_numthreads}" | command bc)"
+    if (( percentload > HIGHLOAD ))
+    then
+        _p_loadcaret_color="${bgred}"
+    elif (( percentload > MEDIUMLOAD ))
+    then
+        _p_loadcaret_color="${bgyellow}"
+    else
+        _p_loadcaret_color=""
+    fi
+
+    if [ -n "${_p_loadcaret_color}" ]
+    then
+        echo -e "${_p_loadcaret_color}^${_pc_nocolour}"
+    fi
+}
 
 case ${TERM} in
     xterm*|rxvt*)
@@ -74,5 +101,20 @@ then
     PS1+="\$(cat /sys/class/power_supply/BAT?/capacity)% "
 fi
 PS1+="${bg_gray}${red}\${_p_retval}${nocolour}"
+if ! "${wantsEphemera}"
+then
+    PS1+="\$(_p_loadcaret)"
+fi
 PS1+="\\\$ "
+
+# EPHEMERAL - borrowed from hl-hostname2
+
+if "${wantsEphemera}"
+then
+    PS1+="\[\$(
+        tput sc
+        echo -en \"        ${_c_darkgray}[\$(_p_threadcount)] \$(_p_load) \$(_p_df_percent)\"
+        tput rc
+    )\]"
+fi
 
