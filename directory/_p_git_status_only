@@ -23,28 +23,33 @@ _p_git_status_only () {
     if [ "${upstream}x" != "x" ]
     then
         # we appear to have an origin
-        _p_git_uptodate=$(echo "${upstream}" | command grep "up to date" -q ; echo $?)
+
+        # This has been replaced by $changecount:
+        #_p_git_uptodate=$(echo "${upstream}" | command grep "up to date" -q ; echo $?)
         _p_git_ahead=$(   echo "${upstream}" | command grep "ahead of"   -q ; echo $?)
         _p_git_behind=$(  echo "${upstream}" | command grep "behind"     -q ; echo $?)
         _p_git_diverged=$(echo "${upstream}" | command grep "diverged"   -q ; echo $?)
     else
-        _p_git_uptodate="1"
+        #_p_git_uptodate="1"
         _p_git_ahead="1"
         _p_git_behind="1"
         _p_git_diverged="1"
     fi
-    _p_git_modified=$(echo "${status}"   | command grep "not staged for"  -q ; echo $?)
+    # Not using this, replaced by $changecount:
+    #_p_git_modified=$(echo "${status}"   | command grep "not staged for"  -q ; echo $?)
     _p_git_untrack=$( echo "${status}"   | command grep "ntrack"          -q ; echo $?)
     _p_git_staged=$(  echo "${status}"   | command grep "to be committed" -q ; echo $?)
     _p_git_stashed=1
-    if command git status >/dev/null 2>&1 && [ $(git stash list | wc -l) -ne 0 ]
+    if command git status >/dev/null 2>&1 && [ "$(git stash list | wc -l)" -ne 0 ]
     then
         _p_git_stashed=0
     fi
     # ------------------------------------------------------------------
-    if (( _p_git_uptodate == 0 ))
+    changecount=$(git diff --numstat --pretty="%H" | awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d-%d\n", plus, minus)}')
+    # This replaces _p_git_modified:
+    if ! [ "${changecount}" == "+0-0" ]
     then
-        echo -n "-"
+        echo -n "${changecount}"
     fi
     if (( _p_git_ahead == 0 ))
     then
@@ -57,10 +62,6 @@ _p_git_status_only () {
     if (( _p_git_diverged == 0 ))
     then
         echo -n "^v"
-    fi
-    if (( _p_git_modified == 0 ))
-    then
-        echo -n "!"
     fi
     if (( _p_git_untrack == 0 ))
     then
