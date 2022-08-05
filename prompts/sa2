@@ -8,7 +8,7 @@
 #
 # Attempting to re-implement "sa" with linedraw characters
 
-echo "Prompt Title: sa2"
+echo "Prompt Title: x2.private (from sa2)"
 echo "Includes:     git status, colour PWD, newline, battery, user@host"
 echo "For:          a dark background"
 echo "Requires:     git"
@@ -58,11 +58,14 @@ PS1+="${_pc_b_black}\\\$"
 PS1+="${_pc_b_blue})${_p_line}"
 PS1+="${_pc_b_gray}${_p_line}"
 PS1+="${_pc_nocolour} "
+# shellcheck disable=SC2089  #  Quotes/backslashes will be treated literally.
 PS1+="\[\$(
     tput sc
     echo -en \"   ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
     tput rc
 )\]"
 
+# shellcheck disable=SC2090  #  Quotes/backslashes in this variable will
+# not be respected.
 export PS1
 
