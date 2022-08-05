@@ -2,15 +2,18 @@
 # Gives a single character indicator of whether power is available.
 
 _p_powerconnected () {
+    # shellcheck disable=SC2154  # "referenced but not assigned"
     if [ "${_p_os}" == "Linux" ]
     then
         # On a Linux system:
+        # shellcheck disable=SC2144  #  -d doesn't work with globs
+        # (It seems to ...)
         if [ -d /sys/class/power_supply/BAT?/ ] # Check there's a battery
         then
             case $(cat /sys/class/power_supply/BAT?/status) in
                 Full)           echo "" ;;
-                Discharging)    echo "v";;
-                Charging)       echo "^";;
+                Discharging)    echo "▼";;
+                Charging)       echo "▲";;
                 "Not charging") echo "~";;
                 # silencing this: works better if the system doesn't have a
                 # battery:
