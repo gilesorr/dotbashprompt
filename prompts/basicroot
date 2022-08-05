@@ -31,6 +31,7 @@ export bgyellow='\[\033[43m\]'
 export black='\[\033[0;30m\]'
 export red='\001\033[31m\002'
 export bg_gray='\001\033[47m\002'
+export darkgray='\033[38;5;008m'
 export nocolour='\001\033[0;0m\002'
 
 if ( command uname -a | command grep Darwin > /dev/null )
@@ -159,7 +160,7 @@ if "${wantsEphemera}"
 then
     PS1+="\[\$(
         tput sc
-        echo -en \"        ${_c_darkgray}[\$(_p_threadcount)] \$(_p_load) \$(_p_df_percent)\"
+        echo -en \"        ${darkgray}[\$(_p_threadcount)] \$(_p_load) \$(_p_df_percent)\"
         tput rc
     )\]"
 fi
