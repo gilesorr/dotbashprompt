@@ -33,6 +33,16 @@ export red='\001\033[31m\002'
 export bg_gray='\001\033[47m\002'
 export nocolour='\001\033[0;0m\002'
 
+if ( command uname -a | command grep Darwin > /dev/null )
+then
+    export _p_os="Darwin"
+elif ( command uname -a | command grep Linux > /dev/null )
+then
+    export _p_os="Linux"
+else
+    export _p_os="?"
+fi
+
 _p_loadcaret () {
     load="$(command uptime | command awk '{print $(NF-2)}' | command tr -d ",")"
     percentload="$(command echo -e "scale=0 ; ${load}*100/${_p_numthreads}" | command bc)"
@@ -50,6 +60,42 @@ _p_loadcaret () {
     then
         echo -e "${_p_loadcaret_color}^${_pc_nocolour}"
     fi
+}
+
+_p_threadcount() {
+    # shellcheck disable=SC2154  # "referenced but not assigned"
+    if [ "${_p_os}" == "Linux" ]
+    then
+        numCPUs="$(grep -c 'siblings' /proc/cpuinfo)"
+    elif [ "${_p_os}" == "Darwin" ]
+    then
+        # this method valid Monterey / 2022-02
+        numCPUs="$(sysctl -n hw.ncpu)"
+    else
+        numCPUs="?"
+    fi
+    echo -n "${numCPUs}"
+}
+
+_p_df_percent() {
+    # shellcheck disable=SC2154  # "referenced but not assigned"
+    if [ "${_p_os}" == "Linux" ]
+    then
+        # finds all local mount-points and shows their percent use in parens
+        while read -r mountpoint
+        do
+            echo -n "($( df --output=pcent "${mountpoint}" | tail -n +2 | tr -d " " ))"
+        done < <(lsblk --output MOUNTPOINT --noheadings | grep -v '^$' | grep -v '[SWAP]' )
+    elif [ "${_p_os}" == "Darwin" ]
+    then
+        echo -n "?"
+    else
+        echo -n "?"
+    fi
+}
+
+_p_load() {
+    command uptime | command awk '{print $(NF-2)}' | command tr -d ","
 }
 
 case ${TERM} in
