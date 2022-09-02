@@ -13,6 +13,12 @@
 # (In this context '[ -r . ]' is NOT the same.)
 
 _p_git_status_only () {
+    # don't run in a non-git environment
+    if ! git diff > /dev/null 2> /dev/null
+    then
+        return 0
+    fi
+
     command git diff --no-ext-diff --quiet --exit-code &>/dev/null
     if (( $? == 128 )) && [ -r "${PWD}" ]
     then

@@ -94,11 +94,14 @@ PS1+="\${_p_retval}"
 PS1+="${_pc_nocolour}"
 PS1+="\\\$ "
 # Print "ephemeral" info after the prompt
+# shellcheck disable=SC2089  # "Quotes/backslashes will be treated literally."
 PS1+="\[\$(
     tput sc
     echo -en \"   ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
     tput rc
 )\]"
 
+# shellcheck disable=SC2090  # "Quotes/backslashes in tthis variable will
+# not be respected."
 export PS1
 
