@@ -1,0 +1,14 @@
+#!/bin/bash
+# Prints the "1,5,15" minute load indicators.
+
+# shellcheck disable=SC2154  # _p_os referenced but not assigned
+# shellcheck disable=SC2034  # load appears unused
+_p_load3 () {
+    if [ "${_p_os}" == "Darwin" ]
+    then
+        command uptime | awk ' BEGIN { FS=":" } { print $NF } ' | sed -e 's/^ //' |  tr " " ","
+    else
+        command uptime | awk ' BEGIN { FS=":" } { print $NF } ' | tr -d " "
+    fi
+}
+

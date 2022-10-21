@@ -1,0 +1,9 @@
+#!/bin/bash
+# Prints the current (1 minute) load.
+#
+# Removing the trailing comma isn't necessary on Mac, but is on Linux
+
+_p_load1 () {
+    command uptime | command awk '{print $(NF-2)}' | command tr -d ","
+}
+
