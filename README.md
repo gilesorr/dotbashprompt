@@ -33,7 +33,7 @@ is only really useful when you're interactively changing prompts.
 
 ## Examples
 
-Please see the (Examples.md)[Examples.md] file for instructions on how to
+Please see the [Examples.md](Examples.md) file for instructions on how to
 use the provided components to build your own prompts.
 
 
