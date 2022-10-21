@@ -9,7 +9,7 @@
 # A clone of my MacBook Pro prompt.
 
 echo "Prompt Title: gomacbp"
-echo "Includes:     git status, PWD, newline, battery, user@host"
+echo "Includes:     git status, PWD, newline, battery, user@host, ephemeral load"
 echo "For:          a dark background" # Mac? works on Linux
 echo "Requires:     git"
 
@@ -20,6 +20,8 @@ source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/directory/_p_tildepwd"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
+source "${PROMPTDIR}/machine/_p_threadcount"
+source "${PROMPTDIR}/machine/_p_load3"
 
 if [ "${_p_uid0}" == "true" ]
 then
@@ -27,6 +29,9 @@ then
 else
     export _p_usercolour="${_pc_b_gray}"
 fi
+
+#This isn't going to change, let's set it once:
+threadcount="$(_p_threadcount)"
 
 prompt_command () {
     _p_retval=$? # capture the return value before you change it w/prompt
@@ -36,6 +41,9 @@ prompt_command () {
         _p_retval=""
     fi
     _p_xtermtitle # generates the _p_TITLEBAR variable
+
+    # Fill after_text with the number of CPUs and the load
+    after_text="[${threadcount}]$(_p_load3)"
 }
 
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
@@ -66,6 +74,11 @@ PS1+="${_pc_b_blue})-${_pc_b_gray}-"
 PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
 PS1+="${_pc_nocolour}"
 PS1+="${_pc_b_gray}\$"
+PS1+="\[\$(
+    tput sc
+    echo -en \"          ${_c_darkgray}\${after_text}${_c_nocolour}\"
+    tput rc
+)\]"
 PS1+="${_pc_nocolour} "
 
 export PS1
