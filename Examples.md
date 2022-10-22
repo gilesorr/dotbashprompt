@@ -239,3 +239,9 @@ PS1+="${_pc_b_gray}\\\$${_pc_nocolor} "
 
 This works as intended.
 
+Remember I mentioned I prefer to use functions rather than embedding code
+in the `PS1` string?  Because we have to capture the return value before
+generating the `PS1` string, there's no good way to use a function here and
+this is the simplest solution I've come up with for displaying the return
+value.
+

@@ -7,6 +7,24 @@ inclination, it's intended to be extensible and easy to build your own
 prompt.  It comes with a variety of ready-to-use prompts.
 
 
+## What It Looks Like
+
+*image: The 'promnow' function of Dot Bashprompt in action, showing several default prompts*
+
+![promnow function with various prompts](images/2022-05-27.examples.jpg)
+
+In the above image, the first prompt is "ogr256" ("Orange Grey, 256
+colours") which requires a 256 colour terminal (that's common these days,
+although it still requires tweaking in Debian?).  The "onetwo" prompt
+changes from one line to two depending on how much content it has to
+display - the clock in the upper right corner of the terminal was placed
+there by it as well.  The "singletons2" prompt reduces directory names,
+except for the last one, to a single character (or two characters if
+there's a leading dot).  "overload" has too much information - including
+the number of files, links, directories, and how much space they take up.
+Both "overload" and "singletons2" display "ephemeral" information.
+
+
 ## Getting Started
 
 Run `git clone https://github.com/gilesorr/dotbashprompt.git
@@ -35,6 +53,16 @@ is only really useful when you're interactively changing prompts.
 
 Please see the [Examples.md](Examples.md) file for instructions on how to
 use the provided components to build your own prompts.
+
+
+## The Bash Prompt Layout Manifesto
+
+If you're wondering "why do your prompts look the way they do?", I answer
+that question at length in
+[The Bash Prompt Layout Manifesto](LayoutManifesto.md).
+The title makes it sound like "everything should be thus and so," but it's
+more "this is what I like and maybe it will help you think about what you
+want to see in a prompt."
 
 
 ## Known Issues
@@ -76,6 +104,12 @@ somewhat different perspective on the same subject.
 
 ## Other Projects
 
+Pretty much all of these projects suffer from the same one mine does:
+complexity.  Setting up prompts, particularly ones that give you several
+pieces of information, is complex and often opaque to the end user.  Choose
+your poison ...
+
+- https://starship.rs/ - Starship, a prompt mechanism for several shells
 - https://powerline.readthedocs.io/en/master/ - Powerline is best known as
   a plugin for Vim, but can also be used for Bash (and ZSH and Fish and
   ...) prompts.
