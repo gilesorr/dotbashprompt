@@ -95,7 +95,7 @@ is to print the stats after the `$`.  For example:
 `$       [8] 0.56,0.46,0.46  (69%)(75%)`.
 The text after the dollar sign is usually printed in dark gray (on a black
 background).  In this case it shows "[number-of-cores] <1,5,15 load> (disk0
-usage)(disk1 usage)".  The user's cursor appears just after the dollar sign
-- and yes, that means you type over top of that "ephemeral" information.
+usage)(disk1 usage)".  The user's cursor appears just after the dollar
+sign - and yes, that means you type over top of that "ephemeral" information.
 Again, probably not for everybody.
 

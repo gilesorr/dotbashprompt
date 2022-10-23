@@ -22,7 +22,8 @@ there by it as well.  The "singletons2" prompt reduces directory names,
 except for the last one, to a single character (or two characters if
 there's a leading dot).  "overload" has too much information - including
 the number of files, links, directories, and how much space they take up.
-Both "overload" and "singletons2" display "ephemeral" information.
+Both "overload" and "singletons2" display "ephemeral" information (ie.
+after the prompt, that you may end up typing over top of).
 
 
 ## Getting Started

@@ -24,7 +24,7 @@ source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
-source "${PROMPTDIR}/machine/_p_load"
+source "${PROMPTDIR}/machine/_p_load1"
 source "${PROMPTDIR}/machine/_p_df_sl"
 source "${PROMPTDIR}/directory/_p_colourslashpwd"
 source "${PROMPTDIR}/directory/_p_numvisfiles"
@@ -112,7 +112,7 @@ PS1+="${_pc_b_gray}-"
 #####################################################################
 # Load:
 PS1+="${_pc_b_blue}-("
-PS1+="${_pc_b_yellow}\$(_p_load)"
+PS1+="${_pc_b_yellow}\$(_p_load1)"
 PS1+="${_pc_b_blue})-"
 PS1+="${_pc_b_gray}-"
 # Files:

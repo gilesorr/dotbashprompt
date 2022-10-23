@@ -23,7 +23,7 @@ source "${PROMPTDIR}/machine/_p_powerpercent"
 source "${PROMPTDIR}/machine/_p_df_sl"
 source "${PROMPTDIR}/machine/_p_df_percent"
 source "${PROMPTDIR}/machine/_p_threadcount"
-source "${PROMPTDIR}/machine/_p_load"
+source "${PROMPTDIR}/machine/_p_load1"
 
 prompt_command () {
     _p_retval=$? # capture the return value before you change it
@@ -92,7 +92,7 @@ PS1+="${_pc_nocolour} "
 
 PS1+="\[\$(
     tput sc
-    echo -en \"        ${_c_darkgray}[\$(_p_threadcount)] \$(_p_load) \$(_p_df_percent)\"
+    echo -en \"        ${_c_darkgray}[\$(_p_threadcount)] \$(_p_load1) \$(_p_df_percent)\"
     tput rc
 )\]"
 
