@@ -2,7 +2,7 @@
 <!-- :created: 2022-10-22 16:32 -->
 
 I originally wrote this for my
-[blog](http://localhost/blog/bash-prompt-layout-manifesto.html) - that
+[blog](https://gilesorr.com/blog/bash-prompt-layout-manifesto.html) - that
 text has been copied to here.
 
 ------------------------------------------------------------------------
