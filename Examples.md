@@ -7,7 +7,8 @@ Bash Prompts, you should read at least part of
 [The Bash Prompt HOWTO](http://www.gilesorr.com/bashprompt/howto/) .  This
 assumes you've performed the initial setup detailed in the
 [README](README.md) and `promnow` is loaded in your environment and
-functioning.
+functioning.  The code for these examples is in the `prompts/examples/`
+folder.
 
 
 ## The Most Basic Prompt

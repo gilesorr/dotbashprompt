@@ -1,0 +1,15 @@
+#!/bin/bash
+# This is one of the example prompts for the Examples.md page
+#shellcheck disable=SC1091  # Not following
+#shellcheck disable=SC2154  # Referenced but not assigned
+
+source "${PROMPTDIR}/_p_colours"
+source "${PROMPTDIR}/directory/_p_git"
+source "${PROMPTDIR}/directory/_p_pwd"
+
+PS1=""
+#PS1+="${_pc_b_yellow}\w  ${_pc_b_purple}\$(_p_git)${_pc_nocolour}"
+PS1+="${_pc_b_yellow}\$(_p_pwd)  ${_pc_b_purple}\$(_p_git)${_pc_nocolour}"
+PS1+="\n"
+PS1+="${_pc_b_gray}\\\$${_pc_nocolor} "
+

@@ -1,0 +1,22 @@
+#!/bin/bash
+# This is one of the example prompts for the Examples.md page
+#shellcheck disable=SC1091  # Not following
+#shellcheck disable=SC2154  # Referenced but not assigned
+
+source "${PROMPTDIR}/_p_colours"
+
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it w/prompt
+}
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
+
+PS1=""
+PS1+="\$(
+    if [ \"\${_p_retval}\" -gt \"0\" ]
+    then
+        echo \"${_pc_bg_gray}${_pc_b_red}\";
+    fi
+)"
+PS1+="\${_p_retval}${_pc_nocolor}"
+PS1+="${_pc_b_gray}\\\$${_pc_nocolor} "
+

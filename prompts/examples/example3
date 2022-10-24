@@ -1,0 +1,9 @@
+# This is one of the example prompts for the Examples.md page
+source "${PROMPTDIR}/_p_colours"
+source "${PROMPTDIR}/machine/_p_load3"
+source "${PROMPTDIR}/machine/_p_threadcount"
+
+threadcount="$(_p_threadcount)"
+
+PS1="${_pc_b_red}[${threadcount}]\$(_p_load3)\\\$${_pc_nocolor} "
+

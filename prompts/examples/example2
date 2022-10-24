@@ -1,0 +1,8 @@
+# This is one of the example prompts for the Examples.md page
+source "${PROMPTDIR}/machine/_p_load3"
+source "${PROMPTDIR}/machine/_p_threadcount"
+
+threadcount="$(_p_threadcount)"
+
+PS1="[${threadcount}]\$(_p_load3)\\\$ "
+
