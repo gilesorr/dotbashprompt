@@ -28,7 +28,7 @@ _p_threadload () {
     # Get the loads:
     # (on Linux, commas between load values, on Mac just space separation)
     # shellcheck disable=SC2034  # yes, l15 is assigned and not used ...
-    read -r l1 l5 l15 < <(uptime | awk '{ print $(NF-2), $(NF-1), $NF }' | tr -d ',')
+    read -r l1 l5 l15 < <(command uptime | command awk '{ print $(NF-2), $(NF-1), $NF }' | command tr -d ',')
     # Display:
     # shellcheck disable=SC2154  # yes, _p_numthreads is referenced but not assigned
     echo -n "${_p_numthreads}:${l1},${l5}"

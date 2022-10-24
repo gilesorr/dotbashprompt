@@ -5,14 +5,14 @@
 # below the "okay" threshold, half filled if above it, and full if above
 # the "warning" threshold.
 #
-# WARNING: untested on Mac, guaranteed to not work there.
+# WARNING: doesn't handle Mac, only returns "?"
 
 _p_df_sl () {
     # shellcheck disable=SC2154  # "referenced but not assigned"
     if [ "${_p_os}" == "Darwin" ]
     then
         # This doesn't work on Mac
-        return
+        echo "?"
     fi
 
     okay=70     # percentage
@@ -24,7 +24,7 @@ _p_df_sl () {
 
     while read -r mountpoint
     do
-        percent=$( df --output=pcent "${mountpoint}" | tail -n +2 | tr -d '%' )
+        percent=$( command df --output=pcent "${mountpoint}" | command tail -n +2 | command tr -d '%' )
         if [ "${percent}" -gt "${warning}" ]
         then
             echo -n "${warning_char}"
@@ -34,6 +34,6 @@ _p_df_sl () {
         else
             echo -n "${okay_char}"
         fi
-    done < <( lsblk --output MOUNTPOINT --noheadings | grep -v '^$' | grep -v '[SWAP]' ; mount | grep " cifs " | awk '{ print $3 }' )
+    done < <( command lsblk --output MOUNTPOINT --noheadings | command grep -v '^$' | command grep -v '[SWAP]' ; command mount | command grep " cifs " | command awk '{ print $3 }' )
 }
 

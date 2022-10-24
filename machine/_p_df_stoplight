@@ -7,14 +7,18 @@
 #
 # WARNING: untested on Mac, guaranteed to not work there.
 
-# Specialty characters are probably font-dependent and you may have to make
-# substitutions.  I use ':digraphs' in Vim to find specialty characters
-# like these (if you don't know what that means, don't worry about it).
+# PROBLEMS:
+# - assumes _p_colours is loaded!
+# - Specialty characters are probably font-dependent and you may have to
+#   make substitutions.  I use ':digraphs' in Vim to find specialty
+#   characters like these (if you don't know what that means, don't worry
+#   about it).
 
 _p_df_stoplight () {
     if [ "${_p_os}" == "Darwin" ]
     then
         # This doesn't work on Mac
+        echo "?"
         return
     fi
 
@@ -31,7 +35,7 @@ _p_df_stoplight () {
 
     while read -r mountpoint
     do
-        percent=$( df --output=pcent "${mountpoint}" | tail -n +2 | tr -d '%' )
+        percent=$( command df --output=pcent "${mountpoint}" | command tail -n +2 | command tr -d '%' )
         # shellcheck disable=SC2086  # "Double quote to prevent globbing and word splitting."
         if [ ${percent} -gt ${warning} ]
         then
@@ -42,6 +46,6 @@ _p_df_stoplight () {
         else
             echo -en "${_pc_b_okay}${okay_char}${_pc_nocolour}"
         fi
-    done < <( lsblk --output MOUNTPOINT --noheadings | grep -v '^$' | grep -v '[SWAP]' ; mount | grep " cifs " | awk '{ print $3 }' )
+    done < <( command lsblk --output MOUNTPOINT --noheadings | command grep -v '^$' | command grep -v '[SWAP]' ; command mount | command grep " cifs " | command awk '{ print $3 }' )
 }
 

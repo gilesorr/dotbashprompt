@@ -6,9 +6,9 @@
 _p_load3 () {
     if [ "${_p_os}" == "Darwin" ]
     then
-        command uptime | awk ' BEGIN { FS=":" } { print $NF } ' | sed -e 's/^ //' |  tr " " ","
+        command uptime | command awk ' BEGIN { FS=":" } { print $NF } ' | command sed -e 's/^ //' |  tr " " ","
     else
-        command uptime | awk ' BEGIN { FS=":" } { print $NF } ' | tr -d " "
+        command uptime | command awk ' BEGIN { FS=":" } { print $NF } ' | command tr -d " "
     fi
 }
 

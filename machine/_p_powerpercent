@@ -11,7 +11,7 @@ _p_powerpercent () {
         # On a Linux system:
         if [ -d /sys/class/power_supply/BAT?/ ] # Check there's a battery
         then
-            cat /sys/class/power_supply/BAT?/capacity
+            command cat /sys/class/power_supply/BAT?/capacity
         fi
     elif [ "${_p_os}" == "Darwin" ]
     then # On a Mac:

@@ -5,11 +5,11 @@ _p_threadcount () {
     # shellcheck disable=SC2154  # "referenced but not assigned"
     if [ "${_p_os}" == "Linux" ]
     then
-        numCPUs="$(grep -c 'siblings' /proc/cpuinfo)"
+        numCPUs="$(command grep -c 'siblings' /proc/cpuinfo)"
     elif [ "${_p_os}" == "Darwin" ]
     then
         # this method valid Monterey / 2022-02
-        numCPUs="$(sysctl -n hw.ncpu)"
+        numCPUs="$(command sysctl -n hw.ncpu)"
     else
         numCPUs="?"
     fi

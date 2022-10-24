@@ -23,7 +23,7 @@ _p_upseconds () {
         # since then.
         # shellcheck disable=2016  # "expressions don't expand in single
         # quotes" (true enough, but this is awk)
-        upSeconds=$(( $(command date +%s) - $(sysctl kern.boottime | command awk '{print $5}' | command tr -d ",") ))
+        upSeconds=$(( $(command date +%s) - $(command sysctl kern.boottime | command awk '{print $5}' | command tr -d ",") ))
     fi
     echo -n "${upSeconds}"
 }

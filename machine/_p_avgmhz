@@ -2,17 +2,25 @@
 # Prints the average MHz speed of your processor
 #
 # gets the current speed of all cores and averages them.
+#
+# This doesn't have code to handle non-Linux (probably Mac) systems, and
+# will display only "?".
 
 _p_avgmhz () {
-    (( sum=0 ))
-    (( numproc=0 ))
+    if [ -e /proc/cpuinfo ]
+    then
+        (( sum=0 ))
+        (( numproc=0 ))
 
-    for value in $(command grep "cpu MHz" /proc/cpuinfo | command awk '{print $NF}' | command awk -F "." '{print $1}')
-    do
-        sum=$(( sum + value ))
-        numproc=$(( numproc + 1 ))
-    done
+        for value in $(command grep "cpu MHz" /proc/cpuinfo | command awk '{print $NF}' | command awk -F "." '{print $1}')
+        do
+            sum=$(( sum + value ))
+            numproc=$(( numproc + 1 ))
+        done
 
-    echo -n $(( sum / numproc ))
+        echo -n $(( sum / numproc ))
+    else
+        echo "?"
+    fi
 }
 

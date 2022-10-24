@@ -1,11 +1,19 @@
 #!/bin/bash
 # Prints the bogomips rating of your current processor.
 #
+# This doesn't have code to handle non-Linux (probably Mac) systems, and
+# will display only "?".  But then, "bogomips" are pretty Linux-specific.
+#
 # This assumes that the bogomips ratings for all processors/cores are the
 # same.  And the value shouldn't change during a session, so don't escape
 # it - just run it once.
 
 _p_bogomips () {
-    command grep bogo /proc/cpuinfo | command head -n 1 | command awk '{print $NF}' | command awk -F "." '{print $1}'
+    if [ -e /proc/cpuinfo ]
+    then
+        command grep bogo /proc/cpuinfo | command head -n 1 | command awk '{print $NF}' | command awk -F "." '{print $1}'
+    else
+        echo "?"
+    fi
 }
 

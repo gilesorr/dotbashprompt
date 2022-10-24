@@ -5,7 +5,7 @@
 
 # an auxiliary function needed by this one that abstracts away the OS
 # differences:
-# shellcheck disable=1090  # Can't follow non-constant source:
+# shellcheck disable=1091  # Not following:
 source "${PROMPTDIR}/machine/_p_upseconds"
 
 _p_uptime () {
