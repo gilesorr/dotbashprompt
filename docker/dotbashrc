@@ -1,0 +1,43 @@
+
+source ~/.bashprompt/promnow
+promnow onetwo > /dev/null
+
+###############################################################################
+# If you like dotbashprompt and want to use it yourself:
+# - check out the git repo:
+#       git clone git@github.com:gilesorr/dotbashprompt.git ~/.bashprompt
+# - add the two lines above to your ~/.bashrc (or change 'onetwo' to your
+#   preferred prompt)
+###############################################################################
+
+cat << EOF
+-------------------------------------------------------------------------------
+DotBashPrompt
+
+Use 'promnow' to see available prompts (tab completion is available).  'cd
+~/.bashprompt' to see the code, and to see how the prompts act in a git
+folder.  'cd ~/really/deep/directory/structure/even/deeper/' to exercise
+prompts that do folder name truncation or folding.  Run 'false' to see
+whether or not prompts notify on failed commands.
+
+-------------------------------------------------------------------------------
+EOF
+
+###############################################################################
+# These functions have nothing to do with the dotbashprompt repo, I just
+# find them convenient in environments I'm working in.
+###############################################################################
+
+..    () { cd .. ; }
+...   () { cd ../.. ; }
+....  () { cd ../../.. ; }
+..... () { cd ../../../.. ; }
+
+# These are busybox versions:
+d  () { ls --color=auto -F     "$@"; }
+da () { ls --color=auto -F -a  "$@"; }
+v  () { ls --color=auto -F -l  "$@"; }
+va () { ls --color=auto -F -la "$@"; }
+c  () { clear ; }
+cdc () { cd ; clear ; }
+
