@@ -31,7 +31,7 @@ _p_topright_clock () {
     #tput setaf 0 ; tput bold ; tput setab 1
     echo -en "${_p_clock_hilight}|${_p_clock_colour}"
     ${topRight}
-    echo -en "${_c_nocolour}"
+    echo -en "$(tput sgr0)"
     #  restore cursor position:
     tput rc
 }

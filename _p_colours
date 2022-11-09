@@ -1,4 +1,5 @@
 #!/bin/bash
+#shellcheck disable=SC2016  # Expressions don't expand in single quotes ...
 #
 # Colours for prompts:
 #    _pc_color          foreground colour

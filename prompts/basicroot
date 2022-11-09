@@ -24,7 +24,7 @@ echo "Prompt Title: basicroot - prompt with colour block, intended as stand-alon
 echo "Includes:     user@host:dir, git (basic), newline, battery, return value, ephemeral: CPU count, load, du"
 #, load indicator"
 echo "For:          a dark background (should work with light)"
-echo "Requires:     git"
+echo "Requires:     git, Powerline font (looks okay without?)"
 
 export bgred='\[\033[41m\]'
 export bgyellow='\[\033[43m\]'
