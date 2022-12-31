@@ -5,6 +5,6 @@
 _p_numhiddendirs () {
     # This method counts "." and ".." as dirs, so subtract 2
     # ("-A" doesn't work because you requested dot files(?))
-    echo -n "$(( $(command ls -l -d .* | command grep -c '^d' | command tr -d ' ') - 2 ))"
+    echo -n "$(( $(command ls -l -d .* 2> /dev/null | command grep -c '^d' | command tr -d ' ') - 2 ))"
 }
 

@@ -4,6 +4,6 @@
 # Does NOT include directories.
 
 _p_numhiddenfiles () {
-    command ls -A -l -d .* | command grep -c "^-" | command tr -d " "
+    command ls -A -l -d .* 2> /dev/null | command grep -c "^-" | command tr -d " "
 }
 
