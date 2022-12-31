@@ -6,12 +6,18 @@
 
 if [ "$(uname -a | grep Darwin > /dev/null ; echo $?)" == "0" ]
 then
-    export _p_line_tl='╭'
-    export _p_line_ll='╰'
+    export _p_line_tl='┌'
+    export _p_line_ll='└'
+    export _p_line_tlr='╭'
+    export _p_line_llr='╰'
+    export _p_line_tr='┐'
+    export _p_line_lr='┘'
     export _p_line='─'
+    export _p_vline='│'
     export _p_line_end='─'
     export _p_line_rightt='─┤'
     export _p_line_leftt='├─'
+    export _p_line_cross='┼'
 elif [ "$(uname -a | grep Linux > /dev/null ; echo $?)" == "0" ]
 then
     # it's ugly, but it works: see demo/specialchars:

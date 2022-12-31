@@ -8,4 +8,6 @@ echo        "  af  jklm n  opqrs  t u v w x  "
 echo ""
 echo -e "To use these in a prompt, surround the matching letter with '\\\e(0'"
 echo -e "and '\\\e(B', so '\\\e(0n\\\e(B' becomes \e(0n\e(B."
+echo "Or you can just echo the raw characters ..."
+echo "┌──┬─┐ ╭┐" ; echo "├──┼─┤ ╰┘" ; echo "│  │ │" ; echo "└──┴─┘"
 
