@@ -71,7 +71,7 @@ fi
 # add battery indicator (if we have one):
 if ${_p_has_battery}
 then
-    PS1+="$(_p_powerconnected)$(_p_powerpercent)% "
+    PS1+="\$(_p_powerconnected)\$(_p_powerpercent)% "
 fi
 PS1+="${_pc_nocolour}"
 PS1+="\$(_p_loadcaret)"

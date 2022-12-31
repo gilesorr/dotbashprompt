@@ -36,7 +36,14 @@ prompt_command () {
 
     # set some variables to be displayed later
     _p_displayGit="$(_p_git)"
-    _p_displayPower="($(_p_powerconnected)$(_p_powerpercent)%)"
+    # this should be on prompt-load only, but the way this prompt is set up
+    # makes that difficult:
+    if [[ ${_p_has_battery} == "true" ]]
+    then
+        _p_displayPower="($(_p_powerconnected)$(_p_powerpercent)%)"
+    else
+        _p_displayPower=""
+    fi
     _p_tilde="~"
     # on Linux/Bash4 we need "\~", on Mac/Bash3 we need "~" in this
     # substitution, so we get around it by making it a variable ...:

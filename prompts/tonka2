@@ -17,6 +17,8 @@ echo "Requires:     git"
 source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/directory/_p_git"
+source "${PROMPTDIR}/machine/_p_powerconnected"
+source "${PROMPTDIR}/machine/_p_powerpercent"
 
 _p_xtermtitle # generates the _p_TITLEBAR variable
 
@@ -53,7 +55,7 @@ PS1+="\n" # ------------------------------------------
 PS1+="${_pc_b_yellow}-${_pc_b_blue}-("
 if [[ "${_p_has_battery}" == "true" ]]
 then
-    PS1+="${_pc_b_yellow}$(_p_powerconnected)$(_p_powerpercent)%"
+    PS1+="${_pc_b_yellow}\$(_p_powerconnected)\$(_p_powerpercent)%"
     PS1+="${_pc_b_blue}:"
 fi
 PS1+="${_pc_b_yellow}\D{%H%M}"
