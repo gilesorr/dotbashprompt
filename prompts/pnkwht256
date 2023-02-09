@@ -2,6 +2,7 @@
 # shebang is unnecessary, but helps vim identify the filetype
 
 # shellcheck disable=SC1090  # "Can't follow non-constant source."
+# shellcheck disable=SC1091  # "Not following: ... was not specified as input"
 # shellcheck disable=SC2154  # "referenced but not assigned"
 
 echo "Prompt Title: pnkwht256 - pink-white-256-colours"
@@ -16,14 +17,11 @@ source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source "${PROMPTDIR}/directory/_p_git"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
+source "${PROMPTDIR}/session/_p_inother" # provides $_p_parentenv
 source "${PROMPTDIR}/machine/_p_loadcaret"
 source "${PROMPTDIR}/directory/_p_tildepwd"
 source "${PROMPTDIR}/directory/_p_xtermtitle"
 
-# _p_yellow -> _p_pink
-# _p_cyan   -> -P_white
-# 201 207 213 218 224 229
-#_p_yellow="\[\033[038;5;226m\]"
 _p_pink="\[\033[038;5;201m\]"
 _p_white="\[\033[038;5;229m\]"
 if (( UID == 0 ))
@@ -63,15 +61,8 @@ PS1+=" ${_p_pink}\$(_p_git)"
 # second line:
 PS1+="\n"
 PS1+="${_p_pink}"
-# add indicators if in tmux or screen:
-if ${_p_in_tmux}
-then
-    PS1+="[t]"
-fi
-if ${_p_in_screen}
-then
-    PS1+="[s]"
-fi
+# add indicators if in tmux, screen, etc.:
+${_p_parentenv}
 # add battery indicator (if we have one):
 if ${_p_has_battery}
 then
