@@ -1,0 +1,91 @@
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+# shellcheck disable=SC1090  # Can't follow non-constant source.
+# shellcheck disable=SC1091  # Not following: <pathname> not specified as input
+# shellcheck disable=SC2154  # VAR is referenced but not assigned.
+#
+# Copying flamev2 -> flamev3, adding "semi-ephemeral information" (load,
+# disk usage) on the first line of the prompt where it may be overwritten.
+
+echo "Prompt Title: flame v3"
+echo "Includes:     user@host, dir w/git, newline, battery, colourblock, retval, $/#"
+echo "              semi-ephemeral info (date/time, df, threads/load) is printed"
+echo "              in the top row in dark gray and may be overwritten."
+echo "For:          a dark background"
+echo "Requires:     git, 256 colour terminal, TrueType font"
+source "${PROMPTDIR}/session/_p_256warning"
+_p_256warning
+
+# Get the components we need:
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_git_branch_only"
+source "${PROMPTDIR}/directory/_p_git_status_only"
+source "${PROMPTDIR}/machine/_p_powerconnected"
+source "${PROMPTDIR}/machine/_p_powerpercent"
+source "${PROMPTDIR}/machine/_p_threadload"
+source "${PROMPTDIR}/machine/_p_df_percent"
+source "${PROMPTDIR}/session/_p_inother" # provides $_p_parentenv
+
+_p_red="\[\033[038;5;196m\]"
+_p_orange="\[\033[038;5;208m\]"
+_p_yellow="\[\033[038;5;226m\]"
+# The shade of gray used for the top line semi-ephemeral information:
+_p_semiephem="\[\033[038;5;243m\]"
+_p_nocolour="\[\033[0m\]"
+
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it w/prompt
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+    semiephem="$(date +%m-%d-%H%M) $(_p_df_percent) $(_p_threadload)"
+    # Significant bug waiting to happen here: if  the length of $semiephem
+    # is larger than $COLUMNS.  This should be checked for, and $semiephem
+    # truncated from the left.
+    semiephem_pos="$(( COLUMNS - ${#semiephem} ))"
+}
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
+
+PS1=""
+# add the terminal titlebar:
+PS1+="${_p_TITLEBAR}"
+
+# add a colour bar on the far right:
+PS1+="\$(
+tput sc
+tput cuf \${semiephem_pos}
+echo -en \"${_p_semiephem}\${semiephem}${_p_nocolour}\"
+tput rc
+)"
+
+PS1+="${_p_yellow}\u${_p_orange}@${_p_yellow}\h "
+if [ -n "${_p_parentenv}" ]
+then
+    PS1+="${_p_red}${_p_parentenv}${_p_nocolour} "
+fi
+PS1+="${_p_yellow}\${PWD//\${HOME}/\~} "
+PS1+="${_p_orange}\$(_p_git_branch_only)${_p_nocolour}"
+PS1+="${_p_yellow}\$(_p_git_status_only)${_p_nocolour}"
+
+PS1+="\n"   ################################# NEWLINE
+
+# add battery indicator (if we have one):
+if ${_p_has_battery}
+then
+    PS1+="${_p_yellow}\$(_p_powerconnected)\$(_p_powerpercent)% ${_p_nocolour}"
+fi
+PS1+="\[\033[38;5;196m\]▷\[\033[38;5;202m\]▷\[\033[38;5;208m\]▷\[\033[38;5;214m\]▷\[\033[38;5;220m\]▷\[\033[38;5;226m\]▷\[\033[0m\]"
+# add the return value of the previous command if non-zero:
+PS1+="${_pc_b_red}"
+PS1+="\$(
+if [ -n \"\${_p_retval}\" ]
+then
+    echo \"<\${_p_retval}>\"
+fi
+)"
+PS1+="${_p_nocolour}"
+PS1+="${_p_yellow}\\\$${_p_nocolour} "
+
