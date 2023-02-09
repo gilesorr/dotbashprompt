@@ -22,7 +22,9 @@ source "${PROMPTDIR}/directory/_p_git_status_only"
 source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
+source "${PROMPTDIR}/session/_p_inother" # creates $_p_parentenv 
 
+# shellcheck disable=SC2034  # "appears unused"
 minRemainingWidth=50
 
 prompt_command () {
@@ -34,6 +36,7 @@ prompt_command () {
     fi
 
     # set some variables to be displayed later (for width calculation)
+    # shellcheck disable=SC2034  # "appears unused"
     _p_displayGit="$(_p_git_branch_only)$(_p_git_status_only)"
     _p_displayPower="($(_p_powerconnected)$(_p_powerpercent)%)"
     _p_tilde="~"
@@ -46,6 +49,9 @@ prompt_command () {
 PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
 
 PS1="${_p_TITLEBAR}"
+# shellcheck disable=SC1001
+# shellcheck disable=SC2034  # "var appears unused"
+# shellcheck disable=SC2089  # "Quotes/backslashes will be treated literally."
 PS1+="\$(
 remainingWidth=\$(( COLUMNS - \${#_p_displayPower} - \${#_p_dir} - \${#_p_displayGit} - \$(echo "\u@\h" | wc -c) - 3 ))
 
@@ -64,7 +70,10 @@ then
     echo -en \"${_pc_b_gray}\$(_p_git_branch_only)${_pc_gray}\$(_p_git_status_only)${_pc_nocolour}\"
     echo -en \"\n\"
     echo -en \"${_pc_b_yellow}\u${_pc_b_purple}@${_pc_b_yellow}\h\"
-    echo -e  \"${_pc_b_purple}\$${_pc_nocolour} \";
+    echo -en \"${_pc_purple}${_p_parentenv}\"
+    echo -en \"${_pc_bg_gray}${_pc_b_red}\${_p_retval}\"
+    echo -en \"${_pc_nocolour}\"
+    echo -e  \"${_pc_b_purple}\\\$${_pc_nocolour} \";
 else   # the one line version
     echo -en \"${_pc_b_purple}\${_p_displayPower}${_pc_nocolour}\"
     echo -en \"${_pc_purple}\${_p_dir}${_pc_nocolour}\"
@@ -75,11 +84,13 @@ else   # the one line version
     fi
     echo -en \"${_pc_b_purple}|\"
     echo -en \"${_pc_b_yellow}\u${_pc_b_purple}@${_pc_b_yellow}\h\"
+    echo -en \"${_pc_purple}${_p_parentenv}\"
     echo -en \"${_pc_bg_gray}${_pc_b_red}\${_p_retval}\"
     echo -en \"${_pc_nocolour}\"
     echo -e  \"${_pc_b_purple}\\\$${_pc_nocolour} \";
 fi
 )"
 
+# shellcheck disable=SC2090  # "Quotes/backslashes in this variable will not be respected."
 export PS1
 
