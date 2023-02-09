@@ -1,0 +1,54 @@
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+# shellcheck disable=SC2154  # "<var> is referenced but not assigned."
+#
+# add indicators of SHLVL, and if in tmux, screen, typescript, nvim ...:
+# Creates $_p_parentenv which contains the output.
+# User can readily change the indicator(s) for various environment types,
+# and switch the display of SHLVL on and off
+
+_p_inother () {
+
+    WANTS_SHLVL="false"
+
+    NVIM_INDICATOR="n"
+    SCREEN_INDICATOR="□"
+    SSH_INDICATOR="s"
+    TMUX_INDICATOR="t"
+    TYPESCRIPT_INDICATOR="y"
+
+    otherEnvs=""
+
+    if ${WANTS_SHLVL}
+    then
+        otherEnvs+="${SHLVL}"
+    fi
+
+    if ${_p_in_nvim}
+    then
+        otherEnvs+="${NVIM_INDICATOR}"
+    fi
+    if ${_p_in_screen}
+    then
+        otherEnvs+="${SCREEN_INDICATOR}"
+    fi
+    if ${_p_in_ssh}
+    then
+        otherEnvs+="${SSH_INDICATOR}"
+    fi
+    if ${_p_in_tmux}
+    then
+        otherEnvs+="${TMUX_INDICATOR}"
+    fi
+    if ${_p_in_typescript}
+    then
+        otherEnvs+="${TYPESCRIPT_INDICATOR}"
+    fi
+    if [ -n "${otherEnvs}" ]
+    then
+        echo -n "[${otherEnvs}]"
+    fi
+}
+# shellcheck disable=SC2034  # "_p_parentenv appears unused."
+_p_parentenv="$(_p_inother)"
+
