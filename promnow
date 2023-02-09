@@ -13,9 +13,10 @@
 #   _p_numthreads - integer, how many processor threads are available
 # tmux, screen, and (type)script variables are only available if the
 # associated binary is available:
-#   _p_in_tmux - true or false, is this shell in a tmux session?
+#   _p_in_nvim   - true or false, is this shell in a Neovim session?
 #   _p_in_screen - true or false, is this shell in a screen session?
-#   _p_in_ssh - true or false, is this shell in a ssh session?
+#   _p_in_ssh    - true or false, is this shell in a ssh session?
+#   _p_in_tmux   - true or false, is this shell in a tmux session?
 #   _p_in_typescript - true or false, is this shell in a typescript session
 
 # This is a problematic hard-coded value: change it if you install the
@@ -134,7 +135,7 @@ _promnow_setup () {
         export _p_in_ssh=false
     fi
     ####################### shell inside NeoVim check #########################
-    if [ "${NVIM_LISTEN_ADDRESS}x" != "x" ]
+    if [ -n "${NVIM}" ] || [ -n "${NVIM_INDICATOR}" ] || [ -n "${NVIM_LISTEN_ADDRESS}" ]
     then
         export _p_in_nvim=true
     else
