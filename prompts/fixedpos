@@ -1,0 +1,100 @@
+#!/bin/bash
+# shellcheck disable=SC2154  # "referenced but not assigned"
+# shellcheck disable=SC1090  # disable "Can't follow non-constant source."
+# shellcheck disable=SC1091  # disable "Not following:"
+
+# The prompt is anchored at the bottom of the terminal, fills the width of
+# the terminal, and draws a line up the right side of the terminal to
+# attach itself to a clock in the upper right corner of the terminal.  It
+# also uses very old ANSI cursor positional codes I should probably get rid
+# of (replace with 'tput' commands).
+
+echo "Prompt Title: fixedpos"
+echo "Includes:     top-right clock, user@hostname, directory, newline,"
+echo "              tmux/screen indicator, git"
+echo "For:          a dark background"
+echo "Requires:     git, TTF font(?)"
+
+# Get the components we need:
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_git_branch_only"
+source "${PROMPTDIR}/directory/_p_git_status_only"
+source "${PROMPTDIR}/session/_p_inother" # provides $_p_parentenv
+
+prompt_command() {
+    #   Calculate the width of the prompt:
+    #   "whoami" and "pwd" include a trailing newline that shouldn't be
+    #   counted, and this obfuscation helps that(?)
+    hostnam=$(hostname)
+    usernam=$(whoami)
+    tempPWD="${PWD//${HOME}/\~}"
+    finalPWD="${tempPWD}"
+    #   Add all the accessories below ...
+    promptsize=$(echo -n "--(${usernam}@${hostnam})---(${tempPWD})-----" | wc -c | tr -d " ")
+    #   Figure out how much to add between user@host and PWD (or how much to
+    #   remove from PWD)
+    fillsize=$(( COLUMNS - promptsize ))
+    fill=""
+    #   Make the filler if prompt isn't as wide as the terminal:
+    while [ "$fillsize" -gt "0" ] 
+    do 
+        fill="${fill}─"
+        fillsize=$(( fillsize - 1 ))
+    done
+    #   Right-truncate PWD if the prompt is going to be wider than the terminal:
+    if [ "$fillsize" -lt "0" ]
+    then
+        cutt=$(( 3 - fillsize ))
+        finalPWD="...$(echo -n "$tempPWD" | sed -e "s/\(^.\{$cutt\}\)\(.*\)/\2/")"
+    fi
+    #
+    #   Create the clock and the bar that runs up the right side of the term
+    #
+    #   Position the cursor to print the clock:
+    echo -en "\033[2;$(( COLUMNS - 9 ))H"
+    echo -en "${_c_b_blue}(${_c_b_yellow}$(date +%H%M)${_c_b_blue})─${_c_b_yellow}──┐"
+    local i=${LINES}
+    echo -en "\033[2;${COLUMNS}H"
+    #   Print vertical dashes down the side of the terminal:
+    while [ $i -ge 4 ]
+    do
+        echo -en "\033[$(( i - 1 ));${COLUMNS}H│"
+        i=$(( i - 1 ))
+    done
+
+    prompt_line=$(( LINES - 1 ))
+    #   This is needed because doing \${LINES} inside a Bash mathematical
+    #   expression (ie. $(())) doesn't seem to work.
+}
+
+PROMPT_COMMAND=prompt_command
+
+case $TERM in
+    xterm*)
+        TITLEBAR='\[\033]0;\u@\h:\w\007\]'
+        ;;
+    *)
+        TITLEBAR=""
+        ;;
+esac
+
+PS1="${TITLEBAR}\
+\[\033[\${prompt_line};0H\]
+${_pc_b_yellow}┌${_pc_b_blue}─<\
+${_pc_b_yellow}\${usernam}${_pc_b_blue}@${_pc_b_yellow}\${hostnam}\
+${_pc_b_blue})─${_pc_b_yellow}─\${fill}${_pc_b_blue}─(\
+${_pc_b_yellow}\${finalPWD}\
+${_pc_b_blue})─${_pc_b_yellow}───┘\
+"
+
+PS1+="\n"
+
+PS1+="${_pc_b_yellow}└${_pc_b_blue}─<\
+${_pc_b_yellow}${_p_parentenv}${_pc_b_blue}:\
+${_pc_b_yellow}\$(_p_git_branch_only)\$(_p_git_status_only)\
+${_pc_b_blue}:${_pc_b_yellow}\\\$\
+${_pc_nocolour} \
+" 
+
+PS2="$_pc_b_blue─$_pc_b_yellow─$_pc_b_yellow─$_pc_nocolour "
+
