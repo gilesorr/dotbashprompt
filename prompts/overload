@@ -10,9 +10,6 @@
 #
 # It's probably quite resource-hungry and a bad idea on things like
 # Raspberry Pis.
-#
-# 2018-05-05: stat fails (missing operand) in a directory where there are
-# no real files - ie. /dev/ where it's all devices and links.
 
 echo "Prompt Title: overload"
 echo "Includes:     git, load, file data, colourslash PWD, newline, battery, user@host, ephemeral dfsl and date-time"
