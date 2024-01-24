@@ -10,7 +10,7 @@
 
 echo "Prompt Title: x2.private (from sa2)"
 echo "Includes:     git status, colour PWD, newline, battery, user@host"
-echo "For:          a dark background"
+echo "For:          a dark background - NOT for text console (linedraw chars fail)"
 echo "Requires:     git"
 
 # Get the components we need:
