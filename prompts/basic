@@ -1,0 +1,160 @@
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+#
+# This prompt is a standalone: it doesn't require any secondary files.
+# Just 'source <filename>' and you have your new prompt.  Because it's a
+# standalone, the git detail is very limited (only whether or not you're in
+# a git folder, not whether/how much it's modified.)
+
+# shellcheck disable=SC1090  # "Can't follow non-constant source."
+# shellcheck disable=SC2154  # "referenced but not assigned"
+
+echo "Prompt Title: basic - prompt with colour block, intended as stand-alone prompt"
+echo "Includes:     user@host:dir, git (basic), newline, battery, return value"
+#, load indicator"
+echo "For:          a dark background"
+echo "Requires:     git"
+
+export bgred='\[\033[41m\]'
+export bgyellow='\[\033[43m\]'
+export black='\[\033[0;30m\]'
+export red='\001\033[31m\002'
+export green='\001\033[38;5;010m\002'
+export yellow='\001\033[38;5;011m\002'
+export cyan='\001\033[38;5;014m\002'
+export bg_gray='\001\033[47m\002'
+export darkgray='\033[38;5;008m'
+export nocolour='\001\033[0;0m\002'
+
+if ( command uname -a | command grep Darwin > /dev/null )
+then
+    export _p_os="Darwin"
+elif ( command uname -a | command grep Linux > /dev/null )
+then
+    export _p_os="Linux"
+else
+    export _p_os="?"
+fi
+
+_p_loadcaret () {
+    load="$(command uptime | command awk '{print $(NF-2)}' | command tr -d ",")"
+    percentload="$(command echo -e "scale=0 ; ${load}*100/${_p_numthreads}" | command bc)"
+    if (( percentload > HIGHLOAD ))
+    then
+        _p_loadcaret_color="${bgred}"
+    elif (( percentload > MEDIUMLOAD ))
+    then
+        _p_loadcaret_color="${bgyellow}"
+    else
+        _p_loadcaret_color=""
+    fi
+
+    if [ -n "${_p_loadcaret_color}" ]
+    then
+        echo -e "${_p_loadcaret_color}^${_pc_nocolour}"
+    fi
+}
+
+_p_threadcount() {
+    # shellcheck disable=SC2154  # "referenced but not assigned"
+    if [ "${_p_os}" == "Linux" ]
+    then
+        numCPUs="$(grep -c 'siblings' /proc/cpuinfo)"
+    elif [ "${_p_os}" == "Darwin" ]
+    then
+        # this method valid Monterey / 2022-02
+        numCPUs="$(sysctl -n hw.ncpu)"
+    else
+        numCPUs="?"
+    fi
+    echo -n "${numCPUs}"
+}
+
+_p_df_percent() {
+    # shellcheck disable=SC2154  # "referenced but not assigned"
+    if [ "${_p_os}" == "Linux" ]
+    then
+        # finds all local mount-points and shows their percent use in parens
+        while read -r mountpoint
+        do
+            echo -n "($( df --output=pcent "${mountpoint}" | tail -n +2 | tr -d " " ))"
+        done < <(lsblk --output MOUNTPOINT --noheadings | grep -v '^$' | grep -v '[SWAP]' )
+    elif [ "${_p_os}" == "Darwin" ]
+    then
+        echo -n "?"
+    else
+        echo -n "?"
+    fi
+}
+
+_p_load() {
+    command uptime | command awk '{print $(NF-2)}' | command tr -d ","
+}
+
+case ${TERM} in
+    xterm*|rxvt*)
+        # the first "\u@\h" is the Icon Title
+        # the second "\u@\h:\w" is goes into the XTerm Title Bar
+        # shellcheck disable=SC1117 #  Backslash is literal in ...
+        export _p_TITLEBAR="\[\033]1;\u@\h\007\033]2;\u@\h:\w\007\]"
+        if [ "$(command uname -a | command grep Darwin > /dev/null ; echo $?)" == "0" ]
+        then
+            # Macs don't understand the "Icon Title":
+            # shellcheck disable=SC1117 #  Backslash is literal in ...
+            export _p_TITLEBAR="\[\033]0;\u@\h:\w\007\]"
+        fi
+        ;;
+    *)
+        export _p_TITLEBAR=""
+        ;;
+esac
+
+_p_changecount() {
+    # Show "+3-5" changed lines:
+    command git diff --numstat | command awk 'NF==3 {plus+=$1; minus+=$2} END {printf("+%d-%d\n", plus, minus)}'
+    # Add a "+" if there are untracked files:
+    if command git status 2> /dev/null | command grep "ntrack" -q
+    then
+        echo -n "+"
+    fi
+}
+
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+}
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
+
+# line 1
+
+PS1=""
+PS1+="${_p_TITLEBAR}"
+# shellcheck disable=SC1117 #  Backslash is literal in ...
+PS1+="${yellow}\u@\h:\w${nocolour}"
+PS1+="${cyan}\$(
+    if command git status >/dev/null 2>&1
+    then
+        echo -n '(git'
+        echo -n \$(_p_changecount)
+        echo -n ')'
+    fi
+)${nocolour}"
+PS1+="${cyan}\$(if command svn info   >/dev/null 2>&1; then echo '(svn)'; fi)${nocolour}"
+
+# line 2
+
+PS1+="\n"
+num_batteries=$(command ls -1d /sys/class/power_supply/BAT* 2>/dev/null | command wc -l)
+if (( num_batteries > 0 ))
+then
+    PS1+="\$(cat /sys/class/power_supply/BAT?/capacity)% "
+fi
+PS1+="${bg_gray}${red}\${_p_retval}${nocolour}"
+PS1+="\$(_p_loadcaret)"
+PS1+="\\\$ "
+

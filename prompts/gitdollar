@@ -1,0 +1,48 @@
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+
+# shellcheck disable=SC1090  # "Can't follow non-constant source."
+# shellcheck disable=SC1091  # "Not following: ... was not specified as input"
+# shellcheck disable=SC2154  # "referenced but not assigned"
+
+echo "Prompt Title: gitdollar - a dollar sign, with extras"
+echo "Includes:     branch$"
+echo "For:          a dark background"
+echo "Requires:     git"
+
+# Get the components we need:
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+source "${PROMPTDIR}/directory/_p_git"
+source "${PROMPTDIR}/session/_p_inother" # provides $_p_parentenv
+source "${PROMPTDIR}/machine/_p_loadcaret"
+source "${PROMPTDIR}/directory/_p_xtermtitle"
+
+_p_white="\[\033[038;5;255m\]"
+_p_orange="\[\033[038;5;202m\]"
+
+_p_xtermtitle # generates the _p_TITLEBAR variable
+
+prompt_command () {
+    _p_retval=$? # capture the return value before you change it w/prompt
+    if (( _p_retval == 0 ))
+    then
+        # disappear the return value if it's zero
+        _p_retval=""
+    fi
+}
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
+
+# add the titlebar:
+PS1="${_p_TITLEBAR}"
+# add indicators if in tmux, screen, etc.:
+PS1+="${_p_parentenv}"
+# add git branch and status:
+PS1+="${_p_orange}\$(_p_git)"
+# add battery indicator (if we have one):
+PS1+="${_pc_nocolour}"
+# add the return value of the previous command if non-zero:
+PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
+PS1+="${_pc_nocolour}"
+PS1+="${_p_white}\\\$ ${_pc_nocolour}"
+
