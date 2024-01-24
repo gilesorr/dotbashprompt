@@ -156,12 +156,12 @@ PS1+="\\\$ "
 
 # EPHEMERAL - borrowed from hl-hostname2
 
-if "${wantsEphemera}"
-then
-    PS1+="\[\$(
+PS1+="\$(
+    if \$wantsEphemera
+    then
         tput sc
         echo -en \"        ${darkgray}[\$(_p_threadcount)] \$(_p_load) \$(_p_df_percent)\"
         tput rc
-    )\]"
-fi
+    fi
+)"
 

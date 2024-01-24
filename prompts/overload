@@ -8,8 +8,12 @@
 #
 # This one has everything.
 #
-# It's probably quite resource-hungry and a bad idea on things like
-# Raspberry Pis.
+# It's resource-hungry and a bad idea on things like Raspberry Pis and Atom
+# processors.
+
+# set the following to "true" or "false" to display ephemeral data after
+# the prompt:
+wantsEphemera="true"
 
 echo "Prompt Title: overload"
 echo "Includes:     git, load, file data, colourslash PWD, newline, battery, user@host, ephemeral dfsl and date-time"
@@ -143,12 +147,17 @@ PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
 PS1+="${_pc_nocolour}"
 PS1+="${_pc_b_gray}\\\$"
 PS1+="${_pc_nocolour} "
-# Add our "ephemeral" data:
+
+# EPHEMERAL -
+
+if $wantsEphemera
+then
 PS1+="\[\$(
     tput sc
     echo -en \"   ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
     tput rc
 )\]"
+fi
 
 export PS1
 

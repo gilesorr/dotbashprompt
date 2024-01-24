@@ -17,6 +17,10 @@
 #   Should be easy enough if you put the write-detection in the
 #   prompt_command().
 
+# set the following to "true" or "false" to display ephemeral data after
+# the prompt:
+wantsEphemera="false"
+
 echo "Prompt Title: singletons2"
 echo "Includes:     colourized single char PWD, git, battery, return value, ephemeral info"
 echo "For:          a dark background"
@@ -93,15 +97,20 @@ PS1+="${_pc_bg_gray}${_pc_b_red}"
 PS1+="\${_p_retval}"
 PS1+="${_pc_nocolour}"
 PS1+="${_pc_b_gray}\\\$ ${_pc_nocolour}"
-# Print "ephemeral" info after the prompt
+
+# EPHEMERAL -
+
+if ${wantsEphemera}
+then
 # shellcheck disable=SC2089  # "Quotes/backslashes will be treated literally."
 PS1+="\[\$(
     tput sc
     echo -en \"   ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
     tput rc
 )\]"
+fi
 
-# shellcheck disable=SC2090  # "Quotes/backslashes in tthis variable will
+# shellcheck disable=SC2090  # "Quotes/backslashes in this variable will
 # not be respected."
 export PS1
 

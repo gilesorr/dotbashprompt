@@ -8,6 +8,10 @@
 #
 # Named for its bright colours.
 
+# User-settable:
+# true/false:
+wantsEphemera="false"
+
 echo "Prompt Title: hl-hostname2"
 echo "Includes:     battery-dir-git, newline, user@host, retval, ephemeral load and df"
 echo "For:          a dark background"
@@ -90,11 +94,14 @@ PS1+="${_pc_nocolour} "
 
 # EPHEMERAL -
 
+if $wantsEphemera
+then
 PS1+="\[\$(
     tput sc
     echo -en \"        ${_c_darkgray}[\$(_p_threadcount)] \$(_p_load1) \$(_p_df_percent)\"
     tput rc
 )\]"
+fi
 
 # shellcheck disable=SC2090  # Quotes/backslashes in this variable will not
 # be respected.

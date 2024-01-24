@@ -12,11 +12,13 @@
 # TODO:
 # - add "[$COLUMNSx$LINES]" to titlebar? (at end)
 
-# User-settable:
-wants_datetime=false
+# this shows datetime as part of the prompt (true/false):
+wants_datetime="false"
+# this shows disk usage / datetime as ephemera after the prompt:
+wantsEphemera="true"
 # Choose if you want directory (and git info, if available) in red (the
 # alternative is white):
-wants_allred=true
+wants_allred="true"
 
 echo "Prompt Title: shelluser2"
 echo "Includes:     'screen' detection, ephemeral messages, top corner clock"
@@ -164,12 +166,17 @@ shelluser_prompt () {
     PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}"
     PS1+="${_pc_nocolour}${_pc_gray}\\\$"
     PS1+="${_pc_b_red})${_pc_red}-${_pc_gray}-${_pc_nocolour} "
-    # This prints the date and time in FRONT of the prompt.
-    PS1+="\[\$(
-        tput sc
-        echo -en \"        ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
-        tput rc
-    )\]"
+
+    # EPHEMERAL -
+
+    if ${wantsEphemera}
+    then
+        PS1+="\[\$(
+            tput sc
+            echo -en \"        ${_c_darkgray}\$(_p_df_sl)  \$(date +%m-%d-%H%M)${_c_nocolour}\"
+            tput rc
+        )\]"
+    fi
 
     PS2="${_pc_b_red}-${_pc_red}-${_pc_gray}-${_pc_nocolour} "
 }
