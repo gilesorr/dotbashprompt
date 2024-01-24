@@ -5,6 +5,10 @@
 #   colour, out of 17 (default + 16 escapes), followed by a test use of
 #   that colour on all nine background colours (default + 8 escapes).
 #
+#   Some of the 90m-97m colours look considerably brighter than the 3[0-7]m
+#   series on `lxterminal`, while they look identical on `alacritty` so I'm
+#   not bothering to add them here ...
+#
 
 T='gYw'   # The test text
 
@@ -24,4 +28,21 @@ for FGs in '   0m' ' 1;0m' '  30m' '1;30m' '  31m' '1;31m' '  32m' \
     echo
     done
 echo
+
+#echo
+#echo "              40m   41m   42m   43m   44m   45m   46m   47m"
+#
+#for FGs in '   0m' ' 1;0m' '  90m' '1;90m' '  91m' '1;91m' '  92m' \
+#           '1;92m' '  93m' '1;93m' '  94m' '1;94m' '  95m' '1;95m' \
+#           '  36m' '1;36m' '  37m' '1;37m'
+#    do
+#        FG=${FGs// /}
+#        echo -en " ${FGs} \033[${FG} ${T} "
+#        for BG in 40m 41m 42m 43m 44m 45m 46m 47m
+#        do
+#            echo -en " \033[${FG}\033[${BG} ${T} \033[0m"
+#        done
+#    echo
+#    done
+#echo
 
