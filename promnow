@@ -11,13 +11,12 @@
 #   _p_os - "Darwin", "Linux", or "?"
 #   _p_has_battery - true or false, does this computer have a battery?
 #   _p_numthreads - integer, how many processor threads are available
-# tmux, screen, and (type)script variables are only available if the
-# associated binary is available:
 #   _p_in_nvim   - true or false, is this shell in a Neovim session?
 #   _p_in_screen - true or false, is this shell in a screen session?
 #   _p_in_ssh    - true or false, is this shell in a ssh session?
 #   _p_in_tmux   - true or false, is this shell in a tmux session?
 #   _p_in_typescript - true or false, is this shell in a typescript session
+#   _p_is_pi     - true if the hardware is a Raspberry Pi
 
 # This is a problematic hard-coded value: change it if you install the
 # project anywhere other than the suggested location.
@@ -62,6 +61,9 @@ _promnow_setup () {
     else
         export _p_uid0=false
     fi
+    # set defaults, update if possible later
+    export _p_has_battery=false
+    export _p_os="?"
     # set _p_os to string "Darwin" or "Linux"
     if ( command uname -a | command grep Darwin > /dev/null )
     then
@@ -70,8 +72,6 @@ _promnow_setup () {
         if command ioreg -l | command grep Capacity >/dev/null
         then
             export _p_has_battery=true
-        else
-            export _p_has_battery=false
         fi
         ######################## Darwin Thread check ##########################
         # this is LOGICAL cores, ie. threads:
@@ -85,15 +85,17 @@ _promnow_setup () {
         if (( num_batteries > 0 ))
         then
             export _p_has_battery=true
-        else
-            export _p_has_battery=false
         fi
         ######################## Linux Thread check ###########################
         # the 'CPU(s)' line seems to be LOGICAL cores, ie. threads:
         _p_numthreads=$(lscpu | grep '^CPU(s):' | awk '{ print $NF }')
         export _p_numthreads
-    else
-        export _p_os="?"
+    fi
+    ####################### Raspberry Pi check ################################
+    export _p_is_pi=false
+    if grep -q Raspberry /proc/cpuinfo
+    then
+        export _p_is_pi=true
     fi
     ####################### tmux check ########################################
     export _p_in_tmux=false
@@ -128,18 +130,16 @@ _promnow_setup () {
     fi
     ####################### ssh check #########################################
     # Not checking to see if it's installed ...
+    export _p_in_ssh=false
     if [ -n "$SSH_CLIENT" ]
     then
         export _p_in_ssh=true
-    else
-        export _p_in_ssh=false
     fi
     ####################### shell inside NeoVim check #########################
+    export _p_in_nvim=false
     if [ -n "${NVIM}" ] || [ -n "${NVIM_INDICATOR}" ] || [ -n "${NVIM_LISTEN_ADDRESS}" ]
     then
         export _p_in_nvim=true
-    else
-        export _p_in_nvim=false
     fi
 }
 
