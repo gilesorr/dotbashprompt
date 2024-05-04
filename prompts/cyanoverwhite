@@ -12,8 +12,11 @@ echo "Requires:     git"
 
 source "${PROMPTDIR}/_p_colours" # get colours into the environment
 source "${PROMPTDIR}/directory/_p_git"
-#source "${PROMPTDIR}/machine/_p_df"
+source "${PROMPTDIR}/directory/_p_xtermtitle"
 source "${PROMPTDIR}/machine/_p_df_stoplight"
+source "${PROMPTDIR}/machine/_p_powerconnected"
+source "${PROMPTDIR}/machine/_p_powerpercent"
+source "${PROMPTDIR}/machine/_p_cputemp"
 
 prompt_command () {
     _p_retval=$? # capture the return value before you change it
@@ -57,12 +60,14 @@ PS1+="${_pc_nocolour}\n"
 #
 # Second Line
 #
+PS1+="${_pc_b_cyan}[${_pc_nocolour}"
 if ${_p_has_battery}
 then
-    PS1+="${_pc_b_cyan}[${_pc_nocolour}"
     PS1+="\$(_p_powerconnected)\$(_p_powerpercent)%"
-    PS1+="${_pc_b_cyan}]${_pc_nocolour}"
+    PS1+="${_pc_b_cyan}∙${_pc_nocolour}"
 fi
+PS1+="\$(_p_cputemp)°"
+PS1+="${_pc_b_cyan}]${_pc_nocolour}"
 if ${_p_uid0}
 then
     PS1+="${_pc_b_red}\u${_pc_nocolour}"

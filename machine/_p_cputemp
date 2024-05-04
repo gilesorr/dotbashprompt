@@ -1,0 +1,27 @@
+#!/bin/bash
+# shellcheck disable=SC2154  # <var> is referenced but not assigned.
+#
+# Returns CPU temperature in Celsius
+
+_p_cputemp () {
+    if [ "${_p_os}" == "Darwin" ]
+    then
+        # Macs with M-series processors seem to have no good way
+        # of providing CPU temperature at the command line.
+        echo -n "?"
+    elif ${_p_is_pi}
+    then
+        # This works on the Raspberry Pi ... and probably nowhere else:
+        if command -v /usr/bin/vcgencmd > /dev/null
+        then
+            /usr/bin/vcgencmd measure_temp | sed -e 's/[^=]*=\([0-9]*\)\..*/\1/'
+        fi
+    elif [ -d /sys/devices/platform/coretemp.0/hwmon/ ]
+    then
+        # This works on most Linuxes:
+        cat /sys/devices/platform/coretemp.0/hwmon/hwmon?/temp1_input | sed 's/\(..\).*/\1/'
+    else
+        echo -n "?"
+    fi
+}
+
