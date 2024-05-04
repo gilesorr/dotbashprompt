@@ -34,6 +34,6 @@ _p_df_sl () {
         else
             echo -n "${okay_char}"
         fi
-    done < <( command lsblk --output MOUNTPOINT --noheadings | command grep -v '^$' | command grep -v '[SWAP]' ; command mount | command grep " cifs " | command awk '{ print $3 }' )
+    done < <( command lsblk --output MOUNTPOINT --noheadings | command grep -v '^$' | command grep -v '[SWAP]' | command grep -v '^/snap/' ; command mount | command grep " cifs " | command awk '{ print $3 }' )
 }
 

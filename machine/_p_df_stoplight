@@ -46,6 +46,6 @@ _p_df_stoplight () {
         else
             echo -en "${_pc_b_okay}${okay_char}${_pc_nocolour}"
         fi
-    done < <( command lsblk --output MOUNTPOINT --noheadings | command grep -v '^$' | command grep -v '[SWAP]' ; command mount | command grep " cifs " | command awk '{ print $3 }' )
+    done < <( command lsblk --output MOUNTPOINT --noheadings | command grep -v '^$' | command grep -v '[SWAP]' | command grep -v '^/snap/' ; command mount | command grep " cifs " | command awk '{ print $3 }' )
 }
 

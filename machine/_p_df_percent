@@ -11,7 +11,7 @@ _p_df_percent () {
         while read -r mountpoint
         do
             echo -n "($( command df --output=pcent "${mountpoint}" | command tail -n +2 | command tr -d " " ))"
-        done < <(command lsblk --output MOUNTPOINT --noheadings | command grep -v '^$' | command grep -v '[SWAP]' )
+        done < <(command lsblk --output MOUNTPOINT --noheadings | command grep -v '^$' | command grep -v '[SWAP]' | command grep -v '^/snap/' )
     elif [ "${_p_os}" == "Darwin" ]
     then
         echo -n "?"
