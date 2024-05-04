@@ -10,7 +10,7 @@ bgColour="\e[48;5;022m"
 fgColour="\e[38;5;226m"
 
 echo "Prompt Title: urblock ('Upper Right Block of text')"
-echo "Includes:     pwd, git"
+echo "Includes:     pwd, git, history number"
 echo "For:          dark or light background"
 echo "Requires:     git"
 
@@ -54,6 +54,7 @@ _p_xtermtitle # generates the _p_TITLEBAR variable
 
 PS1=""
 PS1+="${_p_TITLEBAR}"
+PS1+="\[${bgColour}${fgColour}\]\! ${_pc_nocolour}"
 PS1+="${_pc_bg_gray}${_pc_b_red}\${_p_retval}${_pc_nocolour}"
 PS1+="\[${bgColour}${fgColour}\]\\\$${_pc_nocolour} "
 
