@@ -2,10 +2,17 @@
 #
 # This should be run in any prompt that requires 256 colours to test the
 # $TERM setting and warn the user if support may not be available.
+# 
+# 2024-06: Just added "alacritty" but 256-colour support is becoming common
+# enough that it may be better to reverse this and have a list of known
+# 16-colour terms, warn if they show up ... still considering.
 
 _p_256warning () {
-    if ! [[ "${TERM}" =~ 256color ]]
+    if [[ "${TERM}" =~ 256color ]] || [ "${TERM}" == "alacritty" ]
     then
+        # do nothing:
+        echo -n ""
+    else
         echo -e "\033[1;31mWARNING\033[0m:      This doesn't appear to be a 256 colour \$TERM ('${TERM}')."
     fi
 }
