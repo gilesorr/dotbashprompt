@@ -5,7 +5,7 @@
 # shellcheck disable=SC1091  # "<file> was not specified as input"
 # shellcheck disable=SC2154  # "referenced but not assigned"
 
-echo "Prompt Title: blupnk256 - blue-pink-256-colours"
+echo "Prompt Title: blupnk256_2 - blue-pink-256-colours (take 2)"
 echo "Includes:     user@host, dir, git, newline, screen/tmux indicator, battery, return value, load indicator"
 echo "For:          a dark background"
 echo "Requires:     git, 256 colour terminal"
@@ -53,9 +53,10 @@ PS1+="${_p_blue}@"
 PS1+="${_p_pink}\h "
 # add the blue-pink gradient:
 # 021 057 093 129 165 201
-PS1+="\[\033[48;5;201m\] \[\033[48;5;165m\] \[\033[48;5;129m\] \[\033[48;5;093m\] \[\033[48;5;057m\] \[\033[48;5;021m\] \[\033[0m\]"
+PS1+="\[\033[48;5;021m\] \[\033[48;5;057m\] \[\033[48;5;093m\] \[\033[48;5;129m\] \[\033[48;5;165m\] \[\033[48;5;201m\] \[\033[0m\]"
 # add the current directory:
-PS1+=" ${_p_blue}\$(_p_tildepwd)"
+PS1+="\[\033[48;5;201m\]${_p_blue}\$(_p_tildepwd)${_pc_nocolour}"
+PS1+="\[\033[38;5;201m\]${_pc_nocolour}"
 # if the current directory isn't writeable, tag it:
 PS1+="\$(if ! [ -w \"\${PWD}\" ]; then echo \"[ro]\"; fi)"
 # add git branch and status:
