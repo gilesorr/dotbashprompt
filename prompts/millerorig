@@ -1,0 +1,70 @@
+#!/bin/bash
+# shebang is unnecessary, but helps vim identify the filetype
+# shellcheck disable=SC1091  # disable "not following" included files
+# shellcheck disable=SC2154  # "referenced but not assigned"
+#
+# NOTES:
+# - Dan Miller sent me something like this in 2012: it's been significantly
+#   modified to work in the dotbashprompt framework, but is presented here
+#   with something similar to his choice of colours.
+# - I've created a new stripColours() function to handle determining the
+#   length of prompt content - it's ugly and incomplete, but works in this
+#   context.
+
+echo "Prompt Title: millerorig - Dan Miller's original colours"
+echo "Includes:     history #, user@host, PWD, newline"
+echo "For:          a dark background"
+echo "Requires:     nothing"
+
+# Get the components we need:
+source "${PROMPTDIR}/_p_colours" # get colours into the environment
+
+stripColours () {
+    # This function attempts to strip out the various colour codes inserted
+    # into prompts so we can check the string without the colours.
+    #
+    # There are two sets of colour codes that this can refer to, which
+    # becomes very confusing: those before prompt printing, and those
+    # after.  You can insert bright red into the PS1 string with
+    # "\[\033[1;31m\]" or "\[\e[1;31m\]" or "\001\033[48;5;124m\002" - all
+    # of these work, and there are more besides.  After the PS1 string is
+    # "printed" or displayed, the codes are ... different.  This attempts
+    # to strip both in two different steps.
+
+    string="${1}"
+
+    # strip prompt colour codes before the PS is processed for printing:
+    string="$(echo "${string}" | sed -Ee 's/(\\001|\\\[)(\\033|\\e)\[([[:digit:]]{1,3};)?([[:digit:]]{1,2};)?[[:digit:]]{1,3}m(\\002|\\\])//g')"
+
+    # strip prompt colour codes after the PS code has been processed for
+    # printing ('printf %q' forces codes to be visible so we can remove
+    # them):
+    string="$(printf '%q' "${string}" | sed -Ee 's/(\\001)?\\E\[([[:digit:]]{1,3};){0,2}[[:digit:]]{1,3}m(\\002)?//g' | sed -e "s/^\$'//" -e "s/'$//")"
+
+    printf "%s" "${string}"
+}
+
+_p_red="\[\033[038;5;196m\]"
+_p_orange="\[\033[038;5;208m\]"
+_p_yellow="\[\033[038;5;226m\]"
+_p_darkgray="\[\033[038;5;240m\]"
+
+# High Intensity BLACK
+c1='\[\e[0;90m\]'
+c2="${_pc_red}"
+c3="${_pc_yellow}"
+c4="${_pc_green}"
+c5="${_pc_blue}"
+c6="${_p_darkgray}"
+
+prompt_command () {
+    #dir=$(echo $PWD | sed "s#$HOME#~#")
+    dir="${PWD/${HOME}/\~}"
+    prompt_string="${c6}----[ ${c2}(${c3}\!${c2}) ${c4}${USER}${_pc_nocolour} ${c5}${HOSTNAME%%.*}${_pc_nocolour}:${c5}$dir ${_pc_nocolour}${c6}]"
+    prompt_string_stripped="$(stripColours "${prompt_string@P}")"
+    dashes=$( for (( i=1 ; i<=$(( COLUMNS - ${#prompt_string_stripped} )) ; i++ )) ; do echo -n "-" ; done )
+    export PS1="${prompt_string}${dashes}\n${c1}\\\$${_pc_nocolour} "
+}
+
+PROMPT_COMMAND=" prompt_command ; ${PROMPT_COMMAND} "
+
