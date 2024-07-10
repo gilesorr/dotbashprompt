@@ -36,10 +36,16 @@ export nocolour='\001\033[0;0m\002'
 
 if ( command uname -a | command grep Darwin > /dev/null )
 then
-    export _p_os="Darwin"
+    _p_os="Darwin"
+    export _p_os
+    _p_numthreads=$(sysctl -n hw.ncpu)
+    export _p_numthreads
 elif ( command uname -a | command grep Linux > /dev/null )
 then
-    export _p_os="Linux"
+    _p_os="Linux"
+    export _p_os
+    _p_numthreads=$(lscpu | grep '^CPU(s):' | awk '{ print $NF }')
+    export _p_numthreads
 else
     export _p_os="?"
 fi
@@ -156,12 +162,12 @@ PS1+="\\\$ "
 
 # EPHEMERAL - borrowed from hl-hostname2
 
-PS1+="\$(
-    if \$wantsEphemera
-    then
-        tput sc
-        echo -en \"        ${darkgray}[\$(_p_threadcount)] \$(_p_load) \$(_p_df_percent)\"
-        tput rc
-    fi
-)"
+if ${wantsEphemera}
+then
+PS1+="\[\$(
+    tput sc
+    echo -en \"        ${darkgray}[\$(_p_threadcount)] \$(_p_load) \$(_p_df_percent)\"
+    tput rc
+)\]"
+fi
 
