@@ -5,7 +5,7 @@
 # shellcheck disable=SC1091  # "<file> was not specified as input"
 # shellcheck disable=SC2154  # "referenced but not assigned"
 
-echo "Prompt Title: ogr256 - orange-gray-256-colours"
+echo "Prompt Title: ogr256_2 - orange-gray-256-colours (take 2)"
 echo "Includes:     user@host, dir, git, newline, screen/tmux indicator, battery, return value, load indicator"
 echo "For:          a dark background"
 echo "Requires:     git, 256 colour terminal"
@@ -19,6 +19,7 @@ source "${PROMPTDIR}/machine/_p_powerconnected"
 source "${PROMPTDIR}/machine/_p_powerpercent"
 source "${PROMPTDIR}/machine/_p_loadcaret"
 source "${PROMPTDIR}/directory/_p_tildepwd"
+source "${PROMPTDIR}/session/_p_inother" # provides $_p_parentenv
 source "${PROMPTDIR}/directory/_p_xtermtitle"
 
 _p_orange="\[\033[038;5;208m\]"
@@ -52,24 +53,21 @@ PS1+="${_p_orange}\h "
 # add the orange gradient:
 PS1+="\[\033[48;5;208m\] \[\033[48;5;172m\] \[\033[48;5;136m\] \[\033[48;5;095m\] \[\033[48;5;058m\] \[\033[48;5;235m\] \[\033[0m\]"
 # add the current directory:
-PS1+=" ${_p_gray}\$(_p_tildepwd)"
+PS1+="\[\033[48;5;235m\]${_p_gray}\$(_p_tildepwd)${_pc_nocolour}"
+PS1+="\[\033[38;5;235m\]${_pc_nocolour}"
 # if the current directory isn't writeable, tag it:
 PS1+="\$(if ! [ -w \"\${PWD}\" ]; then echo \"[ro]\"; fi)"
 # add git branch and status:
 PS1+=" ${_p_orange}\$(_p_git)"
 # second line:
 PS1+="\n"
-PS1+="${_p_orange}"
-# add indicators if in tmux or screen:
-if ${_p_in_tmux}
+# add indicators if in tmux, screen, etc:
+if [ -n "${_p_parentenv}" ]
 then
-    PS1+="[t]"
-fi
-if ${_p_in_screen}
-then
-    PS1+="[s]"
+    PS1+="${_pc_b_gray}${_p_parentenv}${_p_nocolour} "
 fi
 # add battery indicator (if we have one):
+PS1+="${_p_orange}"
 if ${_p_has_battery}
 then
     PS1+="\$(_p_powerconnected)\$(_p_powerpercent)% "
